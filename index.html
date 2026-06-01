@@ -1,392 +1,469 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Knowledge Bank | CAS Prototype</title>
+    <title>AI Knowledge Bank | The Evolutionary Network</title>
+    <meta name="description" content="A Complex Adaptive System for human skill evolution in the AI era.">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        deep: '#02040a',
+                        surface: '#0f172a',
+                        primary: '#10b981',
+                        accent: '#f59e0b',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #09090b; color: #f4f4f5; }
-        .glass { background: rgba(24, 24, 27, 0.6); backdrop-filter: blur(8px); border: 1px solid #27272a; }
-        .glow-emerald { box-shadow: 0 0 15px rgba(16, 185, 129, 0.15); }
-        .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
-        
-        /* 演化树连线 */
-        .tree-line::before {
-            content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px;
-            background: linear-gradient(to bottom, #27272a, transparent);
+        body {
+            background-color: #02040a;
+            color: #f8fafc;
+            overflow-x: hidden;
         }
         
-        /* 涌现动画 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #02040a; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #34d399, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-gold {
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+        }
+
         @keyframes emergePulse {
-            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
             100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
         }
-        .emerging { animation: emergePulse 2s infinite; border-color: #f59e0b !important; }
-
-        /* 打字机光标 */
-        .typing-cursor::after {
-            content: '▋'; animation: blink 1s step-end infinite; color: #10b981;
+        .emerging {
+            animation: emergePulse 2s infinite;
+            border-color: #f59e0b !important;
         }
-        @keyframes blink { 50% { opacity: 0; } }
-        
-        /* 滚动条美化 */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #18181b; }
-        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="antialiased selection:bg-primary selection:text-white">
 
-    <!-- 顶部导航 -->
-    <header class="h-14 border-b border-zinc-800 flex items-center px-6 justify-between sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-zinc-950 font-bold text-lg">🧬</div>
-            <span class="font-semibold tracking-tight text-lg">AI Knowledge Bank</span>
-            <span class="text-[10px] px-2 py-0.5 bg-zinc-800 text-zinc-400 rounded-full border border-zinc-700 uppercase font-mono">CAS Prototype</span>
+    <canvas id="canvas-bg"></canvas>
+
+    <nav class="fixed w-full z-50 top-0 start-0 border-b border-white/5 glass">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between px-6 py-4">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    🧬
+                </div>
+                <span class="self-center text-xl font-semibold whitespace-nowrap tracking-tight text-white">AI Knowledge Bank</span>
+            </a>
+            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                <button onclick="document.getElementById('demo-section').scrollIntoView({behavior: 'smooth'})" class="text-white bg-white/10 hover:bg-white/20 border border-white/10 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all backdrop-blur-md">
+                    Try Demo
+                </button>
+            </div>
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
+                <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                    <li><a href="#vision" class="block py-2 px-3 text-gray-400 hover:text-primary transition-colors">Vision</a></li>
+                    <li><a href="#mechanism" class="block py-2 px-3 text-gray-400 hover:text-primary transition-colors">Mechanism</a></li>
+                    <li><a href="#cases" class="block py-2 px-3 text-gray-400 hover:text-primary transition-colors">Cases</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="flex items-center gap-4">
-            <button class="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-sm text-zinc-400 hover:border-zinc-600 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                Search Nodes...
-                <kbd class="ml-4 px-1.5 py-0.5 bg-zinc-800 rounded text-[10px] border border-zinc-700">⌘K</kbd>
-            </button>
-        </div>
-    </header>
+    </nav>
 
-    <!-- 主体内容 -->
-    <main class="flex-1 flex overflow-hidden">
-        
-        <!-- 左侧：节点列表 (The Feed) -->
-        <aside class="w-80 border-r border-zinc-800 overflow-y-auto p-4 space-y-3">
-            <h2 class="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-4 px-2">Genesis Nodes (创世节点)</h2>
-            <div id="node-list" class="space-y-3"></div>
-        </aside>
-
-        <!-- 右侧：核心工作区 (The Workspace) -->
-        <section class="flex-1 flex flex-col overflow-hidden">
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16 text-center relative z-10">
+            <div class="inline-flex items-center justify-center px-4 py-1.5 mb-8 text-xs font-medium text-primary bg-primary/10 rounded-full border border-primary/20 animate-float">
+                <span class="w-2 h-2 mr-2 bg-primary rounded-full animate-pulse"></span>
+                Complex Adaptive System v1.0 Live
+            </div>
             
-            <!-- 节点 Header -->
-            <div id="node-header" class="p-6 border-b border-zinc-800 bg-zinc-950">
-                <!-- JS 动态渲染 -->
+            <h1 class="mb-6 text-5xl font-extrabold tracking-tight leading-none text-white md:text-7xl lg:text-8xl">
+                Human Skill <br />
+                <span class="text-gradient">Evolution Network</span>
+            </h1>
+            
+            <p class="mb-10 text-lg font-normal text-gray-400 lg:text-xl sm:px-16 lg:px-48 max-w-4xl mx-auto leading-relaxed">
+                Bridging the gap between AI potential and human capability. 
+                A decentralized ecosystem where knowledge forks, validates, and emerges through collective intelligence.
+            </p>
+            
+            <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
+                <button onclick="document.getElementById('demo-section').scrollIntoView({behavior: 'smooth'})" class="btn-primary inline-flex justify-center items-center py-4 px-8 text-base font-medium text-white rounded-xl shadow-lg">
+                    Start Evolution
+                    <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </button>
+                <a href="https://github.com/Greatbeing/AI-Knowledge-Bank" target="_blank" class="inline-flex justify-center items-center py-4 px-8 text-base font-medium text-gray-300 rounded-xl border border-gray-700 hover:bg-gray-800 hover:text-white transition-all glass-card">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View Source
+                </a>
             </div>
 
-            <!-- 双栏布局：演化树 + 沙盒 -->
-            <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-0 overflow-hidden">
-                
-                <!-- 左栏：基因演化树 -->
-                <div class="border-r border-zinc-800 p-6 overflow-y-auto bg-zinc-950/50">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-semibold text-zinc-300 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Evolution Tree (演化树)
-                        </h3>
-                        <span class="text-[10px] text-zinc-500 font-mono">Git-style Versioning</span>
+            <div class="mt-20 grid grid-cols-2 gap-8 md:grid-cols-4 border-t border-white/10 pt-10">
+                <div>
+                    <div class="text-3xl font-bold text-white">CAS</div>
+                    <div class="text-sm text-gray-500 mt-1">Core Architecture</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-primary">Non-Linear</div>
+                    <div class="text-sm text-gray-500 mt-1">Growth Model</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-accent">Emergent</div>
+                    <div class="text-sm text-gray-500 mt-1">Knowledge Sync</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-blue-400">Decentralized</div>
+                    <div class="text-sm text-gray-500 mt-1">Community DAO</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px] -z-10 animate-pulse-slow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[128px] -z-10 animate-pulse-slow" style="animation-delay: 2s;"></div>
+    </section>
+
+    <section id="mechanism" class="py-24 bg-deep relative">
+        <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">The Evolution Engine</h2>
+                <p class="mt-4 text-lg text-gray-400">How knowledge evolves from individual insight to collective wisdom.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <svg class="w-24 h-24 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                     </div>
-                    <div id="evolution-tree" class="relative space-y-6 pl-8 tree-line">
-                        <!-- JS 动态渲染 -->
+                    <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6 text-primary">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">1. Fork (Mutation)</h3>
+                    <p class="text-gray-400 leading-relaxed">Users take existing knowledge nodes and adapt them to specific contexts.</p>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group border-primary/30 shadow-[0_0_30px_-10px_rgba(16,185,129,0.2)]">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <svg class="w-24 h-24 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6 text-primary">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">2. Validate (Selection)</h3>
+                    <p class="text-gray-400 leading-relaxed">Community members test branches in real scenarios. Successful applications increase weight non-linearly.</p>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <svg class="w-24 h-24 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-6 text-accent">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">3. Emerge (Synthesis)</h3>
+                    <p class="text-gray-400 leading-relaxed">When a branch's weight surpasses the main trunk, the system auto-merges it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo-section" class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-deep to-surface/30"></div>
+        <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                
+                <div>
+                    <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
+                        Experience the <span class="text-gradient-gold">Emergence</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        Interact with our live CAS engine. Watch how community validation drives the evolution of knowledge weights. 
+                        <br><br>
+                        <strong class="text-white">Try it:</strong> Click "Run Validation" to simulate successful community adoption.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 text-sm text-gray-400">
+                            <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                            <span>Real-time Weight Calculation</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm text-gray-400">
+                            <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                            <span>Auto-Merge Threshold Detection</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm text-gray-400">
+                            <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                            <span>Git-style Version History</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 右栏：AI 流式沙盒 -->
-                <div class="flex flex-col bg-zinc-900/30 overflow-hidden">
-                    <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
-                        <h3 class="text-sm font-semibold text-zinc-300 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                            Streaming Sandbox
-                        </h3>
-                    </div>
-                    
-                    <!-- 聊天输出区 -->
-                    <div id="chat-output" class="flex-1 overflow-y-auto p-4 space-y-4 text-sm leading-relaxed">
-                        <div class="text-zinc-500 italic text-center mt-10">
-                            在下方输入您的业务参数，测试当前 SOP...
+                <div class="glass-card rounded-2xl p-6 border border-white/10 shadow-2xl">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/5">
+                        <div>
+                            <div class="text-xs text-primary font-mono uppercase">Active Node</div>
+                            <div class="text-white font-semibold">Cross-Border Marketing SOP</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500 font-mono uppercase">Current Weight</div>
+                            <div id="weight-display" class="text-2xl font-mono font-bold text-primary transition-all">85.0</div>
                         </div>
                     </div>
 
-                    <!-- 输入区 -->
-                    <div class="p-4 border-t border-zinc-800 bg-zinc-950">
-                        <form id="chat-form" class="flex gap-2">
-                            <input id="chat-input" type="text" placeholder="例如：我的产品是人体工学椅，受众是程序员..." 
-                                class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                            <button type="submit" id="run-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                                <span>Run</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            </button>
-                        </form>
+                    <div class="space-y-4 mb-6 relative pl-4 border-l border-white/10" id="tree-container">
+                        <div class="relative pl-6 py-2">
+                            <div class="absolute -left-[21px] top-6 w-3 h-3 rounded-full bg-primary ring-4 ring-deep"></div>
+                            <div class="text-sm text-gray-300">V1.0 Main Trunk</div>
+                            <div class="text-xs text-gray-500">Base Translation Prompt</div>
+                        </div>
+                        
+                        <div id="emerging-node" class="relative pl-6 py-2 opacity-50 transition-all duration-500">
+                            <div class="absolute -left-[21px] top-6 w-3 h-3 rounded-full bg-gray-600 ring-4 ring-deep"></div>
+                            <div class="text-sm text-gray-400">V1.1 LatAm Branch</div>
+                            <div class="text-xs text-gray-500">Waiting for validation...</div>
+                        </div>
                     </div>
+
+                    <button id="validate-btn" class="w-full btn-primary py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Run Validation (+25.5 Weight)
+                    </button>
+                    
+                    <div id="status-msg" class="text-center text-xs text-gray-500 mt-3 h-4"></div>
                 </div>
 
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <!-- Toast 提示 -->
-    <div id="toast" class="fixed bottom-8 right-8 bg-zinc-900 border border-zinc-700 px-4 py-3 rounded-lg shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
-        <span id="toast-icon" class="text-xl">🧬</span>
-        <span id="toast-msg" class="text-sm font-medium">操作成功</span>
-    </div>
+    <footer class="bg-deep border-t border-white/5 py-12">
+        <div class="py-8 px-4 mx-auto max-w-7xl text-center">
+            <a href="#" class="flex items-center justify-center gap-2 mb-4">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold">🧬</div>
+                <span class="text-xl font-semibold text-white">AI Knowledge Bank</span>
+            </a>
+            <p class="text-gray-500 text-sm mb-6 max-w-md mx-auto">
+                Building the collective brain for the AI era. Open source, decentralized, and evolving.
+            </p>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="https://github.com/Greatbeing/AI-Knowledge-Bank" class="text-gray-400 hover:text-white transition-colors">GitHub</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">Twitter</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">Discord</a>
+            </div>
+            <p class="text-xs text-gray-600">© 2024 AI Knowledge Bank. MIT License.</p>
+        </div>
+    </footer>
 
     <script>
-        // ================= 核心数据模型 (模拟数据库) =================
-        const nodes = [
-            {
-                id: 1,
-                type: 'case',
-                title: '【跨境出海】多语言本地化营销生成流',
-                desc: 'SOP 核心：引入霍夫斯泰德文化维度理论，挂载本地俚语 RAG，强制输出 Reels 脚本格式。',
-                weight: 85.0,
-                versions: [
-                    { v: 'V1.0 主干', author: 'System', desc: '初始化基础多语言翻译 Prompt。', weight: 45, isMain: true },
-                    { v: 'V1.1 拉美分支', author: '@Carlos', desc: 'Fork：注入墨西哥本地俚语库。', weight: 82, isEmerging: true }
-                ]
-            },
-            {
-                id: 2,
-                type: 'tool',
-                title: '【独立开发】PRD 到代码骨架自动化 Agent',
-                desc: 'Workflow：读取 PRD -> 提取 DDD 领域模型 (Mermaid) -> 生成 OpenAPI 3.0 契约 -> 补全边缘测试。',
-                weight: 112.0,
-                versions: [
-                    { v: 'V2.0 主干 (Emergence)', author: 'Auto-Merge', desc: '合并了前端组件库生成的最佳实践。', weight: 112, isMain: true }
-                ]
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.directionX = (Math.random() * 0.4) - 0.2;
+                this.directionY = (Math.random() * 0.4) - 0.2;
+                this.size = Math.random() * 2;
+                this.color = '#10b981';
             }
-        ];
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = 0.2;
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 15000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function connectParticles() {
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
+                                   ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        let opacityValue = 1 - (distance / 20000);
+                        ctx.strokeStyle = 'rgba(16, 185, 129,' + opacityValue * 0.15 + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connectParticles();
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
 
         let currentWeight = 85.0;
-        let isRunning = false;
+        let isAnimating = false;
+        const weightDisplay = document.getElementById('weight-display');
+        const validateBtn = document.getElementById('validate-btn');
+        const statusMsg = document.getElementById('status-msg');
+        const emergingNode = document.getElementById('emerging-node');
 
-        // ================= UI 渲染逻辑 =================
-        function renderNodeList() {
-            const list = document.getElementById('node-list');
-            list.innerHTML = nodes.map(n => `
-                <div onclick="selectNode(${n.id})" class="p-4 glass rounded-xl cursor-pointer hover:border-emerald-500/50 transition-all group">
-                    <span class="text-[10px] uppercase text-emerald-400 font-mono">${n.type}</span>
-                    <h3 class="font-medium mt-1 mb-2 group-hover:text-emerald-400 transition-colors">${n.title}</h3>
-                    <div class="flex justify-between items-center text-xs text-zinc-500">
-                        <span>Weight: <span class="text-zinc-300 font-bold">${n.weight.toFixed(1)}</span></span>
-                        <span class="opacity-0 group-hover:opacity-100 text-emerald-500 transition-opacity">Enter →</span>
-                    </div>
-                </div>
-            `).join('');
-        }
+        validateBtn.addEventListener('click', () => {
+            if (isAnimating) return;
+            isAnimating = true;
+            validateBtn.disabled = true;
+            validateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            statusMsg.textContent = "Running validation simulations...";
+            statusMsg.className = "text-center text-xs text-primary mt-3 h-4 animate-pulse";
 
-        function selectNode(id) {
-            const node = nodes.find(n => n.id === id);
-            if(!node) return;
-            
-            currentWeight = node.weight;
-            renderHeader(node);
-            renderTree(node.versions);
-            document.getElementById('chat-output').innerHTML = `<div class="text-zinc-500 italic text-center mt-10">在下方输入您的业务参数，测试当前 SOP...</div>`;
-        }
-
-        function renderHeader(node) {
-            document.getElementById('node-header').innerHTML = `
-                <div class="flex justify-between items-start">
-                    <div>
-                        <span class="text-xs uppercase text-emerald-400 font-mono tracking-wider">${node.type}</span>
-                        <h1 class="text-2xl font-bold mt-1 tracking-tight">${node.title}</h1>
-                        <p class="text-zinc-400 mt-2 max-w-2xl">${node.desc}</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="text-right">
-                            <div class="text-[10px] text-zinc-500 uppercase tracking-wider">System Weight</div>
-                            <div id="weight-display" class="text-2xl font-mono font-bold text-emerald-400">${node.weight.toFixed(1)}</div>
-                        </div>
-                        <div class="h-10 w-px bg-zinc-800"></div>
-                        <div class="flex gap-2">
-                            <button onclick="handleFork()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                                Fork (突变)
-                            </button>
-                            <button onclick="handleValidate()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                Validate (验证)
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderTree(versions) {
-            const tree = document.getElementById('evolution-tree');
-            tree.innerHTML = versions.map((v, i) => `
-                <div class="relative animate-fade-in-up" style="animation: fadeInUp 0.5s ease-out ${i * 0.1}s both;">
-                    <div class="absolute -left-8 top-2 w-8 h-8 rounded-full bg-zinc-900 border-2 ${v.isEmerging ? 'border-amber-500' : 'border-zinc-700'} flex items-center justify-center z-10">
-                        ${v.isEmerging ? '✨' : (v.isMain ? '🟢' : '🔵')}
-                    </div>
-                    <div class="p-4 glass rounded-lg ${v.isEmerging ? 'emerging' : ''} hover:border-zinc-600 transition-all">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-mono text-sm font-medium ${v.isEmerging ? 'text-amber-400' : 'text-zinc-200'}">${v.v}</span>
-                            <span class="text-xs text-zinc-500">${v.author}</span>
-                        </div>
-                        <p class="text-sm text-zinc-400">${v.desc}</p>
-                        <div class="mt-3 pt-3 border-t border-zinc-800 flex justify-between items-center text-xs">
-                            <span class="text-zinc-500">Weight:</span>
-                            <span class="font-mono font-bold ${v.weight > 100 ? 'text-emerald-400' : 'text-zinc-300'}">${v.weight.toFixed(1)}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            // 注入动画关键帧
-            if(!document.getElementById('anim-style')) {
-                const style = document.createElement('style');
-                style.id = 'anim-style';
-                style.innerHTML = `@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`;
-                document.head.appendChild(style);
-            }
-        }
-
-        // ================= 核心交互逻辑 (CAS 机制) =================
-        function showToast(icon, msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-icon').innerText = icon;
-            document.getElementById('toast-msg').innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
-        }
-
-        function handleFork() {
-            const node = nodes[0]; // 假设操作第一个节点
-            const newVersion = {
-                v: `V1.${node.versions.length} 您的分支`,
-                author: '@You',
-                desc: 'Fork：注入了您独特的行业约束条件与防幻觉指令。',
-                weight: 10.0,
-                isMain: false
-            };
-            node.versions.push(newVersion);
-            renderTree(node.versions);
-            showToast('🧬', '基因突变成功！您的分支已加入演化树。');
-        }
-
-        function handleValidate() {
-            if(isRunning) return;
-            
-            // 模拟权重非线性上涨
-            const weightEl = document.getElementById('weight-display');
             const startWeight = currentWeight;
-            const targetWeight = currentWeight + 25.5; // 增加权重
-            const duration = 1000;
+            const targetWeight = currentWeight + 25.5;
+            const duration = 1500;
             const startTime = performance.now();
 
             function animate(now) {
                 const elapsed = now - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-                // 缓动函数
-                const easeOut = 1 - Math.pow(1 - progress, 3); 
-                currentWeight = startWeight + (targetWeight - startWeight) * easeOut;
-                weightEl.innerText = currentWeight.toFixed(1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
                 
-                if(progress < 1) {
+                currentWeight = startWeight + (targetWeight - startWeight) * easeOut;
+                weightDisplay.innerText = currentWeight.toFixed(1);
+
+                if (progress < 1) {
                     requestAnimationFrame(animate);
                 } else {
-                    // 检查是否触发涌现 (Emergence)
-                    if(currentWeight > 100) {
-                        triggerEmergence();
-                    }
+                    checkEmergence();
                 }
             }
             requestAnimationFrame(animate);
-            showToast('✅', '自然选择完成！您的反馈正在重塑知识权重。');
-        }
-
-        function triggerEmergence() {
-            showToast('🚨', 'Emergence Detected! 分支权重超越主干，正在自动合并...');
-            // 视觉反馈：让主干节点闪烁
-            const header = document.getElementById('node-header');
-            header.classList.add('glow-amber');
-            setTimeout(() => header.classList.remove('glow-amber'), 3000);
-            
-            // 更新演化树状态
-            const node = nodes[0];
-            node.versions.forEach(v => {
-                if(v.isEmerging) {
-                    v.v = "V2.0 新主干 (Merged)";
-                    v.isEmerging = false;
-                    v.isMain = true;
-                    v.weight = currentWeight;
-                }
-            });
-            renderTree(node.versions);
-        }
-
-        // ================= AI 沙盒流式输出模拟 =================
-        document.getElementById('chat-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if(isRunning) return;
-            
-            const input = document.getElementById('chat-input');
-            const output = document.getElementById('chat-output');
-            const btn = document.getElementById('run-btn');
-            
-            const userMsg = input.value.trim();
-            if(!userMsg) return;
-
-            isRunning = true;
-            btn.disabled = true;
-            input.value = '';
-
-            // 渲染用户消息
-            output.innerHTML += `<div class="text-zinc-400 italic border-l-2 border-zinc-700 pl-3">${userMsg}</div>`;
-            
-            // 创建 AI 消息容器
-            const aiMsg = document.createElement('div');
-            aiMsg.className = 'text-zinc-100 typing-cursor';
-            output.appendChild(aiMsg);
-            output.scrollTop = output.scrollHeight;
-
-            // 模拟 AI 思考与流式输出 (基于 CAS 理论的三位一体回答)
-            const aiResponse = `### 🎯 破题：核心认知\n直接翻译文案是出海大忌，必须通过 **文化维度对齐** 重构语境。\n\n### 🧠 【知识层】：底层逻辑\n根据霍夫斯泰德理论，拉美市场属于"高不确定性规避"文化。您的文案必须强调**确定性、耐用性与售后保障**，而非激进的创新。\n\n### 🛠️ 【工具层】：武器库推荐\n建议组合使用：\n1. \`Kimi\` (读取竞品长篇评论)\n2. \`本地化 RAG Agent\` (匹配当地 Slang)\n\n### 🏆 【案例层】：社区实战 SOP\n以下是社区演化至 **V2.0** 的高权重 Prompt 骨架：\n\`\`\`prompt\n[Role] 你是拥有 10 年经验的拉美区资深本土化营销专家...\n[Constraint] 严禁使用冒险词汇，必须包含"100% 售后保障"锚点。\n\`\`\`\n*(提示：该 SOP 已被 42 位跨境卖家实战验证)*`;
-
-            let i = 0;
-            const speed = 15; // 打字速度 (ms)
-            
-            // 简易 Markdown 渲染 (替换换行和代码块)
-            const formattedResponse = aiResponse
-                .replace(/\n/g, '<br>')
-                .replace(/```prompt<br>(.*?)<br>```/g, '<pre class="bg-zinc-950 p-3 rounded border border-zinc-800 text-emerald-300 text-xs font-mono my-2 overflow-x-auto">$1</pre>')
-                .replace(/`([^`]+)`/g, '<code class="bg-zinc-800 px-1 py-0.5 rounded text-xs text-amber-400">$1</code>')
-                .replace(/### (.*?)/g, '<h4 class="font-bold text-emerald-400 mt-3 mb-1">$1</h4>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-zinc-50">$1</strong>');
-
-            function typeWriter() {
-                if (i < formattedResponse.length) {
-                    // 处理 HTML 标签，避免截断标签
-                    if (formattedResponse[i] === '<') {
-                        const closeTagIndex = formattedResponse.indexOf('>', i);
-                        if (closeTagIndex !== -1) {
-                            aiMsg.innerHTML += formattedResponse.substring(i, closeTagIndex + 1);
-                            i = closeTagIndex + 1;
-                        } else {
-                            aiMsg.innerHTML += formattedResponse[i];
-                            i++;
-                        }
-                    } else {
-                        aiMsg.innerHTML += formattedResponse[i];
-                        i++;
-                    }
-                    output.scrollTop = output.scrollHeight;
-                    setTimeout(typeWriter, speed);
-                } else {
-                    aiMsg.classList.remove('typing-cursor');
-                    isRunning = false;
-                    btn.disabled = false;
-                }
-            }
-            
-            // 延迟 500ms 开始输出，模拟网络请求
-            setTimeout(typeWriter, 500);
         });
 
-        // ================= 初始化 =================
-        renderNodeList();
-        selectNode(1); // 默认选中第一个节点
-
+        function checkEmergence() {
+            if (currentWeight > 100) {
+                statusMsg.textContent = "⚠️ Emergence Detected! Merging branch...";
+                statusMsg.className = "text-center text-xs text-accent mt-3 h-4 font-bold";
+                
+                setTimeout(() => {
+                    emergingNode.classList.remove('opacity-50');
+                    emergingNode.classList.add('emerging');
+                    emergingNode.querySelector('.w-3').classList.remove('bg-gray-600');
+                    emergingNode.querySelector('.w-3').classList.add('bg-accent', 'ring-accent/50');
+                    emergingNode.querySelector('.text-sm').innerHTML = '<span class="text-accent font-bold">V2.0 New Main (Merged)</span>';
+                    emergingNode.querySelector('.text-xs').textContent = "Community validated standard";
+                    
+                    weightDisplay.classList.add('text-accent');
+                    weightDisplay.classList.remove('text-primary');
+                    
+                    validateBtn.innerHTML = "✅ Evolution Complete";
+                    validateBtn.classList.remove('btn-primary');
+                    validateBtn.classList.add('bg-green-900/50', 'border', 'border-green-500/30', 'text-green-400');
+                }, 800);
+            } else {
+                statusMsg.textContent = "Validation complete. Weight increased.";
+                isAnimating = false;
+                validateBtn.disabled = false;
+                validateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
     </script>
 </body>
 </html>
