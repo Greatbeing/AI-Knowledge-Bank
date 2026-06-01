@@ -1,174 +1,252 @@
-# AI Knowledge Bank 🧬
+# AI Knowledge Bank
 
-> **AI 时代的人类技能进化网络 | Human Skill Evolution Network for the AI Era**
+**AI 驱动的人类技能进化网络 | A Complex Adaptive System for Human-AI Collaboration**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Prototype Status](https://img.shields.io/badge/Status-Prototype-emerald)](./index.html)
-[![Theory](https://img.shields.io/badge/Theory-CAS-blue)](https://en.wikipedia.org/wiki/Complex_adaptive_system)
+[![Complex Adaptive System](https://img.shields.io/badge/CAS-Emergence-emerald)](https://en.wikipedia.org/wiki/Complex_adaptive_system)
+[![Status: Alpha](https://img.shields.io/badge/Status-Alpha-orange)](https://github.com/your-org/ai-knowledge-bank)
 
-## 🌌 项目愿景
-
-在 AI 大模型能力指数级增长与大众应用能力线性增长之间，存在巨大的**技术鸿沟**。真正能熟练运用 AI 重塑工作流的人仍是极少数。
-
-**AI Knowledge Bank** 不是一个传统的网课平台或工具导航站。基于**复杂适应系统（Complex Adaptive Systems, CAS）**理论，我们将每一个渴望成长的个体视为智能节点，通过精心设计的交互规则：
-
-- 🔹 让微小的个人经验在碰撞中**涌现（Emergence）**出行业级的 AI 标准 SOP
-- 🔹 让松散的个体在共同解决痛点中**自组织（Self-Organization）**成创新的微公会
-- 🔹 利用 AI 将社区前沿经验实时**反哺**给学习库，形成自我进化的知识飞轮
-
-我们不仅是在消除技术鸿沟，更是在构建 AI 时代人类技能进化的**超级基础设施**和**集体智慧大脑**。
+> **愿景**: 消除 AI 时代的技术鸿沟，构建去中心化的集体智慧大脑。我们不是在教育用户，而是在催化人类技能的自发涌现。
 
 ---
 
-## 🚀 核心特性
+## 🌌 项目概述
 
-### 1. 创世节点 (Genesis Nodes)
-结构化的知识起点，每个节点代表一个具体的业务场景或技能树（如"跨境出海营销"、"PRD 转代码"）。
+**AI Knowledge Bank** 不是一个传统的网课平台或工具导航站。基于**复杂适应系统 (Complex Adaptive Systems, CAS)**理论，我们将每一个渴望成长的个体视为智能节点，通过精心设计的交互规则，让微小的个人经验在碰撞中**涌现**出行业级的 AI 标准。
 
-### 2. Git 式演化树 (Evolution Tree)
-引入版本控制理念，知识不再是静态复制，而是像基因一样进化：
-- **Fork (突变)**: 用户基于现有 SOP 注入自己的行业约束，创建新分支
-- **Merge (合并)**: 经验证的高权重分支自动合并为主干，实现知识迭代
-- **Weight (权重)**: 基于真实业务反馈的非线性评分系统
+### 核心差异化
 
-### 3. 涌现机制 (Emergence Detection)
-当某个分支的验证权重超过阈值 (>100)，系统自动触发"涌现"：
-- 视觉警示与自动合并提示
-- 旧主干降级，新分支成为标准 SOP
-- 全系统推送更新给相关学习者
-
-### 4. AI 流式沙盒 (Streaming Sandbox)
-内置 AI 助手，兼具双重角色：
-- **私人助教**: 根据用户水平提供个性化指导
-- **社区管家**: 识别优质内容，自动提炼并打上标签
+| 传统 AI 教育产品 | AI Knowledge Bank |
+|-----------------|-------------------|
+| 中心化内容分发 | 去中心化知识演化 |
+| 静态课程体系 | 动态涌现的 SOP |
+| 线性积分激励 | PageRank 声誉网络 |
+| 讲师→学员单向传递 | 多主体非线性交互 |
+| 内容易过时 | 社区自更新机制 |
 
 ---
 
-## 🛠️ 快速开始
+## 🔬 理论基础：复杂适应系统 (CAS)
 
-### 在线体验
-直接打开 `index.html` 文件即可在浏览器中运行原型：
+本项目的架构设计遵循复杂性科学的四大核心原则：
 
-```bash
-# Mac/Linux
-open index.html
+### 1. 主体 (Agents)
+每个用户都是携带独特"初始状态"(行业背景、业务痛点、AI 认知水平) 的智能体。系统刻意保护"边缘节点",因为创新往往发生在跨界地带 (如 AI+ 农业)。
 
-# Windows
-start index.html
+### 2. 非线性交互 (Non-linear Interactions)
+引入 Git 模式的 Prompt 协作机制:
+- **Fork**: 用户改进他人的 Prompt，注入自己的行业约束
+- **Merge**: 当分支权重超越主干，系统自动合并为新标准
+- **Emergence**: 1+1>2 的化学反应，产生全新的知识形态
+
+### 3. 自组织 (Self-Organization)
+当局部节点交互密度达到阈值时，系统自动生成"微公会":
+> "检测到 20 位用户都在讨论'跨境电商+AI 生成商品图',已为您创建【AI 电商视觉攻坚室】"
+
+### 4. 混沌边缘 (Edge of Chaos)
+系统通过以下机制保持在最佳创新状态:
+- **负熵输入**: 真实业务结果 (阅读量、转化率) 作为能量注入
+- **时间衰减**: 老知识的权重随时间自然衰减，逼迫系统持续更新
+- **弱连接碰撞**: AI 定期举办"盲盒跨界挑战",促进跨领域创新
+
+---
+
+## 🏗️ 技术架构
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      Frontend Layer                         │
+│  Next.js 14 (App Router) + Tailwind CSS + Framer Motion    │
+│  - EvolutionTree 组件：可视化知识基因谱系                   │
+│  - Streaming Sandbox: AI 流式输出沙盒                       │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                       Backend Layer                         │
+│  Supabase (PostgreSQL) + Edge Functions                    │
+│  - CAS Emergence Algorithm: 非线性权重计算                  │
+│  - Auto-Merge Trigger: 涌现检测与自动合并                   │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                        AI Layer                             │
+│  Custom Agents (Coze/Dify) + RAG Pipeline                  │
+│  - UGC 提纯 Agent: 社区精华→标准化 SOP                     │
+│  - 个性化推荐引擎：基于用户画像的动态路径规划               │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### 本地开发
-无需任何构建工具，本项目采用纯 HTML + TailwindCSS (CDN) + 原生 JavaScript 构建。
+### 核心算法
 
-1. 克隆仓库
+节点权重的计算公式 (基于 Hacker News Gravity 变体 + PageRank 声誉传递):
+
+$$
+\text{Weight} = 1.0 + \frac{\sum (\text{Validator\_Reputation} \times \text{Feedback\_Score})}{(\text{Hours\_Since\_Creation} + 2)^{1.8}}
+$$
+
+- **分子**: 高声誉用户的验证呈指数级放大
+- **分母**: 时间衰减因子，防止知识僵化
+- **涌现阈值**: 当分支权重 > 父节点 × 1.2 时，触发自动合并
+
+---
+
+## 🚀 快速开始
+
+### 前置要求
+
+- Node.js 18+ 
+- PostgreSQL 15+ (推荐使用 [Supabase](https://supabase.com))
+- pnpm 或 npm
+
+### 1. 克隆仓库
+
 ```bash
-git clone https://github.com/yourusername/ai-knowledge-bank.git
+git clone https://github.com/your-org/ai-knowledge-bank.git
 cd ai-knowledge-bank
+pnpm install
 ```
 
-2. 使用 Live Server 运行（推荐）
+### 2. 初始化数据库
+
 ```bash
-# 若已安装 VS Code，右键 index.html -> "Open with Live Server"
-# 或使用 Python
-python -m http.server 8000
-# 访问 http://localhost:8000
+# 使用 Supabase CLI
+npx supabase db push
+
+# 或手动执行 SQL 迁移
+psql -h your-db.supabase.co -U postgres -d postgres < supabase/migrations/001_cas_emergence_algorithm.sql
+```
+
+### 3. 启动开发服务器
+
+```bash
+pnpm dev
+# 访问 http://localhost:3000
+```
+
+### 4. 录入创世节点
+
+参考 [`data/genesis_nodes.md`](./data/genesis_nodes.md),将 3 个行业级 SOP 插入数据库:
+
+```sql
+-- 示例：插入跨境出海节点
+INSERT INTO nodes (id, title, description, content, node_type, weight, is_mainline)
+VALUES (
+  '00000000-0000-0000-0000-000000000001',
+  '【跨境出海】多语言本地化营销物料生成流',
+  'SOP 核心：引入霍夫斯泰德文化维度理论，挂载本地俚语 RAG...',
+  '{...}'::jsonb,
+  'prompt',
+  85.0,
+  true
+);
 ```
 
 ---
 
-## 🏗️ 架构设计
+## 📦 核心模块
 
-### 复杂适应系统 (CAS) 映射
+### 前端组件
 
-| CAS 概念 | 产品实现 | 价值 |
-|---------|---------|------|
-| **智能体 (Agents)** | 多维数字身份用户 | 保护异质性，鼓励跨界创新 |
-| **非线性交互** | Fork/Merge 机制 | 1+1>2，知识化学反应 |
-| **自组织** | AI 辅助微公会生成 | 降低结网成本，自发形成组织 |
-| **涌现** | 权重阈值触发合并 | 从微观互动产生宏观秩序 |
-| **负熵输入** | 真实业务结果反馈 | 对抗混乱，保持系统活力 |
+| 组件 | 路径 | 说明 |
+|------|------|------|
+| `EvolutionTree` | [`components/EvolutionTree.tsx`](./components/EvolutionTree.tsx) | 知识演化树可视化，支持 Framer Motion 动画 |
+| `StreamingSandbox` | `components/StreamingSandbox.tsx` | AI 流式输出沙盒 (待开发) |
+| `NodeCard` | `components/NodeCard.tsx` | 节点信息卡片 (待开发) |
 
-### 技术栈
-- **前端**: HTML5, TailwindCSS, Vanilla JavaScript
-- **可视化**: 自定义 CSS 动画 + SVG 图标
-- **数据模拟**: 内存中的 JSON 对象（生产环境将替换为图数据库）
+### 后端函数
+
+| 函数 | 路径 | 说明 |
+|------|------|------|
+| `calculate_emergence_weight()` | [`supabase/migrations/001_cas_emergence_algorithm.sql`](./supabase/migrations/001_cas_emergence_algorithm.sql) | CAS 核心权重计算 |
+| `fork_node()` | 同上 | 创建分支 (Fork) |
+| `check_and_trigger_emergence()` | 同上 | 涌现检测触发器 |
+
+### 数据资产
+
+| 文件 | 路径 | 说明 |
+|------|------|------|
+| 创世节点文档 | [`data/genesis_nodes.md`](./data/genesis_nodes.md) | 3 个国际水准的冷启动 SOP |
+| 数据库迁移 | `supabase/migrations/` | PostgreSQL schema 与触发器 |
 
 ---
 
-## 📈 发展路线图
+## 🗺️ 发展路线图
 
-### Phase 1: 原型验证 (当前阶段) ✅
-- [x] 核心交互逻辑实现 (Fork/Validate/Emergence)
-- [x] 视觉系统设计 (深色主题 + 毛玻璃效果)
-- [x] AI 流式输出模拟
-- [ ] 接入真实 LLM API
+### Phase 1: MVP (当前阶段)
+- [x] CAS 算法原型实现
+- [x] 演化树前端组件
+- [x] 3 个创世节点内容填充
+- [ ] 基础用户认证系统
+- [ ] Fork/Merge 交互功能
 
-### Phase 2: MVP 闭环
-- [ ] 用户系统与身份画像
-- [ ] 社区 UGC 发布与点赞
-- [ ] AI 自动提纯引擎 (Coze/Dify 集成)
-- [ ] 基础积分与声誉系统
+### Phase 2: 社区测试版 (Q2 2025)
+- [ ] 邀请 100 位种子用户
+- [ ] UGC 提纯 Agent 上线
+- [ ] 声誉积分系统
+- [ ] 移动端适配
 
-### Phase 3: 生态演化
-- [ ] 图数据库后端 (Neo4j/NebulaGraph)
-- [ ] 自动化微公会生成
-- [ ] 跨界盲盒挑战匹配
-- [ ] PageRank 声誉算法
-
-### Phase 4: 产业级应用
-- [ ] 企业私有化部署
-- [ ] 行业 SOP 开源市场
+### Phase 3: 开放生态 (Q3 2025)
+- [ ] 公开注册
 - [ ] API 开放平台
-- [ ] DAO 治理机制
+- [ ] 企业版工作区
+- [ ] 跨语言支持 (EN/ES/AR)
 
 ---
 
-## 🤝 参与贡献
+## 🤝 贡献指南
 
-我们欢迎对以下领域感兴趣的伙伴加入：
+我们欢迎所有认同"复杂适应系统"理念的贡献者！
 
-1. **内容贡献者**: 分享你的 AI 实战 SOP 和 Prompt
-2. **产品设计师**: 优化用户体验和交互流程
-3. **全栈开发者**: 参与后端架构和 AI Agent 开发
-4. **社区运营**: 策划跨界活动，引导自组织形成
+### 贡献方式
 
-### 贡献流程
-```bash
-# 1. Fork 本仓库
-# 2. 创建特性分支
-git checkout -b feature/amazing-feature
+1. **代码贡献**: 查看 [CONTRIBUTING.md](./CONTRIBUTING.md)
+2. **内容贡献**: 提交你的行业 SOP 到 `data/community_nodes/`
+3. **Bug 报告**: 使用 GitHub Issues 模板
+4. **理念传播**: 在社交媒体分享你的使用体验
 
-# 3. 提交变更
-git commit -m 'Add some amazing feature'
+### 核心贡献者
 
-# 4. 推送到分支
-git push origin feature/amazing-feature
-
-# 5. 开启 Pull Request
-```
+<!-- 这里将显示贡献者头像 -->
+[@YourName](https://github.com/yourname) - 创始人 & 系统架构师
 
 ---
 
-## 📜 开源协议
+## 📜 许可证
 
-本项目采用 [MIT License](./LICENSE) 开源协议。
+本项目采用 [MIT 许可证](./LICENSE)。这意味着你可以:
+- ✅ 自由使用于商业或非商业用途
+- ✅ 修改和分发代码
+- ✅ 无需支付版税
+
+但请保留原始的署名声明。
+
+---
+
+## 🌍 社会价值
+
+**AI Knowledge Bank** 的终极目标超越商业成功:
+
+1. **数字红利再分配**: 让县城实体店老板也能零代码复用一线城市极客的 AI 工作流
+2. **集体心智防御网**: 帮助人类群体完成职业物种的演化，应对 AI 取代焦虑
+3. **产业级开源大脑**: 成为全球最鲜活的"行业 AI 应用开源库"
+
+> "市面上的 AI 工具在教人如何**控制机器**,而我们致力于用 AI 重塑**人类的连接**。"
 
 ---
 
 ## 📬 联系方式
 
-- **项目发起人**: [Your Name]
-- **邮箱**: [your.email@example.com]
-- **讨论区**: [GitHub Discussions](https://github.com/yourusername/ai-knowledge-bank/discussions)
+- **官网**: [aiknowledgebank.dev](https://aiknowledgebank.dev) (待上线)
+- **Twitter**: [@AIKnowledgeBank](https://twitter.com) (待开通)
+- **Discord**: [加入社区](https://discord.gg/xxx) (待创建)
+- **邮箱**: hello@aiknowledgebank.dev
 
 ---
 
-> "市面上的 AI 工具在教人如何**控制机器**，而 AI Knowledge Bank 致力于用 AI 重塑**人类的连接**。"
-
 <div align="center">
 
-**一起构建 AI 时代的集体智慧大脑** 🧠✨
+**🧬 让知识像基因一样演化，让智慧从社区中涌现。**
 
-[⭐ Star 这个项目](https://github.com/yourusername/ai-knowledge-bank/stargazers) | [🍴 Fork 这个项目](https://github.com/yourusername/ai-knowledge-bank/fork) | [🐛 报告问题](https://github.com/yourusername/ai-knowledge-bank/issues)
+*Built with ❤️ for the Complex Adaptive Future*
 
 </div>
