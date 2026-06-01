@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Knowledge Bank | CAS Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #09090b; color: #f4f4f5; }
+        .glass { background: rgba(24, 24, 27, 0.6); backdrop-filter: blur(8px); border: 1px solid #27272a; }
+        .glow-emerald { box-shadow: 0 0 15px rgba(16, 185, 129, 0.15); }
+        .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+        
+        /* 演化树连线 */
+        .tree-line::before {
+            content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px;
+            background: linear-gradient(to bottom, #27272a, transparent);
+        }
+        
+        /* 涌现动画 */
+        @keyframes emergePulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+        .emerging { animation: emergePulse 2s infinite; border-color: #f59e0b !important; }
+
+        /* 打字机光标 */
+        .typing-cursor::after {
+            content: '▋'; animation: blink 1s step-end infinite; color: #10b981;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        
+        /* 滚动条美化 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #18181b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- 顶部导航 -->
+    <header class="h-14 border-b border-zinc-800 flex items-center px-6 justify-between sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-zinc-950 font-bold text-lg">🧬</div>
+            <span class="font-semibold tracking-tight text-lg">AI Knowledge Bank</span>
+            <span class="text-[10px] px-2 py-0.5 bg-zinc-800 text-zinc-400 rounded-full border border-zinc-700 uppercase font-mono">CAS Prototype</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-sm text-zinc-400 hover:border-zinc-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                Search Nodes...
+                <kbd class="ml-4 px-1.5 py-0.5 bg-zinc-800 rounded text-[10px] border border-zinc-700">⌘K</kbd>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="flex-1 flex overflow-hidden">
+        
+        <!-- 左侧：节点列表 (The Feed) -->
+        <aside class="w-80 border-r border-zinc-800 overflow-y-auto p-4 space-y-3">
+            <h2 class="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-4 px-2">Genesis Nodes (创世节点)</h2>
+            <div id="node-list" class="space-y-3"></div>
+        </aside>
+
+        <!-- 右侧：核心工作区 (The Workspace) -->
+        <section class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- 节点 Header -->
+            <div id="node-header" class="p-6 border-b border-zinc-800 bg-zinc-950">
+                <!-- JS 动态渲染 -->
+            </div>
+
+            <!-- 双栏布局：演化树 + 沙盒 -->
+            <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-0 overflow-hidden">
+                
+                <!-- 左栏：基因演化树 -->
+                <div class="border-r border-zinc-800 p-6 overflow-y-auto bg-zinc-950/50">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-sm font-semibold text-zinc-300 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Evolution Tree (演化树)
+                        </h3>
+                        <span class="text-[10px] text-zinc-500 font-mono">Git-style Versioning</span>
+                    </div>
+                    <div id="evolution-tree" class="relative space-y-6 pl-8 tree-line">
+                        <!-- JS 动态渲染 -->
+                    </div>
+                </div>
+
+                <!-- 右栏：AI 流式沙盒 -->
+                <div class="flex flex-col bg-zinc-900/30 overflow-hidden">
+                    <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
+                        <h3 class="text-sm font-semibold text-zinc-300 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                            Streaming Sandbox
+                        </h3>
+                    </div>
+                    
+                    <!-- 聊天输出区 -->
+                    <div id="chat-output" class="flex-1 overflow-y-auto p-4 space-y-4 text-sm leading-relaxed">
+                        <div class="text-zinc-500 italic text-center mt-10">
+                            在下方输入您的业务参数，测试当前 SOP...
+                        </div>
+                    </div>
+
+                    <!-- 输入区 -->
+                    <div class="p-4 border-t border-zinc-800 bg-zinc-950">
+                        <form id="chat-form" class="flex gap-2">
+                            <input id="chat-input" type="text" placeholder="例如：我的产品是人体工学椅，受众是程序员..." 
+                                class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            <button type="submit" id="run-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span>Run</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast 提示 -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-zinc-900 border border-zinc-700 px-4 py-3 rounded-lg shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+        <span id="toast-icon" class="text-xl">🧬</span>
+        <span id="toast-msg" class="text-sm font-medium">操作成功</span>
+    </div>
+
+    <script>
+        // ================= 核心数据模型 (模拟数据库) =================
+        const nodes = [
+            {
+                id: 1,
+                type: 'case',
+                title: '【跨境出海】多语言本地化营销生成流',
+                desc: 'SOP 核心：引入霍夫斯泰德文化维度理论，挂载本地俚语 RAG，强制输出 Reels 脚本格式。',
+                weight: 85.0,
+                versions: [
+                    { v: 'V1.0 主干', author: 'System', desc: '初始化基础多语言翻译 Prompt。', weight: 45, isMain: true },
+                    { v: 'V1.1 拉美分支', author: '@Carlos', desc: 'Fork：注入墨西哥本地俚语库。', weight: 82, isEmerging: true }
+                ]
+            },
+            {
+                id: 2,
+                type: 'tool',
+                title: '【独立开发】PRD 到代码骨架自动化 Agent',
+                desc: 'Workflow：读取 PRD -> 提取 DDD 领域模型 (Mermaid) -> 生成 OpenAPI 3.0 契约 -> 补全边缘测试。',
+                weight: 112.0,
+                versions: [
+                    { v: 'V2.0 主干 (Emergence)', author: 'Auto-Merge', desc: '合并了前端组件库生成的最佳实践。', weight: 112, isMain: true }
+                ]
+            }
+        ];
+
+        let currentWeight = 85.0;
+        let isRunning = false;
+
+        // ================= UI 渲染逻辑 =================
+        function renderNodeList() {
+            const list = document.getElementById('node-list');
+            list.innerHTML = nodes.map(n => `
+                <div onclick="selectNode(${n.id})" class="p-4 glass rounded-xl cursor-pointer hover:border-emerald-500/50 transition-all group">
+                    <span class="text-[10px] uppercase text-emerald-400 font-mono">${n.type}</span>
+                    <h3 class="font-medium mt-1 mb-2 group-hover:text-emerald-400 transition-colors">${n.title}</h3>
+                    <div class="flex justify-between items-center text-xs text-zinc-500">
+                        <span>Weight: <span class="text-zinc-300 font-bold">${n.weight.toFixed(1)}</span></span>
+                        <span class="opacity-0 group-hover:opacity-100 text-emerald-500 transition-opacity">Enter →</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectNode(id) {
+            const node = nodes.find(n => n.id === id);
+            if(!node) return;
+            
+            currentWeight = node.weight;
+            renderHeader(node);
+            renderTree(node.versions);
+            document.getElementById('chat-output').innerHTML = `<div class="text-zinc-500 italic text-center mt-10">在下方输入您的业务参数，测试当前 SOP...</div>`;
+        }
+
+        function renderHeader(node) {
+            document.getElementById('node-header').innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-xs uppercase text-emerald-400 font-mono tracking-wider">${node.type}</span>
+                        <h1 class="text-2xl font-bold mt-1 tracking-tight">${node.title}</h1>
+                        <p class="text-zinc-400 mt-2 max-w-2xl">${node.desc}</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <div class="text-[10px] text-zinc-500 uppercase tracking-wider">System Weight</div>
+                            <div id="weight-display" class="text-2xl font-mono font-bold text-emerald-400">${node.weight.toFixed(1)}</div>
+                        </div>
+                        <div class="h-10 w-px bg-zinc-800"></div>
+                        <div class="flex gap-2">
+                            <button onclick="handleFork()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                                Fork (突变)
+                            </button>
+                            <button onclick="handleValidate()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Validate (验证)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTree(versions) {
+            const tree = document.getElementById('evolution-tree');
+            tree.innerHTML = versions.map((v, i) => `
+                <div class="relative animate-fade-in-up" style="animation: fadeInUp 0.5s ease-out ${i * 0.1}s both;">
+                    <div class="absolute -left-8 top-2 w-8 h-8 rounded-full bg-zinc-900 border-2 ${v.isEmerging ? 'border-amber-500' : 'border-zinc-700'} flex items-center justify-center z-10">
+                        ${v.isEmerging ? '✨' : (v.isMain ? '🟢' : '🔵')}
+                    </div>
+                    <div class="p-4 glass rounded-lg ${v.isEmerging ? 'emerging' : ''} hover:border-zinc-600 transition-all">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-mono text-sm font-medium ${v.isEmerging ? 'text-amber-400' : 'text-zinc-200'}">${v.v}</span>
+                            <span class="text-xs text-zinc-500">${v.author}</span>
+                        </div>
+                        <p class="text-sm text-zinc-400">${v.desc}</p>
+                        <div class="mt-3 pt-3 border-t border-zinc-800 flex justify-between items-center text-xs">
+                            <span class="text-zinc-500">Weight:</span>
+                            <span class="font-mono font-bold ${v.weight > 100 ? 'text-emerald-400' : 'text-zinc-300'}">${v.weight.toFixed(1)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // 注入动画关键帧
+            if(!document.getElementById('anim-style')) {
+                const style = document.createElement('style');
+                style.id = 'anim-style';
+                style.innerHTML = `@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`;
+                document.head.appendChild(style);
+            }
+        }
+
+        // ================= 核心交互逻辑 (CAS 机制) =================
+        function showToast(icon, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-icon').innerText = icon;
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        function handleFork() {
+            const node = nodes[0]; // 假设操作第一个节点
+            const newVersion = {
+                v: `V1.${node.versions.length} 您的分支`,
+                author: '@You',
+                desc: 'Fork：注入了您独特的行业约束条件与防幻觉指令。',
+                weight: 10.0,
+                isMain: false
+            };
+            node.versions.push(newVersion);
+            renderTree(node.versions);
+            showToast('🧬', '基因突变成功！您的分支已加入演化树。');
+        }
+
+        function handleValidate() {
+            if(isRunning) return;
+            
+            // 模拟权重非线性上涨
+            const weightEl = document.getElementById('weight-display');
+            const startWeight = currentWeight;
+            const targetWeight = currentWeight + 25.5; // 增加权重
+            const duration = 1000;
+            const startTime = performance.now();
+
+            function animate(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // 缓动函数
+                const easeOut = 1 - Math.pow(1 - progress, 3); 
+                currentWeight = startWeight + (targetWeight - startWeight) * easeOut;
+                weightEl.innerText = currentWeight.toFixed(1);
+                
+                if(progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    // 检查是否触发涌现 (Emergence)
+                    if(currentWeight > 100) {
+                        triggerEmergence();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+            showToast('✅', '自然选择完成！您的反馈正在重塑知识权重。');
+        }
+
+        function triggerEmergence() {
+            showToast('🚨', 'Emergence Detected! 分支权重超越主干，正在自动合并...');
+            // 视觉反馈：让主干节点闪烁
+            const header = document.getElementById('node-header');
+            header.classList.add('glow-amber');
+            setTimeout(() => header.classList.remove('glow-amber'), 3000);
+            
+            // 更新演化树状态
+            const node = nodes[0];
+            node.versions.forEach(v => {
+                if(v.isEmerging) {
+                    v.v = "V2.0 新主干 (Merged)";
+                    v.isEmerging = false;
+                    v.isMain = true;
+                    v.weight = currentWeight;
+                }
+            });
+            renderTree(node.versions);
+        }
+
+        // ================= AI 沙盒流式输出模拟 =================
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(isRunning) return;
+            
+            const input = document.getElementById('chat-input');
+            const output = document.getElementById('chat-output');
+            const btn = document.getElementById('run-btn');
+            
+            const userMsg = input.value.trim();
+            if(!userMsg) return;
+
+            isRunning = true;
+            btn.disabled = true;
+            input.value = '';
+
+            // 渲染用户消息
+            output.innerHTML += `<div class="text-zinc-400 italic border-l-2 border-zinc-700 pl-3">${userMsg}</div>`;
+            
+            // 创建 AI 消息容器
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'text-zinc-100 typing-cursor';
+            output.appendChild(aiMsg);
+            output.scrollTop = output.scrollHeight;
+
+            // 模拟 AI 思考与流式输出 (基于 CAS 理论的三位一体回答)
+            const aiResponse = `### 🎯 破题：核心认知\n直接翻译文案是出海大忌，必须通过 **文化维度对齐** 重构语境。\n\n### 🧠 【知识层】：底层逻辑\n根据霍夫斯泰德理论，拉美市场属于"高不确定性规避"文化。您的文案必须强调**确定性、耐用性与售后保障**，而非激进的创新。\n\n### 🛠️ 【工具层】：武器库推荐\n建议组合使用：\n1. \`Kimi\` (读取竞品长篇评论)\n2. \`本地化 RAG Agent\` (匹配当地 Slang)\n\n### 🏆 【案例层】：社区实战 SOP\n以下是社区演化至 **V2.0** 的高权重 Prompt 骨架：\n\`\`\`prompt\n[Role] 你是拥有 10 年经验的拉美区资深本土化营销专家...\n[Constraint] 严禁使用冒险词汇，必须包含"100% 售后保障"锚点。\n\`\`\`\n*(提示：该 SOP 已被 42 位跨境卖家实战验证)*`;
+
+            let i = 0;
+            const speed = 15; // 打字速度 (ms)
+            
+            // 简易 Markdown 渲染 (替换换行和代码块)
+            const formattedResponse = aiResponse
+                .replace(/\n/g, '<br>')
+                .replace(/```prompt<br>(.*?)<br>```/g, '<pre class="bg-zinc-950 p-3 rounded border border-zinc-800 text-emerald-300 text-xs font-mono my-2 overflow-x-auto">$1</pre>')
+                .replace(/`([^`]+)`/g, '<code class="bg-zinc-800 px-1 py-0.5 rounded text-xs text-amber-400">$1</code>')
+                .replace(/### (.*?)/g, '<h4 class="font-bold text-emerald-400 mt-3 mb-1">$1</h4>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-zinc-50">$1</strong>');
+
+            function typeWriter() {
+                if (i < formattedResponse.length) {
+                    // 处理 HTML 标签，避免截断标签
+                    if (formattedResponse[i] === '<') {
+                        const closeTagIndex = formattedResponse.indexOf('>', i);
+                        if (closeTagIndex !== -1) {
+                            aiMsg.innerHTML += formattedResponse.substring(i, closeTagIndex + 1);
+                            i = closeTagIndex + 1;
+                        } else {
+                            aiMsg.innerHTML += formattedResponse[i];
+                            i++;
+                        }
+                    } else {
+                        aiMsg.innerHTML += formattedResponse[i];
+                        i++;
+                    }
+                    output.scrollTop = output.scrollHeight;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    aiMsg.classList.remove('typing-cursor');
+                    isRunning = false;
+                    btn.disabled = false;
+                }
+            }
+            
+            // 延迟 500ms 开始输出，模拟网络请求
+            setTimeout(typeWriter, 500);
+        });
+
+        // ================= 初始化 =================
+        renderNodeList();
+        selectNode(1); // 默认选中第一个节点
+
+    </script>
+</body>
+</html>
