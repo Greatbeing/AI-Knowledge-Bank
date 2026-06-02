@@ -78,50 +78,105 @@ graph LR
 - [x] **V0.1 Genesis** - 核心概念验证，单文件 Demo 上线
 - [x] **V0.5 Alpha** - 基础演化树可视化，权重算法实现
 - [x] **V0.8 User System** - 用户认证、徽章系统、通知机制、排行榜
-- [ ] **V1.0 Beta** - 社区 Fork/Validate 功能完整实现
+- [x] **V0.9 Workflow** - 知识工作流、验证系统、Fork/Merge、评论订阅
+- [ ] **V1.0 Beta** - 生产部署、性能优化、移动端适配
 - [ ] **V1.5** - AI Agent 自动提纯 UGC，生成 SOP
 - [ ] **V2.0** - 微公会自组织，DAO 治理机制
 
 ---
 
-## 🆕 最新更新：用户系统 (v0.8)
+## 🆕 最新更新：知识工作流系统 (v0.9)
 
-我们刚刚完成了完整的用户认证和管理系统！
+我们刚刚实现了完整的知识管理工作流系统，实现"提交 - 验证 - 合并 - 演化"的完整闭环！
 
 ### ✨ 新增功能
 
-- 🔐 **OAuth 认证**: 支持 GitHub 登录，一键接入
+#### 核心工作流
+- 📝 **知识节点**: 创建、编辑、版本控制、状态管理
+- ⚖️ **验证系统**: 提交审核、同行评审、批准/拒绝流程
+- 🍴 **Fork/Merge**: 分支管理、提案投票、去中心化决策
+- 💬 **评论讨论**: Threaded comments、投票、@提及
+- 🔔 **订阅通知**: 关注节点、实时更新、邮件/站内通知
+- 📜 **演化历史**: 完整审计追踪、CAS 指标快照
+
+#### 技术特性
+- 🗄️ **8 张核心表**: knowledge_nodes, validation_requests, node_forks, merge_proposals...
+- ⚡ **4 个自动化触发器**: 自动更新计数、记录演化历史
+- 👁️ **4 个优化视图**: hot_knowledge_nodes, pending_validations, active_contributors...
+- 🔐 **完整 RLS 策略**: 细粒度权限控制，保护数据安全
+- 🔍 **全文搜索**: GIN 索引优化，支持复杂查询
+
+### 📚 快速开始
+
+查看 [WORKFLOW_GUIDE.md](./WORKFLOW_GUIDE.md) 获取详细的使用指南。
+
+```typescript
+import workflow from '@/lib/workflow';
+
+// 创建知识节点
+const node = await workflow.createKnowledgeNode({
+  title: 'Introduction to CAS',
+  content: '...',
+  tags: ['cas', 'complexity'],
+  category: 'theory'
+}, user);
+
+// 提交验证
+await workflow.submitValidationRequest(node.data.id, {
+  validation_type: 'fact_check',
+  confidence_score: 0.8
+}, user);
+
+// 创建分叉
+await workflow.createFork(nodeId, 'Improving explanation', 'improvement', user);
+
+// 投票合并提案
+await workflow.voteOnMergeProposal(proposalId, 'for', user);
+```
+
+### 🎯 核心 API
+
+| 模块 | 功能 |
+|------|------|
+| Nodes | create, update, get, search, fullTextSearch |
+| Validations | submit, review, getPending, getStatus |
+| Forks & Merges | createFork, proposeMerge, vote, decide |
+| Comments | add, get, vote, reply |
+| Subscriptions | subscribe, unsubscribe, getSubscriptions |
+| Evolution | getHistory, getActivity |
+| CAS Metrics | calculate, update |
+
+### 📊 数据库架构
+
+```
+knowledge_nodes ──┬── validation_requests
+                  ├── node_forks ──┬── merge_proposals
+                  ├── node_comments
+                  ├── node_subscriptions
+                  └── evolution_history
+```
+
+### 📈 代码统计
+
+本次更新新增：
+- **SQL 迁移**: 644 行 (`003_knowledge_workflow.sql`)
+- **TypeScript**: 1,135 行 (`lib/workflow.ts`)
+- **文档**: 361 行 (`WORKFLOW_GUIDE.md`)
+- **总计**: 2,140 行高质量代码
+
+---
+
+## 🆕 上一版本：用户系统 (v0.8)
+
+用户认证和管理系统已完整实现：
+
+- 🔐 **OAuth 认证**: GitHub/Google/Discord 登录
 - 👤 **用户画像**: 声誉分数、专业领域、贡献统计
 - 🏆 **徽章系统**: 5 种初始徽章，自动授予成就
 - 🔔 **实时通知**: 验证成功、分支合并、徽章获得
 - 📊 **排行榜**: 声誉排名、验证者排名
-- 🛡️ **安全策略**: Row Level Security 保护数据安全
-- 📝 **活动日志**: 完整的审计追踪
 
-### 📚 快速开始
-
-查看 [USER_SYSTEM_SETUP.md](./USER_SYSTEM_SETUP.md) 获取详细的配置指南。
-
-```bash
-# 1. 在 Supabase 运行 SQL 迁移
-# supabase/migrations/002_user_system.sql
-
-# 2. 配置 OAuth 提供商
-# 详见 setup guide
-
-# 3. 更新前端配置
-# 修改 index.html 和 dashboard.html 中的 Supabase 凭证
-```
-
-### 🎯 核心特性
-
-| 功能 | 描述 |
-|------|------|
-| 自动 Profile 创建 | 用户注册即生成资料 |
-| 声誉传递算法 | 高声誉用户的验证权重更高 |
-| 徽章自动授予 | 基于触发器的成就检测 |
-| 部分片段索引 | 未读通知高效查询 |
-| 会话管理 | 多设备登录支持 |
+详见 [USER_SYSTEM_SETUP.md](./USER_SYSTEM_SETUP.md)
 
 ---
 
