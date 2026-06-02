@@ -293,12 +293,12 @@
                         </div>
                     </div>
 
-                    <button id="validate-btn" class="w-full btn-primary py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <button id="validate-btn" class="w-full btn-primary py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2" aria-label="Run validation to increase node weight">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Run Validation (+25.5 Weight)
                     </button>
                     
-                    <div id="status-msg" class="text-center text-xs text-gray-500 mt-3 h-4"></div>
+                    <div id="status-msg" class="text-center text-xs text-gray-500 mt-3 h-4" role="status" aria-live="polite"></div>
                 </div>
 
             </div>
@@ -358,7 +358,10 @@
 
         function initParticles() {
             particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 15000;
+            // Performance optimization: Reduce particle count on high-DPI screens
+            const pixelRatio = window.devicePixelRatio || 1;
+            const baseDensity = pixelRatio > 1.5 ? 25000 : 15000;
+            let numberOfParticles = (canvas.height * canvas.width) / baseDensity;
             for (let i = 0; i < numberOfParticles; i++) {
                 particlesArray.push(new Particle());
             }

@@ -156,7 +156,48 @@ FOR EACH ROW
 EXECUTE FUNCTION check_and_trigger_emergence();
 
 -- ============================================
--- 5. 辅助函数：Fork 节点
+-- 5. Row Level Security (RLS) Policies
+-- ============================================
+
+-- Enable RLS on all tables
+ALTER TABLE nodes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE interactions ENABLE ROW LEVEL SECURITY;
+
+-- Nodes: Anyone can read, authenticated users can insert/update their own
+CREATE POLICY "Anyone can view nodes" ON nodes
+    FOR SELECT USING (true);
+
+CREATE POLICY "Authenticated users can insert nodes" ON nodes
+    FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Users can update their own nodes" ON nodes
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1 FROM user_profiles up
+            WHERE up.user_id = auth.uid()
+        )
+    );
+
+-- User Profiles: Users can view all profiles but only update their own
+CREATE POLICY "Anyone can view user profiles" ON user_profiles
+    FOR SELECT USING (true);
+
+CREATE POLICY "Users can update their own profile" ON user_profiles
+    FOR UPDATE USING (user_id = auth.uid());
+
+CREATE POLICY "Users can insert their own profile" ON user_profiles
+    FOR INSERT WITH CHECK (user_id = auth.uid());
+
+-- Interactions: Anyone can view, authenticated users can create
+CREATE POLICY "Anyone can view interactions" ON interactions
+    FOR SELECT USING (true);
+
+CREATE POLICY "Authenticated users can create interactions" ON interactions
+    FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- ============================================
+-- 6. Auxiliary Function: Fork Node
 -- ============================================
 
 -- 创建一个新分支 (Fork)
@@ -189,7 +230,7 @@ END;
 $$;
 
 -- ============================================
--- 6. 视图：演化树查询
+-- 7. View: Evolution Tree Query
 -- ============================================
 
 -- 查看完整的演化树结构
@@ -219,7 +260,7 @@ SELECT * FROM tree
 ORDER BY path;
 
 -- ============================================
--- 7. 插入创世节点 (Genesis Nodes)
+-- 8. Insert Genesis Nodes
 -- ============================================
 
 -- 创世节点 1: 跨境出海多语言本地化营销
@@ -293,7 +334,7 @@ VALUES (
 );
 
 -- ============================================
--- 8. 注释说明
+-- 9. Comments and Documentation
 -- ============================================
 
 COMMENT ON TABLE nodes IS '知识基因节点表：存储 Prompt、Workflow、Case Study 等知识单元';
