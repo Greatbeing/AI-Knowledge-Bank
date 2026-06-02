@@ -125,7 +125,16 @@
                 </div>
                 <span class="self-center text-xl font-semibold whitespace-nowrap tracking-tight text-white">AI Knowledge Bank</span>
             </a>
-            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse items-center gap-3">
+                <!-- User Auth Section -->
+                <div id="auth-section" class="hidden md:flex items-center gap-3">
+                    <button id="login-btn" class="text-gray-300 hover:text-white transition-colors text-sm">
+                        Sign In
+                    </button>
+                    <a href="dashboard.html" class="text-white bg-primary/20 hover:bg-primary/30 border border-primary/30 focus:ring-4 focus:outline-none focus:ring-primary/50 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all backdrop-blur-md">
+                        Dashboard
+                    </a>
+                </div>
                 <button onclick="document.getElementById('demo-section').scrollIntoView({behavior: 'smooth'})" class="text-white bg-white/10 hover:bg-white/20 border border-white/10 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all backdrop-blur-md">
                     Try Demo
                 </button>
@@ -323,7 +332,20 @@
         </div>
     </footer>
 
-    <script>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        // ============================================
+        // Supabase Configuration
+        // ============================================
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Replace with your actual Supabase URL
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your actual Anon Key
+        
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ============================================
+        // Canvas Background Animation
+        // ============================================
         const canvas = document.getElementById('canvas-bg');
         const ctx = canvas.getContext('2d');
         let particlesArray;
@@ -403,6 +425,9 @@
         initParticles();
         animateParticles();
 
+        // ============================================
+        // Demo Section Animation
+        // ============================================
         let currentWeight = 85.0;
         let isAnimating = false;
         const weightDisplay = document.getElementById('weight-display');
@@ -467,6 +492,59 @@
                 validateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
+
+        // ============================================
+        // User Authentication UI
+        // ============================================
+        const authSection = document.getElementById('auth-section');
+        const loginBtn = document.getElementById('login-btn');
+
+        // Check auth state on load
+        async function checkAuthState() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    // User is logged in
+                    authSection.classList.remove('hidden');
+                    loginBtn.textContent = 'Dashboard';
+                    loginBtn.onclick = () => window.location.href = 'dashboard.html';
+                } else {
+                    // User is not logged in
+                    authSection.classList.remove('hidden');
+                    loginBtn.textContent = 'Sign In';
+                    loginBtn.onclick = handleLogin;
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                authSection.classList.remove('hidden');
+                loginBtn.textContent = 'Sign In';
+                loginBtn.onclick = handleLogin;
+            }
+        }
+
+        function handleLogin() {
+            // Show simple login modal or redirect to OAuth
+            const email = prompt('Enter your email:');
+            if (!email) return;
+            
+            // For demo purposes, redirect to OAuth
+            supabase.auth.signInWithOAuth({
+                provider: 'github',
+                options: {
+                    redirectTo: `${window.location.origin}/index.html`,
+                },
+            });
+        }
+
+        // Listen for auth state changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Auth event:', event);
+            checkAuthState();
+        });
+
+        // Initialize auth UI
+        checkAuthState();
     </script>
 </body>
 </html>
