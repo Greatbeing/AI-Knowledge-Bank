@@ -36,6 +36,12 @@ export type {
   UserQueryFilters
 } from './types';
 
+// API Layer
+export * from './api/supabase-client';
+
+// React Hooks
+export * from './hooks/useKnowledgeBank';
+
 // Nodes Module
 export {
   createKnowledgeNode,
@@ -133,6 +139,8 @@ import comments from './comments';
 import subscriptions from './subscriptions';
 import evolution from './evolution';
 import metrics from './metrics';
+import * as api from './api/supabase-client';
+import * as hooks from './hooks/useKnowledgeBank';
 
 export const modules = {
   nodes,
@@ -141,7 +149,9 @@ export const modules = {
   comments,
   subscriptions,
   evolution,
-  metrics
+  metrics,
+  api,
+  hooks
 };
 
 export default modules;
