@@ -3,7 +3,7 @@
  * 用户与认证相关类型定义
  */
 
-import type { Database } from '../types/supabase';
+import type { Database } from '../../types/supabase';
 
 // ============================================
 // User Profile Types

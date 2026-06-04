@@ -3,7 +3,7 @@
  * 知识节点相关类型定义
  */
 
-import type { Database } from '../types/supabase';
+import type { Database } from '../../types/supabase';
 
 // ============================================
 // Core Knowledge Node Types
