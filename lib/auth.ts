@@ -1,5 +1,8 @@
 // lib/auth.ts - Authentication utilities for Supabase
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type User } from '@supabase/supabase-js';
+import type { Database, Json } from '../types/supabase';
+
+export type { User };
 
 // 从环境变量获取配置 (在浏览器环境中通过 window.__ENV__注入)
 const getSupabaseConfig = () => {
@@ -16,7 +19,7 @@ const getSupabaseConfig = () => {
 };
 
 // 创建 Supabase 客户端单例
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
+let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null;
 
 export function getSupabaseClient() {
   if (!supabaseInstance) {
@@ -26,7 +29,7 @@ export function getSupabaseClient() {
       console.warn('⚠️ Supabase configuration is missing. Some features may not work.');
     }
     
-    supabaseInstance = createClient(
+    supabaseInstance = createClient<Database>(
       config.url || 'https://placeholder.supabase.co',
       config.anonKey || 'placeholder-key',
       {
@@ -46,6 +49,8 @@ export function getSupabaseClient() {
   
   return supabaseInstance;
 }
+
+export const supabase = getSupabaseClient();
 
 // ============================================
 // User Session Management
@@ -396,7 +401,7 @@ export async function logUserActivity(
       action,
       entity_type: entityType,
       entity_id: entityId,
-      metadata,
+      metadata: metadata as Json | undefined,
     });
   
   if (error) {
