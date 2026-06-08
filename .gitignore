@@ -19,3 +19,6 @@ dist/
 
 # Original rules preserved
 *.log
+
+# Vercel local project state
+.vercel/
