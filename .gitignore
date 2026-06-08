@@ -1,6 +1,8 @@
-```
 # Dependencies
 node_modules/
+
+# Build output
+dist/
 
 # Logs and temp files
 *.log
@@ -17,4 +19,3 @@ node_modules/
 
 # Original rules preserved
 *.log
-```
