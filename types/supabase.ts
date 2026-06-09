@@ -13,6 +13,9 @@ type TableDefinition<Row> = {
   Relationships: [];
 };
 
+export type VaultType = 'knowledge' | 'tool' | 'case';
+export type CommunitySignalType = 'validated' | 'used' | 'forked' | 'commented' | 'merged' | 'disputed';
+
 export type KnowledgeNodeRow = {
   id: string;
   title: string;
@@ -20,6 +23,12 @@ export type KnowledgeNodeRow = {
   summary: string | null;
   tags: string[] | null;
   category: string | null;
+  vault_type: VaultType | string | null;
+  source_refs: Json | null;
+  scenario_tags: string[] | null;
+  language: 'zh' | 'en' | 'bilingual' | string | null;
+  trust_score: number | null;
+  embedding: string | null;
   emergence_level: number | null;
   complexity_score: number | null;
   connectivity_score: number | null;
@@ -181,6 +190,19 @@ export type ActivityLogRow = {
   created_at: string | null;
 };
 
+export type CommunitySignalRow = {
+  id: string;
+  node_id: string;
+  user_id: string | null;
+  signal_type: CommunitySignalType | string;
+  impact_delta: number;
+  confidence: number;
+  evidence_url: string | null;
+  weight_snapshot: Json | null;
+  metadata: Json | null;
+  created_at: string | null;
+};
+
 export type BadgeRow = {
   id: string;
   name: string;
@@ -205,6 +227,7 @@ export type Database = {
       activity_log: TableDefinition<ActivityLogRow>;
       activity_logs: TableDefinition<ActivityLogRow>;
       badges: TableDefinition<BadgeRow>;
+      community_evolution_signals: TableDefinition<CommunitySignalRow>;
       evolution_history: TableDefinition<EvolutionHistoryRow>;
       interactions: TableDefinition<{
         id: string;
@@ -265,6 +288,13 @@ export type Database = {
         };
         Relationships: [];
       };
+      cross_vault_rag_index: {
+        Row: KnowledgeNodeRow & {
+          search_document: string | null;
+          signal_strength: number | null;
+        };
+        Relationships: [];
+      };
       hot_knowledge_nodes: {
         Row: KnowledgeNodeRow & {
           author_name: string | null;
@@ -310,6 +340,23 @@ export type Database = {
           result_limit: number;
         };
         Returns: KnowledgeNodeRow[];
+      };
+      match_cross_vault_nodes: {
+        Args: {
+          search_query: string;
+          locale_filter?: string;
+          result_limit?: number;
+        };
+        Returns: Array<{
+          id: string;
+          title: string;
+          summary: string | null;
+          vault_type: VaultType | string | null;
+          trust_score: number | null;
+          emergence_level: number | null;
+          rank_score: number | null;
+          source_refs: Json | null;
+        }>;
       };
     };
     Enums: Record<string, never>;

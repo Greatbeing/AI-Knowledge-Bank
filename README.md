@@ -1,207 +1,203 @@
 # AI Knowledge Bank
 
-**AI 驱动的人类技能进化网络 | A Complex Adaptive System for Human-AI Collaboration**
+<p align="center">
+  <img src="./assets/readme/hero.svg" alt="AI Knowledge Bank banner" width="100%" />
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Complex Adaptive System](https://img.shields.io/badge/CAS-Emergence-emerald)](https://en.wikipedia.org/wiki/Complex_adaptive_system)
-[![Status: Live Demo](https://img.shields.io/badge/Status-Live%20Demo-brightgreen)](https://greatbeing.github.io/AI-Knowledge-Bank/)
+<p align="center">
+  <a href="https://aiknowledgebank.pages.dev"><strong>Cloudflare Live</strong></a>
+  ·
+  <a href="https://ai-knowledge-bank.pages.dev">Backup Site</a>
+  ·
+  <a href="https://greatbeing.github.io/AI-Knowledge-Bank/">GitHub Pages</a>
+  ·
+  <a href="./WORKFLOW_GUIDE.md">Workflow Guide</a>
+  ·
+  <a href="./CONTRIBUTING.md">Contributing</a>
+</p>
 
-> **愿景**: 消除 AI 时代的技术鸿沟，构建去中心化的集体智慧大脑。我们不是在教育用户，而是在催化人类技能的自发涌现。
+<p align="center">
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-6.4-646CFF?logo=vite&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white" />
+  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-ready-3ECF8E?logo=supabase&logoColor=white" />
+  <img alt="Cloudflare Pages" src="https://img.shields.io/badge/Cloudflare%20Pages-live-F38020?logo=cloudflarepages&logoColor=white" />
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-111827" />
+</p>
+
+<p align="center">
+  <strong>AI-driven knowledge evolution network for human-AI collaboration</strong><br />
+  <span>面向 AI 时代的人类知识协作、验证与涌现网络</span>
+</p>
 
 ---
 
-## 🌌 项目概述
+## Project Vision / 项目愿景
 
-**AI Knowledge Bank** 不是一个传统的网课平台或工具导航站。基于**复杂适应系统 (Complex Adaptive Systems, CAS)**理论，我们将每一个渴望成长的个体视为智能节点，通过精心设计的交互规则，让微小的个人经验在碰撞中**涌现**出行业级的 AI 标准。
+**EN** · AI Knowledge Bank is a three-vault knowledge evolution system. It helps people turn scattered AI practices into reusable standards through personalized AI dispatch, branching, validation, discussion, voting, and emergence.
 
-### 核心差异化
+**中文** · AI Knowledge Bank 不是静态课程站，也不是普通 Prompt 仓库。它以知识库、工具库、案例库为骨架，把知识看作一个持续演化的网络：用户贡献实践经验，AI 跨库调度，社区在真实场景中验证，高价值分支再合并为新的公共标准。
 
-| 传统 AI 教育产品 | AI Knowledge Bank |
-|-----------------|-------------------|
-| 静态课程内容，更新慢 | 动态演化知识，实时同步社区最新实践 |
-| 中心化专家输出 | 去中心化群体智慧，Fork/Merge 机制 |
-| 单向灌输学习 | 非线性交互，验证即学习 |
-| 结业即结束 | 持续进化，声誉累积网络 |
+## Three Vaults + Two Engines / 三库两引擎
 
----
+| System part | English | 中文 |
+| --- | --- | --- |
+| Knowledge Vault | Principles, cognitive models, explainers, and decision frames | 原理、认知模型、解释器和判断框架 |
+| Tools Vault | Agents, prompts, workflows, automation routes, and sandbox recipes | Agent、Prompt、工作流、自动化路径和沙盒配方 |
+| Cases Vault | Before/After records, SOP reviews, validation evidence, and version trees | Before/After、SOP 复盘、验证证据和版本树 |
+| Cross-Vault RAG | Personalized retrieval across all vaults, returning cognition + route + evidence | 跨三库个性化调度，输出认知解释、工具路径和案例证据 |
+| Community Evolution | Real-world signals from validation, usage, forks, merges, decay, and disputes | 由验证、使用、分叉、合并、衰减和争议组成的社区演化机制 |
 
-## 🔥 核心机制：Fork → Validate → Emerge
+## Experience Design / 体验设计
 
-我们引入了类似 Git 的协作逻辑，但针对的是**人类技能与 Prompt**：
+| Design layer | English | 中文 |
+| --- | --- | --- |
+| Network atmosphere | Dynamic particle grid inspired by connected knowledge nodes | 以动态粒子网格表达知识节点之间的连接 |
+| Liquid glass | Translucent navigation, metric panels, cards, and actions | 导航、数据面板和操作按钮采用液态玻璃质感 |
+| Bilingual interface | Runtime Chinese and English language switching | 支持中英文运行时切换 |
+| Dispatch console | Cross-vault scenario demo with routed knowledge, tool, and case results | 跨三库场景调度演示，返回知识、工具和案例结果 |
+| Knowledge workflow | Fork, validate, discuss, vote, merge, and track evolution | 分叉、验证、讨论、投票、合并、追踪演化 |
+| Deployment surface | Cloudflare Pages, GitHub Pages, and Vercel-compatible build | 支持 Cloudflare Pages、GitHub Pages 和 Vercel 构建 |
+
+## Core Loop / 核心闭环
 
 ```mermaid
-graph LR
-    A[🌱 Fork<br/>突变] --> B[⚖️ Validate<br/>自然选择]
-    B --> C{权重 > 阈值？}
-    C -->|是 | D[✨ Emerge<br/>自动合并为新主干]
-    C -->|否 | E[继续演化]
-    D --> A
-    style A fill:#10b981,stroke:#059669,color:white
-    style B fill:#3b82f6,stroke:#2563eb,color:white
-    style D fill:#f59e0b,stroke:#d97706,color:white
+flowchart LR
+  A["Fork<br/>创建知识分支"] --> B["Validate<br/>真实场景验证"]
+  B --> C{"Signal strong enough?<br/>信号足够强？"}
+  C -->|Yes / 是| D["Emerge<br/>合并为公共标准"]
+  C -->|No / 否| E["Iterate<br/>继续优化"]
+  E --> B
+  D --> A
 ```
 
-1.  **🌱 Fork (突变)**：用户根据特定场景（医疗/法律/电商）注入约束条件，创建知识分支。
-2.  **⚖️ Validate (自然选择)**：社区在真实场景测试，成功案例获得"权重"加分。
-3.  **✨ Emerge (涌现)**：当分支权重超越主干，系统自动合并为新标准 SOP。
+The system borrows collaboration ideas from Git, but applies them to human skills, AI workflows, and reusable knowledge assets.
 
----
+这个系统借鉴 Git 的协作思想，但对象不是代码，而是人类技能、AI 工作流和可复用知识资产。
 
-## 🚀 实时演示
+## Feature Matrix / 功能矩阵
 
-无需安装，立即体验 CAS 核心逻辑：
+| Module | English | 中文 |
+| --- | --- | --- |
+| Three vault model | `vault_type` separates knowledge, tools, and cases | 用 `vault_type` 区分知识库、工具库和案例库 |
+| Cross-Vault RAG contract | Query once and receive knowledge, tool, and case result groups | 一次查询返回知识、工具和案例三组结果 |
+| Community signals | Validation, usage, forks, merges, and disputes can feed evolution scoring | 验证、使用、分叉、合并、争议可进入演化评分 |
+| Knowledge nodes | Create, update, search, version, and categorize knowledge | 创建、更新、搜索、版本化和分类知识节点 |
+| Validation | Submit fact checks, peer reviews, and scenario validation | 提交事实核验、同行评审和场景验证 |
+| Fork and merge | Create branches, propose merges, vote, and decide | 创建分支、发起合并提案、投票和决策 |
+| Discussion | Threaded comments, replies, and community feedback | 多级评论、回复和社区反馈 |
+| Subscription | Follow nodes and receive update notifications | 关注节点并接收更新通知 |
+| Evolution history | Track how knowledge changes over time | 追踪知识随时间变化的完整历史 |
+| CAS metrics | Calculate activity, reputation, and emergence indicators | 计算活跃度、声誉和涌现指标 |
 
-### 👉 [访问交互式 Demo](https://greatbeing.github.io/AI-Knowledge-Bank/)
+## Live Preview / 在线预览
 
-*(建议在电脑端打开，体验"演化树"与"涌现"的完整过程)*
+| Platform | URL |
+| --- | --- |
+| Primary Cloudflare Pages | <https://aiknowledgebank.pages.dev> |
+| Cloudflare Pages backup | <https://ai-knowledge-bank.pages.dev> |
+| GitHub Pages | <https://greatbeing.github.io/AI-Knowledge-Bank/> |
 
-**演示亮点：**
-- 🎨 深色粒子网络背景，模拟自组织连接
-- ⚡ 实时权重计算动画，见证非线性增长
-- 🧬 触发 Emergence 事件，观察自动合并
+## Tech Stack / 技术栈
 
----
+| Layer | Technology |
+| --- | --- |
+| Frontend | Vite 6, TypeScript, HTML5, Canvas |
+| UI system | Tailwind CSS, liquid glass visual language |
+| Data layer | Supabase, PostgreSQL, Row Level Security |
+| Workflow logic | TypeScript service, SQL triggers, optimized views |
+| Deployment | Cloudflare Pages, GitHub Pages, Vercel |
+| Quality | ESLint 9 flat config, TypeScript build checks |
 
-## 🛠️ 技术栈
+## Quick Start / 快速开始
 
-| 层级 | 技术选型 | 说明 |
-|------|---------|------|
-| **前端** | HTML5 + Tailwind CSS + Canvas | 零依赖单文件架构，极致性能 |
-| **后端** | PostgreSQL + Supabase | 支持实时订阅与 Row Level Security |
-| **算法** | PL/pgSQL + PageRank 变体 | 非线性权重计算与声誉传递 |
-| **部署** | GitHub Pages + Actions | CI/CD 自动化流水线 |
-
----
-
-## 🗺️ 发展路线图
-
-- [x] **V0.1 Genesis** - 核心概念验证，单文件 Demo 上线
-- [x] **V0.5 Alpha** - 基础演化树可视化，权重算法实现
-- [x] **V0.8 User System** - 用户认证、徽章系统、通知机制、排行榜
-- [x] **V0.9 Workflow** - 知识工作流、验证系统、Fork/Merge、评论订阅
-- [ ] **V1.0 Beta** - 生产部署、性能优化、移动端适配
-- [ ] **V1.5** - AI Agent 自动提纯 UGC，生成 SOP
-- [ ] **V2.0** - 微公会自组织，DAO 治理机制
-
----
-
-## 🆕 最新更新：知识工作流系统 (v0.9)
-
-我们刚刚实现了完整的知识管理工作流系统，实现"提交 - 验证 - 合并 - 演化"的完整闭环！
-
-### ✨ 新增功能
-
-#### 核心工作流
-- 📝 **知识节点**: 创建、编辑、版本控制、状态管理
-- ⚖️ **验证系统**: 提交审核、同行评审、批准/拒绝流程
-- 🍴 **Fork/Merge**: 分支管理、提案投票、去中心化决策
-- 💬 **评论讨论**: Threaded comments、投票、@提及
-- 🔔 **订阅通知**: 关注节点、实时更新、邮件/站内通知
-- 📜 **演化历史**: 完整审计追踪、CAS 指标快照
-
-#### 技术特性
-- 🗄️ **8 张核心表**: knowledge_nodes, validation_requests, node_forks, merge_proposals...
-- ⚡ **4 个自动化触发器**: 自动更新计数、记录演化历史
-- 👁️ **4 个优化视图**: hot_knowledge_nodes, pending_validations, active_contributors...
-- 🔐 **完整 RLS 策略**: 细粒度权限控制，保护数据安全
-- 🔍 **全文搜索**: GIN 索引优化，支持复杂查询
-
-### 📚 快速开始
-
-查看 [WORKFLOW_GUIDE.md](./WORKFLOW_GUIDE.md) 获取详细的使用指南。
-
-```typescript
-import workflow from '@/lib/workflow';
-
-// 创建知识节点
-const node = await workflow.createKnowledgeNode({
-  title: 'Introduction to CAS',
-  content: '...',
-  tags: ['cas', 'complexity'],
-  category: 'theory'
-}, user);
-
-// 提交验证
-await workflow.submitValidationRequest(node.data.id, {
-  validation_type: 'fact_check',
-  confidence_score: 0.8
-}, user);
-
-// 创建分叉
-await workflow.createFork(nodeId, 'Improving explanation', 'improvement', user);
-
-// 投票合并提案
-await workflow.voteOnMergeProposal(proposalId, 'for', user);
+```bash
+npm install
+npm run dev
 ```
 
-### 🎯 核心 API
+Build and verify / 构建与验证：
 
-| 模块 | 功能 |
-|------|------|
-| Nodes | create, update, get, search, fullTextSearch |
-| Validations | submit, review, getPending, getStatus |
-| Forks & Merges | createFork, proposeMerge, vote, decide |
-| Comments | add, get, vote, reply |
-| Subscriptions | subscribe, unsubscribe, getSubscriptions |
-| Evolution | getHistory, getActivity |
-| CAS Metrics | calculate, update |
-
-### 📊 数据库架构
-
-```
-knowledge_nodes ──┬── validation_requests
-                  ├── node_forks ──┬── merge_proposals
-                  ├── node_comments
-                  ├── node_subscriptions
-                  └── evolution_history
+```bash
+npm run lint
+npm run build
+npm run preview
 ```
 
-### 📈 代码统计
+## Supabase Setup / Supabase 配置
 
-本次更新新增：
-- **SQL 迁移**: 644 行 (`003_knowledge_workflow.sql`)
-- **TypeScript**: 1,135 行 (`lib/workflow.ts`)
-- **文档**: 361 行 (`WORKFLOW_GUIDE.md`)
-- **总计**: 2,140 行高质量代码
+The project can run as a static demo without Supabase credentials. To enable the full workflow backend, create a Supabase project and run the migrations in order:
 
----
+本项目可以在没有 Supabase 配置的情况下作为静态演示运行。如果要启用完整知识工作流后端，请创建 Supabase 项目并按顺序执行迁移：
 
-## 🆕 上一版本：用户系统 (v0.8)
+```text
+supabase/migrations/001_cas_emergence_algorithm.sql
+supabase/migrations/002_user_system.sql
+supabase/migrations/003_knowledge_workflow.sql
+supabase/migrations/004_three_vault_cross_rag.sql
+```
 
-用户认证和管理系统已完整实现：
+Then configure / 然后配置：
 
-- 🔐 **OAuth 认证**: GitHub/Google/Discord 登录
-- 👤 **用户画像**: 声誉分数、专业领域、贡献统计
-- 🏆 **徽章系统**: 5 种初始徽章，自动授予成就
-- 🔔 **实时通知**: 验证成功、分支合并、徽章获得
-- 📊 **排行榜**: 声誉排名、验证者排名
+```env
+VITE_SUPABASE_URL=your-project-url
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
 
-详见 [USER_SYSTEM_SETUP.md](./USER_SYSTEM_SETUP.md)
+Related docs / 相关文档：
 
----
+| Guide | Purpose |
+| --- | --- |
+| [USER_SYSTEM_SETUP.md](./USER_SYSTEM_SETUP.md) | User auth, profile, badges, notifications |
+| [WORKFLOW_GUIDE.md](./WORKFLOW_GUIDE.md) | Knowledge workflow API and usage |
+| [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) | Deployment options and environment setup |
 
-## 🤝 参与贡献
+## Project Structure / 项目结构
 
-我们欢迎所有认同"复杂适应系统"理念的开发者、设计师和内容创作者：
+```text
+.
+├── index.html                 # Main experience and particle network UI
+├── assets/readme/             # Repository homepage visual assets
+├── components/                # React components and visual modules
+├── lib/                       # Auth, workflow, and shared utilities
+├── supabase/migrations/       # Database schema, policies, triggers, views
+├── types/                     # TypeScript definitions
+├── .github/workflows/         # GitHub Pages deployment workflow
+└── dist/                      # Production build output
+```
 
-1.  **Fork** 本仓库
-2.  创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
-3.  提交你的改动 (`git commit -m 'Add some AmazingFeature'`)
-4.  推送到分支 (`git push origin feature/AmazingFeature`)
-5.  开启一个 **Pull Request**
+## Roadmap / 路线图
 
-详见 [CONTRIBUTING.md](./CONTRIBUTING.md)
+| Stage | Status | Focus |
+| --- | --- | --- |
+| V0.1 Genesis | Done | Concept validation and first interactive demo |
+| V0.5 Alpha | Done | Evolution tree and scoring model |
+| V0.8 User System | Done | Authentication, profiles, badges, notifications |
+| V0.9 Workflow | Done | Knowledge nodes, validation, fork, merge, comments |
+| V1.0 Beta | In progress | Three-vault UX, Cross-Vault RAG contract, community evolution signals |
+| V1.5 Agent Layer | Planned | AI-assisted knowledge extraction and SOP generation |
+| V2.0 Governance | Planned | Community governance and decentralized contribution rules |
 
----
+## Contributing / 参与贡献
 
-## 📄 开源协议
+Contributions are welcome from developers, designers, AI practitioners, educators, and researchers interested in better human-AI collaboration systems.
 
-本项目采用 MIT 协议 - 详见 [LICENSE](./LICENSE) 文件
+欢迎开发者、设计师、AI 实践者、教育者和研究者参与，共同探索更好的 Human-AI 协作系统。
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Commit focused changes.
+4. Open a pull request with a clear explanation.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution details.
+
+## License / 开源协议
+
+This project is released under the [MIT License](./LICENSE).
 
 ---
 
 <p align="center">
-  <strong>🧬 AI Knowledge Bank</strong><br>
-  <em>Building the Collective Brain for the AI Era.</em><br>
-  <sub>Last Updated: 2024-10-24 | Force Push Verified ✅</sub>
+  <strong>AI Knowledge Bank</strong><br />
+  <span>Build, validate, and evolve knowledge for the AI era.</span><br />
+  <span>为 AI 时代构建、验证并演化知识。</span>
 </p>

@@ -1,0 +1,39 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">AI Knowledge Bank brand mark</title>
+  <desc id="desc">A compact AI Knowledge Bank brand mark with an AI monogram, warm heart accent, and stable seal form.</desc>
+  <defs>
+    <linearGradient id="seal" x1="16" y1="12" x2="116" y2="118" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#11A994"/>
+      <stop offset="0.46" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#D96A43"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="28" y1="18" x2="99" y2="115" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.42"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.22"/>
+    </linearGradient>
+    <linearGradient id="heart" x1="52" y1="59" x2="77" y2="86" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF5A6F"/>
+      <stop offset="0.55" stop-color="#E5484D"/>
+      <stop offset="1" stop-color="#C8373F"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="128" height="128" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="12" y="12" width="104" height="104" rx="28" fill="url(#seal)"/>
+    <rect x="18" y="18" width="92" height="92" rx="22" fill="url(#shine)" stroke="white" stroke-opacity="0.34"/>
+  </g>
+
+  <path d="M34 88L55.2 39.5C58.6 31.8 69.4 31.8 72.8 39.5L94 88" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M47.5 68H80.5" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <path d="M91 41V88" stroke="white" stroke-width="10" stroke-linecap="round"/>
+
+  <path d="M64 85.5C62.9 84.4 56.2 78.6 53.1 75.6C48.8 71.5 48.2 65.1 52.1 61.4C55.6 58.1 60.4 59.1 64 63.1C67.6 59.1 72.4 58.1 75.9 61.4C79.8 65.1 79.2 71.5 74.9 75.6C71.8 78.6 65.1 84.4 64 85.5Z" fill="url(#heart)" stroke="#FFE8E2" stroke-opacity="0.82" stroke-width="1.5"/>
+
+  <circle cx="34" cy="88" r="5" fill="#D1FAE5" stroke="white" stroke-width="2"/>
+  <circle cx="94" cy="88" r="5" fill="#FFE4D6" stroke="white" stroke-width="2"/>
+  <circle cx="91" cy="41" r="5" fill="#DBEAFE" stroke="white" stroke-width="2"/>
+  <path d="M34 88C46 99 81 99 94 88" stroke="white" stroke-opacity="0.42" stroke-width="2" stroke-linecap="round"/>
+</svg>
