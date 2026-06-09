@@ -35,9 +35,9 @@ export interface CASMetrics {
 }
 
 export interface NodeWithAuthor extends KnowledgeNode {
-  author_name?: string;
-  author_avatar?: string;
-  hotness_score?: number;
+  author_name?: string | null;
+  author_avatar?: string | null;
+  hotness_score?: number | null;
 }
 
 export interface ValidationResult {

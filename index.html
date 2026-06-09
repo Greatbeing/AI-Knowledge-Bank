@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="zh-CN" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,8 +141,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            opacity: 0.5;
+            z-index: 1;
+            opacity: 0.46;
+            pointer-events: none;
         }
 
         /* Enhanced Buttons */
@@ -285,13 +286,131 @@
             opacity: 1;
             transform: translateX(-50%) translateY(-4px);
         }
+
+        .knowledge-nav {
+            background:
+                linear-gradient(135deg, rgba(43, 45, 54, 0.82), rgba(43, 45, 54, 0.68));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 12px 36px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(24px) saturate(190%);
+            -webkit-backdrop-filter: blur(24px) saturate(190%);
+        }
+
+        .knowledge-hero {
+            color: #111827;
+            background:
+                radial-gradient(circle at 12% 18%, rgba(59, 130, 246, 0.12), transparent 28%),
+                radial-gradient(circle at 86% 24%, rgba(16, 185, 129, 0.10), transparent 26%),
+                linear-gradient(135deg, rgba(245, 249, 255, 0.96) 0%, rgba(255, 255, 255, 0.92) 48%, rgba(255, 248, 246, 0.92) 100%);
+        }
+
+        .knowledge-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 16%, rgba(255,255,255,0.72), transparent 30%),
+                linear-gradient(180deg, rgba(255,255,255,0.38), transparent 24%);
+        }
+
+        .liquid-badge {
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.74), rgba(236, 253, 245, 0.42));
+            border: 1px solid rgba(20, 184, 166, 0.24);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.84),
+                0 14px 36px rgba(15, 118, 110, 0.10);
+            backdrop-filter: blur(22px) saturate(190%);
+            -webkit-backdrop-filter: blur(22px) saturate(190%);
+        }
+
+        .evolution-feature-card {
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.44));
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            box-shadow:
+                0 20px 54px rgba(15, 23, 42, 0.10),
+                inset 0 1px 0 rgba(255, 255, 255, 0.92),
+                inset 0 -1px 0 rgba(148, 163, 184, 0.14);
+            backdrop-filter: blur(26px) saturate(190%);
+            -webkit-backdrop-filter: blur(26px) saturate(190%);
+        }
+
+        .evolution-feature-card::after {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: inherit;
+            pointer-events: none;
+            background: linear-gradient(145deg, rgba(255,255,255,0.54), transparent 38%);
+        }
+
+        .evolution-feature-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .evolution-primary-btn {
+            background: linear-gradient(135deg, #3aa3ff 0%, #2185df 100%);
+            box-shadow: 0 16px 32px rgba(37, 139, 224, 0.24), inset 0 1px 0 rgba(255,255,255,0.36);
+        }
+
+        .liquid-control {
+            background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 24px rgba(15,23,42,0.10);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+        }
+
+        .liquid-metrics {
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.38), rgba(255,255,255,0.12));
+            border: 1px solid rgba(255,255,255,0.54);
+            box-shadow:
+                0 18px 48px rgba(15, 23, 42, 0.06),
+                inset 0 1px 0 rgba(255,255,255,0.72);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+        }
+
+        .liquid-metrics::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(110deg, transparent 0 22%, rgba(255,255,255,0.44) 36%, transparent 52%);
+            opacity: 0.64;
+        }
+
+        .liquid-metrics > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 640px) {
+            .knowledge-hero {
+                justify-content: flex-start !important;
+                padding-top: 8.5rem !important;
+            }
+
+            .knowledge-hero::before {
+                opacity: 0.18;
+            }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white">
 
     <canvas id="canvas-bg"></canvas>
 
-    <nav class="fixed w-full z-50 top-0 start-0 border-b border-white/5 glass">
+    <nav class="fixed w-full z-50 top-0 start-0 knowledge-nav">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between px-6 py-4">
             <a href="#" class="flex items-center gap-3 group">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
@@ -305,81 +424,97 @@
                     <button id="login-btn" class="text-gray-300 hover:text-white transition-colors text-sm">
                         Sign In
                     </button>
-                    <a href="dashboard.html" class="text-white bg-primary/20 hover:bg-primary/30 border border-primary/30 focus:ring-4 focus:outline-none focus:ring-primary/50 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all backdrop-blur-md">
+                    <a href="dashboard.html" class="liquid-control text-white bg-primary/20 hover:bg-primary/30 border border-primary/30 focus:ring-4 focus:outline-none focus:ring-primary/50 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all">
                         Dashboard
                     </a>
                 </div>
-                <button onclick="document.getElementById('demo-section').scrollIntoView({behavior: 'smooth'})" class="text-white bg-white/10 hover:bg-white/20 border border-white/10 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all backdrop-blur-md">
+                <button onclick="document.getElementById('demo-section').scrollIntoView({behavior: 'smooth'})" class="liquid-control text-white hover:bg-white/20 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all">
                     Try Demo
+                </button>
+                <button id="language-toggle" class="liquid-control text-white hover:bg-white/20 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center transition-all" aria-label="Switch language">
+                    EN
                 </button>
             </div>
             <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
                 <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                     <li><a href="#vision" class="block py-2 px-3 text-gray-400 hover:text-primary transition-colors">Vision</a></li>
                     <li><a href="#mechanism" class="block py-2 px-3 text-gray-400 hover:text-primary transition-colors">Mechanism</a></li>
-                    <li><a href="#cases" class="block py-2 px-3 text-gray-400 hover:text-primary transition-colors">Cases</a></li>
+                    <li><a href="#demo-section" class="block py-2 px-3 text-gray-400 hover:text-primary transition-colors">Demo</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <section id="vision" class="knowledge-hero relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
         <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16 text-center relative z-10">
-            <div class="inline-flex items-center justify-center px-4 py-1.5 mb-8 text-xs font-medium text-primary bg-primary/10 rounded-full border border-primary/20 animate-float">
+            <div class="liquid-badge inline-flex items-center justify-center px-4 py-1.5 mb-8 text-xs font-medium text-primary rounded-full animate-float">
                 <span class="w-2 h-2 mr-2 bg-primary rounded-full animate-pulse"></span>
                 Complex Adaptive System v1.0 Live
             </div>
-            
-            <h1 class="mb-6 text-5xl font-extrabold tracking-tight leading-none text-white md:text-7xl lg:text-8xl">
-                Human Skill <br />
-                <span class="text-gradient">Evolution Network</span>
+
+            <h1 class="mb-8 text-5xl font-extrabold tracking-tight leading-none text-slate-950 md:text-8xl lg:text-9xl">
+                AI Knowledge Bank
+                <span class="mt-5 block text-3xl font-bold tracking-normal text-gradient md:text-5xl">人类技能进化网络</span>
             </h1>
             
-            <p class="mb-10 text-lg font-normal text-gray-400 lg:text-xl sm:px-16 lg:px-48 max-w-4xl mx-auto leading-relaxed">
-                Bridging the gap between AI potential and human capability. 
-                A decentralized ecosystem where knowledge forks, validates, and emerges through collective intelligence.
+            <p class="mb-10 text-lg font-normal text-slate-500 lg:text-2xl sm:px-16 lg:px-48 max-w-5xl mx-auto leading-relaxed">
+                不是静态知识库，而是自我进化的复杂适应系统。<br class="hidden md:block" />
+                通过 Fork 与 Validate，让最优秀的行业经验自发涌现。
             </p>
             
+            <div class="mb-12 grid max-w-4xl grid-cols-1 gap-5 mx-auto md:grid-cols-3">
+                <div class="evolution-feature-card rounded-2xl px-7 py-6 text-left">
+                    <div class="mb-2 text-sm font-semibold text-indigo-500">Fork</div>
+                    <div class="text-xl font-bold text-slate-950">基因突变</div>
+                    <div class="mt-2 text-sm text-slate-500">从已有节点生成适配场景的新分支</div>
+                </div>
+                <div class="evolution-feature-card rounded-2xl px-7 py-6 text-left">
+                    <div class="mb-2 text-sm font-semibold text-emerald-500">Validate</div>
+                    <div class="text-xl font-bold text-slate-950">自然选择</div>
+                    <div class="mt-2 text-sm text-slate-500">真实使用反馈让高价值经验增权</div>
+                </div>
+                <div class="evolution-feature-card rounded-2xl px-7 py-6 text-left">
+                    <div class="mb-2 text-sm font-semibold text-orange-500">Emerge</div>
+                    <div class="text-xl font-bold text-slate-950">涌现合并</div>
+                    <div class="mt-2 text-sm text-slate-500">权重超过阈值后成为新主干标准</div>
+                </div>
+            </div>
+
             <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-                <button onclick="document.getElementById('demo-section').scrollIntoView({behavior: 'smooth'})" class="btn-primary inline-flex justify-center items-center py-4 px-8 text-base font-medium text-white rounded-xl shadow-lg">
-                    Start Evolution
+                <button onclick="document.getElementById('demo-section').scrollIntoView({behavior: 'smooth'})" class="evolution-primary-btn inline-flex justify-center items-center py-4 px-9 text-base font-semibold text-white rounded-xl shadow-lg transition-all hover:-translate-y-0.5">
+                    进入演化广场
                     <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 </button>
-                <a href="https://github.com/Greatbeing/AI-Knowledge-Bank" target="_blank" class="inline-flex justify-center items-center py-4 px-8 text-base font-medium text-gray-300 rounded-xl border border-gray-700 hover:bg-gray-800 hover:text-white transition-all glass-card">
+                <a href="https://github.com/Greatbeing/AI-Knowledge-Bank" target="_blank" class="liquid-control inline-flex justify-center items-center py-4 px-9 text-base font-semibold text-cyan-700 rounded-xl hover:bg-white/70 transition-all hover:-translate-y-0.5">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    View Source
+                    打开沙盒
                 </a>
             </div>
 
-            <div class="mt-20 grid grid-cols-2 gap-8 md:grid-cols-4 border-t border-white/10 pt-10">
+            <div class="liquid-metrics mt-20 grid grid-cols-3 gap-8 rounded-2xl px-8 py-7 max-w-3xl mx-auto">
                 <div>
-                    <div class="text-3xl font-bold text-white">CAS</div>
-                    <div class="text-sm text-gray-500 mt-1">Core Architecture</div>
+                    <div class="text-3xl font-bold text-gradient">2,847</div>
+                    <div class="text-sm text-slate-500 mt-1">知识基因</div>
                 </div>
                 <div>
-                    <div class="text-3xl font-bold text-primary">Non-Linear</div>
-                    <div class="text-sm text-gray-500 mt-1">Growth Model</div>
+                    <div class="text-3xl font-bold text-gradient">15,234</div>
+                    <div class="text-sm text-slate-500 mt-1">Fork次数</div>
                 </div>
                 <div>
-                    <div class="text-3xl font-bold text-accent">Emergent</div>
-                    <div class="text-sm text-gray-500 mt-1">Knowledge Sync</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold text-blue-400">Decentralized</div>
-                    <div class="text-sm text-gray-500 mt-1">Community DAO</div>
+                    <div class="text-3xl font-bold text-gradient">42,891</div>
+                    <div class="text-sm text-slate-500 mt-1">验证次数</div>
                 </div>
             </div>
         </div>
         
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px] -z-10 animate-pulse-slow"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[128px] -z-10 animate-pulse-slow" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-sm text-slate-400">向下滚动探索</div>
     </section>
 
     <section id="mechanism" class="py-24 bg-deep relative">
         <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">The Evolution Engine</h2>
-                <p class="mt-4 text-lg text-gray-400">How knowledge evolves from individual insight to collective wisdom.</p>
+                <h2 data-i18n="mechanismTitle" class="text-3xl font-bold tracking-tight text-white sm:text-4xl">The Evolution Engine</h2>
+                <p data-i18n="mechanismCopy" class="mt-4 text-lg text-gray-400">How knowledge evolves from individual insight to collective wisdom.</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
@@ -390,8 +525,8 @@
                     <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6 text-primary">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">1. Fork (Mutation)</h3>
-                    <p class="text-gray-400 leading-relaxed">Users take existing knowledge nodes and adapt them to specific contexts.</p>
+                    <h3 data-i18n="mechanismForkTitle" class="text-xl font-bold text-white mb-3">1. Fork (Mutation)</h3>
+                    <p data-i18n="mechanismForkCopy" class="text-gray-400 leading-relaxed">Users take existing knowledge nodes and adapt them to specific contexts.</p>
                 </div>
 
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden group border-primary/30 shadow-[0_0_30px_-10px_rgba(16,185,129,0.2)]">
@@ -401,8 +536,8 @@
                     <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6 text-primary">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">2. Validate (Selection)</h3>
-                    <p class="text-gray-400 leading-relaxed">Community members test branches in real scenarios. Successful applications increase weight non-linearly.</p>
+                    <h3 data-i18n="mechanismValidateTitle" class="text-xl font-bold text-white mb-3">2. Validate (Selection)</h3>
+                    <p data-i18n="mechanismValidateCopy" class="text-gray-400 leading-relaxed">Community members test branches in real scenarios. Successful applications increase weight non-linearly.</p>
                 </div>
 
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
@@ -412,8 +547,8 @@
                     <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-6 text-accent">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">3. Emerge (Synthesis)</h3>
-                    <p class="text-gray-400 leading-relaxed">When a branch's weight surpasses the main trunk, the system auto-merges it.</p>
+                    <h3 data-i18n="mechanismEmergeTitle" class="text-xl font-bold text-white mb-3">3. Emerge (Synthesis)</h3>
+                    <p data-i18n="mechanismEmergeCopy" class="text-gray-400 leading-relaxed">When a branch's weight surpasses the main trunk, the system auto-merges it.</p>
                 </div>
             </div>
         </div>
@@ -426,10 +561,10 @@
                 
                 <div class="space-y-8">
                     <div>
-                        <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
+                        <h2 data-i18n="demoTitle" class="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
                             Experience the <span class="text-gradient-gold">Emergence</span>
                         </h2>
-                        <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        <p data-i18n="demoCopy" class="text-gray-400 text-lg mb-8 leading-relaxed">
                             Interact with our live CAS engine. Watch how community validation drives the evolution of knowledge weights. 
                             <br><br>
                             <strong class="text-white">Try it:</strong> Click "Run Validation" to simulate successful community adoption.
@@ -439,15 +574,15 @@
                     <div class="space-y-4">
                         <div class="flex items-center gap-4 text-sm text-gray-300 group">
                             <div class="w-3 h-3 rounded-full bg-green-500 glow-primary group-hover:scale-125 transition-transform"></div>
-                            <span class="group-hover:text-white transition-colors">Real-time Weight Calculation</span>
+                            <span data-i18n="demoPointWeight" class="group-hover:text-white transition-colors">Real-time Weight Calculation</span>
                         </div>
                         <div class="flex items-center gap-4 text-sm text-gray-300 group">
                             <div class="w-3 h-3 rounded-full bg-yellow-500 glow-accent group-hover:scale-125 transition-transform"></div>
-                            <span class="group-hover:text-white transition-colors">Auto-Merge Threshold Detection</span>
+                            <span data-i18n="demoPointMerge" class="group-hover:text-white transition-colors">Auto-Merge Threshold Detection</span>
                         </div>
                         <div class="flex items-center gap-4 text-sm text-gray-300 group">
                             <div class="w-3 h-3 rounded-full bg-blue-500 group-hover:scale-125 transition-transform" style="box-shadow: 0 0 20px rgba(59,130,246,0.4);"></div>
-                            <span class="group-hover:text-white transition-colors">Git-style Version History</span>
+                            <span data-i18n="demoPointHistory" class="group-hover:text-white transition-colors">Git-style Version History</span>
                         </div>
                     </div>
 
@@ -455,13 +590,13 @@
                     <div class="grid grid-cols-2 gap-4 pt-4">
                         <div class="glass-card rounded-xl p-4 hover:bg-white/5 transition-all cursor-default">
                             <div class="text-2xl mb-2">⚡</div>
-                            <div class="text-sm font-medium text-white">Non-Linear Growth</div>
-                            <div class="text-xs text-gray-500 mt-1">Exponential impact</div>
+                            <div data-i18n="demoCardGrowthTitle" class="text-sm font-medium text-white">Non-Linear Growth</div>
+                            <div data-i18n="demoCardGrowthCopy" class="text-xs text-gray-500 mt-1">Exponential impact</div>
                         </div>
                         <div class="glass-card rounded-xl p-4 hover:bg-white/5 transition-all cursor-default">
                             <div class="text-2xl mb-2">🎯</div>
-                            <div class="text-sm font-medium text-white">Community Driven</div>
-                            <div class="text-xs text-gray-500 mt-1">Collective wisdom</div>
+                            <div data-i18n="demoCardCommunityTitle" class="text-sm font-medium text-white">Community Driven</div>
+                            <div data-i18n="demoCardCommunityCopy" class="text-xs text-gray-500 mt-1">Collective wisdom</div>
                         </div>
                     </div>
                 </div>
@@ -471,11 +606,11 @@
                     <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10"></div>
                     <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/5">
                         <div>
-                            <div class="text-xs text-primary font-mono uppercase">Active Node</div>
-                            <div class="text-white font-semibold">Cross-Border Marketing SOP</div>
+                            <div data-i18n="demoActiveNode" class="text-xs text-primary font-mono uppercase">Active Node</div>
+                            <div data-i18n="demoNodeName" class="text-white font-semibold">Cross-Border Marketing SOP</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-xs text-gray-500 font-mono uppercase">Current Weight</div>
+                            <div data-i18n="demoCurrentWeight" class="text-xs text-gray-500 font-mono uppercase">Current Weight</div>
                             <div id="weight-display" class="text-2xl font-mono font-bold text-primary transition-all">85.0</div>
                         </div>
                     </div>
@@ -483,20 +618,20 @@
                     <div class="space-y-4 mb-6 relative pl-4 border-l border-white/10" id="tree-container">
                         <div class="relative pl-6 py-2">
                             <div class="absolute -left-[21px] top-6 w-3 h-3 rounded-full bg-primary ring-4 ring-deep"></div>
-                            <div class="text-sm text-gray-300">V1.0 Main Trunk</div>
-                            <div class="text-xs text-gray-500">Base Translation Prompt</div>
+                            <div data-i18n="demoMainTrunk" class="text-sm text-gray-300">V1.0 Main Trunk</div>
+                            <div data-i18n="demoMainPrompt" class="text-xs text-gray-500">Base Translation Prompt</div>
                         </div>
                         
                         <div id="emerging-node" class="relative pl-6 py-2 opacity-50 transition-all duration-500">
                             <div class="absolute -left-[21px] top-6 w-3 h-3 rounded-full bg-gray-600 ring-4 ring-deep"></div>
-                            <div class="text-sm text-gray-400">V1.1 LatAm Branch</div>
-                            <div class="text-xs text-gray-500">Waiting for validation...</div>
+                            <div data-i18n="demoBranch" class="text-sm text-gray-400">V1.1 LatAm Branch</div>
+                            <div data-i18n="demoBranchStatus" class="text-xs text-gray-500">Waiting for validation...</div>
                         </div>
                     </div>
 
                     <button id="validate-btn" class="w-full btn-primary py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2" aria-label="Run validation to increase node weight">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Run Validation (+25.5 Weight)
+                        <span data-i18n="demoValidateButton">Run Validation (+25.5 Weight)</span>
                     </button>
                     
                     <div id="status-msg" class="text-center text-xs text-gray-500 mt-3 h-4" role="status" aria-live="polite"></div>
@@ -512,7 +647,7 @@
                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold">🧬</div>
                 <span class="text-xl font-semibold text-white">AI Knowledge Bank</span>
             </a>
-            <p class="text-gray-500 text-sm mb-6 max-w-md mx-auto">
+            <p data-i18n="footerCopy" class="text-gray-500 text-sm mb-6 max-w-md mx-auto">
                 Building the collective brain for the AI era. Open source, decentralized, and evolving.
             </p>
             <div class="flex justify-center space-x-6 mb-8">
@@ -525,7 +660,6 @@
     </footer>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
         // ============================================
         // Supabase Configuration
@@ -533,7 +667,14 @@
         const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Replace with your actual Supabase URL
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your actual Anon Key
         
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase = null;
+        const supabaseReady = import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm').then(({ createClient }) => {
+            supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            return supabase;
+        }).catch((error) => {
+            console.warn('Supabase is not configured yet. Authentication is disabled for this preview.', error);
+            return null;
+        });
 
         // ============================================
         // Canvas Background Animation
@@ -541,6 +682,7 @@
         const canvas = document.getElementById('canvas-bg');
         const ctx = canvas.getContext('2d');
         let particlesArray;
+        const pointer = { x: null, y: null };
 
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -551,14 +693,14 @@
                 this.y = Math.random() * canvas.height;
                 this.directionX = (Math.random() * 0.4) - 0.2;
                 this.directionY = (Math.random() * 0.4) - 0.2;
-                this.size = Math.random() * 2;
-                this.color = '#10b981';
+                this.size = Math.random() * 2.4 + 0.4;
+                this.color = '#0891b2';
             }
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
                 ctx.fillStyle = this.color;
-                ctx.globalAlpha = 0.2;
+                ctx.globalAlpha = 0.34;
                 ctx.fill();
             }
             update() {
@@ -574,7 +716,7 @@
             particlesArray = [];
             // Performance optimization: Reduce particle count on high-DPI screens
             const pixelRatio = window.devicePixelRatio || 1;
-            const baseDensity = pixelRatio > 1.5 ? 25000 : 15000;
+            const baseDensity = pixelRatio > 1.5 ? 28000 : 17000;
             let numberOfParticles = (canvas.height * canvas.width) / baseDensity;
             for (let i = 0; i < numberOfParticles; i++) {
                 particlesArray.push(new Particle());
@@ -582,17 +724,34 @@
         }
 
         function connectParticles() {
+            const maxDistance = Math.min(210, Math.max(130, canvas.width / 8));
+            const maxDistanceSq = maxDistance * maxDistance;
             for (let a = 0; a < particlesArray.length; a++) {
                 for (let b = a; b < particlesArray.length; b++) {
                     let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
                                    ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width/7) * (canvas.height/7)) {
-                        let opacityValue = 1 - (distance / 20000);
-                        ctx.strokeStyle = 'rgba(16, 185, 129,' + opacityValue * 0.15 + ')';
+                    if (distance < maxDistanceSq) {
+                        let opacityValue = 1 - (Math.sqrt(distance) / maxDistance);
+                        ctx.strokeStyle = 'rgba(37, 99, 235,' + opacityValue * 0.22 + ')';
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
                         ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+
+                if (pointer.x !== null && pointer.y !== null) {
+                    const dx = particlesArray[a].x - pointer.x;
+                    const dy = particlesArray[a].y - pointer.y;
+                    const pointerDistance = Math.sqrt(dx * dx + dy * dy);
+                    if (pointerDistance < 190) {
+                        const pointerOpacity = 1 - (pointerDistance / 190);
+                        ctx.strokeStyle = 'rgba(20, 184, 166,' + pointerOpacity * 0.28 + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(pointer.x, pointer.y);
                         ctx.stroke();
                     }
                 }
@@ -614,6 +773,16 @@
             initParticles();
         });
 
+        window.addEventListener('pointermove', (event) => {
+            pointer.x = event.clientX;
+            pointer.y = event.clientY;
+        });
+
+        window.addEventListener('pointerleave', () => {
+            pointer.x = null;
+            pointer.y = null;
+        });
+
         initParticles();
         animateParticles();
 
@@ -632,7 +801,7 @@
             isAnimating = true;
             validateBtn.disabled = true;
             validateBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            statusMsg.textContent = "Running validation simulations...";
+            statusMsg.textContent = translations[currentLanguage].statusRunning;
             statusMsg.className = "text-center text-xs text-primary mt-3 h-4 animate-pulse";
 
             const startWeight = currentWeight;
@@ -659,7 +828,7 @@
 
         function checkEmergence() {
             if (currentWeight > 100) {
-                statusMsg.textContent = "⚠️ Emergence Detected! Merging branch...";
+                statusMsg.textContent = translations[currentLanguage].statusEmergence;
                 statusMsg.className = "text-center text-xs text-accent mt-3 h-4 font-bold";
                 
                 setTimeout(() => {
@@ -667,8 +836,8 @@
                     emergingNode.classList.add('emerging');
                     emergingNode.querySelector('.w-3').classList.remove('bg-gray-600');
                     emergingNode.querySelector('.w-3').classList.add('bg-accent', 'ring-accent/50');
-                    emergingNode.querySelector('.text-sm').innerHTML = '<span class="text-accent font-bold">V2.0 New Main (Merged)</span>';
-                    emergingNode.querySelector('.text-xs').textContent = "Community validated standard";
+                    emergingNode.querySelector('.text-sm').innerHTML = `<span class="text-accent font-bold">${translations[currentLanguage].statusMergedTitle}</span>`;
+                    emergingNode.querySelector('.text-xs').textContent = translations[currentLanguage].statusMergedCopy;
                     
                     weightDisplay.classList.add('text-accent');
                     weightDisplay.classList.remove('text-primary');
@@ -678,12 +847,202 @@
                     validateBtn.classList.add('bg-green-900/50', 'border', 'border-green-500/30', 'text-green-400');
                 }, 800);
             } else {
-                statusMsg.textContent = "Validation complete. Weight increased.";
+                statusMsg.textContent = translations[currentLanguage].statusComplete;
                 isAnimating = false;
                 validateBtn.disabled = false;
                 validateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
+
+        // ============================================
+        // Language Toggle
+        // ============================================
+        const languageToggle = document.getElementById('language-toggle');
+        const translations = {
+            zh: {
+                navVision: '愿景',
+                navMechanism: '机制',
+                navCases: '演示',
+                navTryDemo: '试用演示',
+                signIn: '登录',
+                dashboard: '控制台',
+                badge: '复杂适应系统 v1.0 Live',
+                heroTitle: 'AI Knowledge Bank<br><span class="mt-5 block text-3xl font-bold tracking-normal text-gradient md:text-5xl">人类技能进化网络</span>',
+                heroCopy: '不是静态知识库，而是自我进化的复杂适应系统。<br class="hidden md:block">通过 Fork 与 Validate，让最优秀的行业经验自发涌现。',
+                features: [
+                    ['Fork', '基因突变', '从已有节点生成适配场景的新分支'],
+                    ['Validate', '自然选择', '真实使用反馈让高价值经验增权'],
+                    ['Emerge', '涌现合并', '权重超过阈值后成为新主干标准']
+                ],
+                primaryCta: '进入演化广场',
+                secondaryCta: '打开沙盒',
+                stats: ['知识基因', 'Fork次数', '验证次数'],
+                scrollHint: '向下滚动探索',
+                mechanismTitle: '演化引擎',
+                mechanismCopy: '知识如何从个体经验进化为群体智慧。',
+                mechanismForkTitle: '1. Fork（变异）',
+                mechanismForkCopy: '用户从已有知识节点出发，按真实场景复制、改写并生成新分支。',
+                mechanismValidateTitle: '2. Validate（选择）',
+                mechanismValidateCopy: '社区成员在业务现场验证分支，成功应用会让知识权重非线性增长。',
+                mechanismEmergeTitle: '3. Emerge（涌现）',
+                mechanismEmergeCopy: '当分支权重超过主干，系统会将它合并为新的标准路径。',
+                demoTitle: '体验<span class="text-gradient-gold">涌现</span>',
+                demoCopy: '与实时 CAS 引擎互动，观察社区验证如何推动知识权重演化。<br><br><strong class="text-white">试一试：</strong>点击“运行验证”模拟一次成功的社区采用。',
+                demoPointWeight: '实时权重计算',
+                demoPointMerge: '自动合并阈值检测',
+                demoPointHistory: 'Git 风格版本历史',
+                demoCardGrowthTitle: '非线性增长',
+                demoCardGrowthCopy: '影响力指数放大',
+                demoCardCommunityTitle: '社区驱动',
+                demoCardCommunityCopy: '汇聚群体智慧',
+                demoActiveNode: '活跃节点',
+                demoNodeName: '跨境营销 SOP',
+                demoCurrentWeight: '当前权重',
+                demoMainTrunk: 'V1.0 主干',
+                demoMainPrompt: '基础翻译提示词',
+                demoBranch: 'V1.1 拉美分支',
+                demoBranchStatus: '等待验证...',
+                demoValidateButton: '运行验证（+25.5 权重）',
+                statusRunning: '正在运行验证模拟...',
+                statusEmergence: '检测到涌现！正在合并分支...',
+                statusComplete: '验证完成，权重已提升。',
+                statusMergedTitle: 'V2.0 新主干（已合并）',
+                statusMergedCopy: '社区验证通过的标准',
+                footerCopy: '为 AI 时代构建共同大脑。开源、去中心化，并持续进化。',
+                toggle: 'EN'
+            },
+            en: {
+                navVision: 'Vision',
+                navMechanism: 'Mechanism',
+                navCases: 'Demo',
+                navTryDemo: 'Try Demo',
+                signIn: 'Sign In',
+                dashboard: 'Dashboard',
+                badge: 'Complex Adaptive System v1.0 Live',
+                heroTitle: 'AI Knowledge Bank<br><span class="mt-5 block text-3xl font-bold tracking-normal text-gradient md:text-5xl">Human Skill Evolution Network</span>',
+                heroCopy: 'Not a static knowledge base, but a self-evolving complex adaptive system.<br class="hidden md:block">Through Fork and Validate, the strongest field-tested practices emerge into standards.',
+                features: [
+                    ['Fork', 'Mutation', 'Branch proven knowledge into new real-world contexts'],
+                    ['Validate', 'Selection', 'Practical feedback increases the weight of useful knowledge'],
+                    ['Emerge', 'Synthesis', 'High-weight branches become the next mainline standard']
+                ],
+                primaryCta: 'Enter Evolution Hub',
+                secondaryCta: 'Open Sandbox',
+                stats: ['Knowledge Genes', 'Forks', 'Validations'],
+                scrollHint: 'Scroll to explore',
+                mechanismTitle: 'The Evolution Engine',
+                mechanismCopy: 'How knowledge evolves from individual insight to collective wisdom.',
+                mechanismForkTitle: '1. Fork (Mutation)',
+                mechanismForkCopy: 'Users take existing knowledge nodes and adapt them to specific contexts.',
+                mechanismValidateTitle: '2. Validate (Selection)',
+                mechanismValidateCopy: 'Community members test branches in real scenarios. Successful applications increase weight non-linearly.',
+                mechanismEmergeTitle: '3. Emerge (Synthesis)',
+                mechanismEmergeCopy: "When a branch's weight surpasses the main trunk, the system auto-merges it.",
+                demoTitle: 'Experience the <span class="text-gradient-gold">Emergence</span>',
+                demoCopy: 'Interact with our live CAS engine. Watch how community validation drives the evolution of knowledge weights.<br><br><strong class="text-white">Try it:</strong> Click "Run Validation" to simulate successful community adoption.',
+                demoPointWeight: 'Real-time Weight Calculation',
+                demoPointMerge: 'Auto-Merge Threshold Detection',
+                demoPointHistory: 'Git-style Version History',
+                demoCardGrowthTitle: 'Non-Linear Growth',
+                demoCardGrowthCopy: 'Exponential impact',
+                demoCardCommunityTitle: 'Community Driven',
+                demoCardCommunityCopy: 'Collective wisdom',
+                demoActiveNode: 'Active Node',
+                demoNodeName: 'Cross-Border Marketing SOP',
+                demoCurrentWeight: 'Current Weight',
+                demoMainTrunk: 'V1.0 Main Trunk',
+                demoMainPrompt: 'Base Translation Prompt',
+                demoBranch: 'V1.1 LatAm Branch',
+                demoBranchStatus: 'Waiting for validation...',
+                demoValidateButton: 'Run Validation (+25.5 Weight)',
+                statusRunning: 'Running validation simulations...',
+                statusEmergence: 'Emergence Detected! Merging branch...',
+                statusComplete: 'Validation complete. Weight increased.',
+                statusMergedTitle: 'V2.0 New Main (Merged)',
+                statusMergedCopy: 'Community validated standard',
+                footerCopy: 'Building the collective brain for the AI era. Open source, decentralized, and evolving.',
+                toggle: '中'
+            }
+        };
+
+        let currentLanguage = ['zh', 'en'].includes(localStorage.getItem('language'))
+            ? localStorage.getItem('language')
+            : 'zh';
+
+        function setLanguage(lang) {
+            const text = translations[lang] || translations.zh;
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+
+            const navLinks = document.querySelectorAll('nav ul a[href^="#"]');
+            if (navLinks[0]) navLinks[0].textContent = text.navVision;
+            if (navLinks[1]) navLinks[1].textContent = text.navMechanism;
+            if (navLinks[2]) navLinks[2].textContent = text.navCases;
+
+            const navDemo = document.querySelector('nav button[onclick*="demo-section"]');
+            if (navDemo) navDemo.textContent = text.navTryDemo;
+            if (languageToggle) languageToggle.textContent = text.toggle;
+
+            const loginButton = document.getElementById('login-btn');
+            const dashboardLink = document.querySelector('#auth-section a[href="dashboard.html"]');
+            if (loginButton) {
+                const authState = loginButton.dataset.authState || 'signin';
+                loginButton.textContent = authState === 'dashboard' ? text.dashboard : text.signIn;
+            }
+            if (dashboardLink) dashboardLink.textContent = text.dashboard;
+
+            document.querySelectorAll('[data-i18n]').forEach((node) => {
+                const key = node.dataset.i18n;
+                if (key && text[key]) node.innerHTML = text[key];
+            });
+
+            const hero = document.querySelector('.knowledge-hero');
+            if (!hero) return;
+
+            const badge = hero.querySelector('.inline-flex');
+            const title = hero.querySelector('h1');
+            const copy = hero.querySelector('p');
+            if (badge) {
+                const dot = badge.querySelector('span')?.outerHTML || '';
+                badge.innerHTML = `${dot} ${text.badge}`;
+            }
+            if (title) title.innerHTML = text.heroTitle;
+            if (copy) copy.innerHTML = text.heroCopy;
+
+            hero.querySelectorAll('.evolution-feature-card').forEach((card, index) => {
+                const item = text.features[index];
+                if (!item) return;
+                const parts = card.querySelectorAll('div');
+                if (parts[0]) parts[0].textContent = item[0];
+                if (parts[1]) parts[1].textContent = item[1];
+                if (parts[2]) parts[2].textContent = item[2];
+            });
+
+            const primaryCta = hero.querySelector('.evolution-primary-btn');
+            if (primaryCta) {
+                const icon = primaryCta.querySelector('svg')?.outerHTML || '';
+                primaryCta.innerHTML = `${text.primaryCta}${icon}`;
+            }
+            const secondaryCta = hero.querySelector('a[href*="github.com"]');
+            if (secondaryCta) {
+                const icon = secondaryCta.querySelector('svg')?.outerHTML || '';
+                secondaryCta.innerHTML = `${icon}${text.secondaryCta}`;
+            }
+
+            hero.querySelectorAll('.mt-20 .text-sm').forEach((label, index) => {
+                if (text.stats[index]) label.textContent = text.stats[index];
+            });
+            const scrollHint = hero.querySelector('.absolute.bottom-8');
+            if (scrollHint) scrollHint.textContent = text.scrollHint;
+        }
+
+        if (languageToggle) {
+            languageToggle.addEventListener('click', () => {
+                setLanguage(currentLanguage === 'zh' ? 'en' : 'zh');
+            });
+        }
+        setLanguage(currentLanguage);
 
         // ============================================
         // User Authentication UI
@@ -694,28 +1053,39 @@
         // Check auth state on load
         async function checkAuthState() {
             try {
+                await supabaseReady;
+                if (!supabase) throw new Error('Supabase is not configured');
                 const { data: { session } } = await supabase.auth.getSession();
                 
                 if (session) {
                     // User is logged in
                     authSection.classList.remove('hidden');
-                    loginBtn.textContent = 'Dashboard';
+                    loginBtn.dataset.authState = 'dashboard';
+                    loginBtn.textContent = translations[currentLanguage].dashboard;
                     loginBtn.onclick = () => window.location.href = 'dashboard.html';
                 } else {
                     // User is not logged in
                     authSection.classList.remove('hidden');
-                    loginBtn.textContent = 'Sign In';
+                    loginBtn.dataset.authState = 'signin';
+                    loginBtn.textContent = translations[currentLanguage].signIn;
                     loginBtn.onclick = handleLogin;
                 }
             } catch (error) {
                 console.error('Auth check error:', error);
                 authSection.classList.remove('hidden');
-                loginBtn.textContent = 'Sign In';
+                loginBtn.dataset.authState = 'signin';
+                loginBtn.textContent = translations[currentLanguage].signIn;
                 loginBtn.onclick = handleLogin;
             }
         }
 
-        function handleLogin() {
+        async function handleLogin() {
+            await supabaseReady;
+            if (!supabase) {
+                alert('Supabase is not configured yet.');
+                return;
+            }
+
             // Show simple login modal or redirect to OAuth
             const email = prompt('Enter your email:');
             if (!email) return;
