@@ -339,6 +339,7 @@
     }
 
     .workbench {
+      position: relative;
       border-radius: 8px;
       min-height: 540px;
       overflow: hidden;
@@ -346,12 +347,61 @@
         linear-gradient(140deg, rgba(17, 24, 39, 0.92), rgba(22, 42, 51, 0.88) 48%, rgba(24, 53, 47, 0.9));
       color: white;
       box-shadow: 0 28px 86px rgba(17, 24, 39, 0.22);
+      transition: background 420ms ease, box-shadow 420ms ease, transform 420ms ease;
+    }
+
+    .workbench::before,
+    .workbench::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .workbench::before {
+      inset: -12%;
+      background: radial-gradient(circle at 50% 48%, rgba(251, 215, 122, 0.34) 0%, rgba(251, 215, 122, 0.14) 28%, rgba(251, 215, 122, 0) 62%);
+      mix-blend-mode: screen;
+    }
+
+    .workbench::after {
+      inset: 0;
+      background: linear-gradient(118deg, transparent 22%, rgba(255, 243, 191, 0) 34%, rgba(255, 243, 191, 0.38) 46%, rgba(255, 255, 255, 0.12) 50%, rgba(245, 158, 11, 0.18) 58%, transparent 72%);
+      transform: translateX(-130%);
+    }
+
+    .workbench.emergence-active {
+      background:
+        radial-gradient(circle at 50% 45%, rgba(251, 215, 122, 0.16), transparent 30%),
+        linear-gradient(140deg, rgba(32, 28, 15, 0.96), rgba(63, 51, 17, 0.9) 52%, rgba(24, 53, 47, 0.92));
+      box-shadow:
+        0 32px 96px rgba(214, 164, 48, 0.24),
+        0 0 0 1px rgba(251, 215, 122, 0.16) inset;
+      transform: translateY(-2px);
+    }
+
+    .workbench.emergence-active::before {
+      animation: emergenceHalo 1.8s ease-out forwards;
+    }
+
+    .workbench.emergence-active::after {
+      animation: emergenceSweep 1.25s ease-out 120ms forwards;
     }
 
     .console-row {
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       background: rgba(255, 255, 255, 0.08);
+      transition: border-color 360ms ease, background 360ms ease, box-shadow 360ms ease, transform 360ms ease;
+    }
+
+    .console-row.emergence-hot {
+      border-color: rgba(251, 215, 122, 0.42);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(255, 255, 255, 0.1));
+      box-shadow:
+        0 0 0 1px rgba(251, 215, 122, 0.14) inset,
+        0 18px 38px rgba(214, 164, 48, 0.12);
+      transform: translateY(-2px);
     }
 
     .progress-track {
@@ -367,6 +417,34 @@
       background: linear-gradient(90deg, var(--jade), #61c8ff, var(--gold));
       border-radius: inherit;
       transition: width 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .progress-fill.emergence-hot {
+      background: linear-gradient(90deg, #f59e0b, #fde68a, #fff3bf, #f59e0b);
+      background-size: 200% 100%;
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.55);
+      animation: goldPulse 1.4s ease-in-out infinite;
+    }
+
+    #weight-value,
+    #demo-status {
+      transition: color 320ms ease, text-shadow 320ms ease;
+    }
+
+    #weight-value.emergence-hot,
+    #demo-status.emergence-hot {
+      color: #f8e7a1;
+      text-shadow: 0 0 24px rgba(250, 204, 21, 0.28);
+    }
+
+    #validate-btn {
+      transition: background 300ms ease, color 300ms ease, box-shadow 300ms ease, transform 300ms ease;
+    }
+
+    #validate-btn.emergence-complete {
+      background: linear-gradient(135deg, #fff7d1, #f1d16b);
+      color: #48320a;
+      box-shadow: 0 20px 40px rgba(214, 164, 48, 0.28);
     }
 
     .reveal {
@@ -388,6 +466,23 @@
     @keyframes signal {
       0%, 100% { opacity: 0.24; }
       50% { opacity: 0.86; }
+    }
+
+    @keyframes emergenceHalo {
+      0% { opacity: 0; transform: scale(0.92); }
+      45% { opacity: 1; }
+      100% { opacity: 0.7; transform: scale(1.03); }
+    }
+
+    @keyframes emergenceSweep {
+      0% { transform: translateX(-130%); opacity: 0; }
+      25% { opacity: 1; }
+      100% { transform: translateX(135%); opacity: 0; }
+    }
+
+    @keyframes goldPulse {
+      0%, 100% { background-position: 0% 50%; filter: brightness(1); }
+      50% { background-position: 100% 50%; filter: brightness(1.12); }
     }
 
     @media (max-width: 860px) {
@@ -595,7 +690,7 @@
           </div>
         </div>
 
-        <div class="workbench p-5 sm:p-7 reveal">
+        <div id="demo-workbench" class="workbench p-5 sm:p-7 reveal">
           <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-5">
             <div>
               <div class="font-mono text-xs font-bold uppercase text-emerald-300" data-i18n="consoleLabel">Active Node</div>
@@ -605,7 +700,7 @@
           </div>
 
           <div class="mt-7 grid gap-4 sm:grid-cols-[0.9fr_1.1fr]">
-            <div class="console-row p-5">
+            <div id="weight-panel" class="console-row p-5">
               <div class="text-sm font-semibold text-white/62" data-i18n="currentWeight">当前权重</div>
               <div class="mt-3 font-mono text-5xl font-bold text-white"><span id="weight-value">72.0</span></div>
               <div class="progress-track mt-5">
@@ -743,8 +838,10 @@
         statusIdle: '准备接收社区验证信号',
         statusRunning: '正在计算验证权重...',
         statusMerged: '已触发涌现：分支合并为新的公共标准',
+        validateComplete: '涌现已完成',
         branchMerged: 'V2.0 新主干',
         branchMergedCopy: '社区验证通过',
+        branchStateMerged: 'merged',
         ecosystemKicker: 'ECOSYSTEM',
         ecosystemTitle: '为真实协作准备的基础设施',
         ecoDataTitle: '结构化知识资产',
@@ -809,8 +906,10 @@
         statusIdle: 'Ready to receive community validation signals',
         statusRunning: 'Calculating validation weight...',
         statusMerged: 'Emergence triggered: branch merged into the shared standard',
+        validateComplete: 'Emergence Complete',
         branchMerged: 'V2.0 New Mainline',
         branchMergedCopy: 'Community validated',
+        branchStateMerged: 'merged',
         ecosystemKicker: 'ECOSYSTEM',
         ecosystemTitle: 'Infrastructure for real collaboration',
         ecoDataTitle: 'Structured knowledge assets',
@@ -845,7 +944,9 @@
       if (demoState.merged) {
         document.getElementById('branch-title').textContent = dict.branchMerged;
         document.getElementById('branch-copy').textContent = dict.branchMergedCopy;
+        document.getElementById('branch-state').textContent = dict.branchStateMerged;
         document.getElementById('demo-status').textContent = dict.statusMerged;
+        validateButton.querySelector('span').textContent = dict.validateComplete;
       }
     }
 
@@ -966,6 +1067,8 @@
     const weightFill = document.getElementById('weight-fill');
     const validateButton = document.getElementById('validate-btn');
     const demoStatus = document.getElementById('demo-status');
+    const workbench = document.getElementById('demo-workbench');
+    const weightPanel = document.getElementById('weight-panel');
     const branchRow = document.getElementById('branch-row');
     const branchTitle = document.getElementById('branch-title');
     const branchCopy = document.getElementById('branch-copy');
@@ -1001,14 +1104,19 @@
 
         demoState.running = false;
         demoState.merged = true;
-        branchRow.style.borderColor = 'rgba(16, 185, 129, 0.56)';
-        branchRow.style.background = 'rgba(16, 185, 129, 0.14)';
+        workbench.classList.add('emergence-active');
+        weightPanel.classList.add('emergence-hot');
+        branchRow.classList.add('emergence-hot');
+        weightFill.classList.add('emergence-hot');
+        weightValue.classList.add('emergence-hot');
+        demoStatus.classList.add('emergence-hot');
+        validateButton.classList.add('emergence-complete');
         branchTitle.textContent = translations[currentLanguage].branchMerged;
         branchCopy.textContent = translations[currentLanguage].branchMergedCopy;
-        branchState.textContent = 'merged';
+        branchState.textContent = translations[currentLanguage].branchStateMerged;
         branchState.className = 'font-mono text-xs font-bold text-emerald-300';
         demoStatus.textContent = translations[currentLanguage].statusMerged;
-        validateButton.querySelector('span').textContent = translations[currentLanguage].statusMerged;
+        validateButton.querySelector('span').textContent = translations[currentLanguage].validateComplete;
       }
 
       requestAnimationFrame(animate);
