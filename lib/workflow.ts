@@ -260,7 +260,7 @@ export async function fullTextSearch(query: string, limit: number = 50): Promise
 
     if (error) throw error;
     return data || [];
-  } catch (err) {
+  } catch {
     // Fallback: 简单搜索
     return searchNodes(query, { status: ['validated', 'merged'] });
   }
