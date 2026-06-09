@@ -1,0 +1,89 @@
+<svg width="1280" height="520" viewBox="0 0 1280 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">AI Knowledge Bank</title>
+  <desc id="desc">A liquid glass style repository banner for AI Knowledge Bank.</desc>
+  <defs>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(220 120) rotate(38) scale(520 360)">
+      <stop stop-color="#34D399" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1010 365) rotate(142) scale(520 380)">
+      <stop stop-color="#60A5FA" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#60A5FA" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="205" y1="70" x2="1100" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="205" y1="70" x2="1085" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D1FAE5" stop-opacity="0.5"/>
+      <stop offset="0.48" stop-color="#93C5FD" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#C4B5FD" stop-opacity="0.42"/>
+    </linearGradient>
+    <linearGradient id="titleFill" x1="260" y1="178" x2="920" y2="178" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ECFDF5"/>
+      <stop offset="0.48" stop-color="#BFDBFE"/>
+      <stop offset="1" stop-color="#DDD6FE"/>
+    </linearGradient>
+    <filter id="softShadow" x="160" y="40" width="960" height="470" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="28" stdDeviation="34" flood-color="#020617" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="520" fill="#060A12"/>
+  <rect width="1280" height="520" fill="url(#glowA)"/>
+  <rect width="1280" height="520" fill="url(#glowB)"/>
+
+  <g opacity="0.45">
+    <path d="M40 430C205 334 296 374 446 268C612 152 739 220 880 137C1036 45 1132 105 1240 62" stroke="#34D399" stroke-opacity="0.28"/>
+    <path d="M80 107C231 157 331 112 485 202C620 281 744 274 893 355C1028 428 1126 383 1225 452" stroke="#60A5FA" stroke-opacity="0.3"/>
+    <path d="M152 466C254 292 364 326 503 251C661 166 789 90 1053 166" stroke="#A78BFA" stroke-opacity="0.25"/>
+  </g>
+
+  <g opacity="0.75">
+    <circle cx="118" cy="392" r="4" fill="#34D399"/>
+    <circle cx="253" cy="340" r="3.5" fill="#93C5FD"/>
+    <circle cx="390" cy="318" r="5" fill="#A7F3D0"/>
+    <circle cx="518" cy="236" r="4" fill="#BFDBFE"/>
+    <circle cx="660" cy="202" r="5" fill="#C4B5FD"/>
+    <circle cx="806" cy="248" r="3.5" fill="#34D399"/>
+    <circle cx="966" cy="158" r="5" fill="#93C5FD"/>
+    <circle cx="1124" cy="108" r="4" fill="#DDD6FE"/>
+    <circle cx="1176" cy="420" r="4.5" fill="#34D399"/>
+    <circle cx="1048" cy="372" r="3.5" fill="#93C5FD"/>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="198" y="72" width="884" height="376" rx="28" fill="url(#panel)" stroke="url(#edge)" stroke-width="1.5"/>
+    <rect x="220" y="96" width="840" height="328" rx="20" fill="#020617" fill-opacity="0.28" stroke="#FFFFFF" stroke-opacity="0.08"/>
+  </g>
+
+  <g transform="translate(258 136)">
+    <rect x="0" y="0" width="162" height="34" rx="17" fill="#10B981" fill-opacity="0.16" stroke="#6EE7B7" stroke-opacity="0.38"/>
+    <circle cx="22" cy="17" r="5" fill="#34D399"/>
+    <text x="38" y="22" fill="#D1FAE5" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">LIVE SYSTEM</text>
+  </g>
+
+  <text x="258" y="232" fill="url(#titleFill)" font-family="Inter, Arial, sans-serif" font-size="64" font-weight="800">AI Knowledge Bank</text>
+  <text x="260" y="278" fill="#CBD5E1" font-family="Inter, Arial, 'Microsoft YaHei', sans-serif" font-size="24" font-weight="500">AI 驱动的人类知识协作、验证与涌现网络</text>
+  <text x="260" y="314" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="20">Fork knowledge. Validate practice. Emerge better standards.</text>
+
+  <g transform="translate(260 354)" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">
+    <rect width="146" height="42" rx="12" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <text x="20" y="26" fill="#D1FAE5">Liquid Glass UI</text>
+    <rect x="162" width="154" height="42" rx="12" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <text x="184" y="26" fill="#DBEAFE">Particle Network</text>
+    <rect x="332" width="154" height="42" rx="12" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <text x="354" y="26" fill="#EDE9FE">中文 / English</text>
+    <rect x="502" width="156" height="42" rx="12" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <text x="524" y="26" fill="#FDE68A">CAS Workflow</text>
+  </g>
+
+  <g transform="translate(852 135)">
+    <rect width="152" height="196" rx="22" fill="#FFFFFF" fill-opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <circle cx="76" cy="58" r="26" fill="#34D399" fill-opacity="0.18" stroke="#6EE7B7" stroke-opacity="0.48"/>
+    <circle cx="76" cy="58" r="7" fill="#34D399"/>
+    <path d="M76 65V102M43 126H109M49 126C49 111 60 102 76 102C92 102 103 111 103 126" stroke="#93C5FD" stroke-width="3" stroke-linecap="round"/>
+    <text x="76" y="154" text-anchor="middle" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">Emerge</text>
+    <text x="76" y="178" text-anchor="middle" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="12">validated standards</text>
+  </g>
+</svg>
