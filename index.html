@@ -142,6 +142,66 @@
       transform: translateY(-1px);
     }
 
+    .nav-primary {
+      padding: 8px 0;
+    }
+
+    .nav-link-main {
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: rgba(17, 24, 39, 0.72);
+      background: rgba(255, 255, 255, 0.26);
+      border: 1px solid rgba(17, 24, 39, 0.06);
+      white-space: nowrap;
+    }
+
+    .nav-link-main:hover {
+      background: rgba(255, 255, 255, 0.72);
+      border-color: rgba(15, 159, 142, 0.24);
+    }
+
+    .more-menu {
+      position: relative;
+    }
+
+    .more-menu summary {
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .more-menu summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .more-panel {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      z-index: 40;
+      width: 210px;
+      border-radius: 8px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      box-shadow: 0 24px 70px rgba(17, 24, 39, 0.14);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+    }
+
+    .more-panel a {
+      display: block;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: rgba(17, 24, 39, 0.68);
+      transition: color 180ms ease, background 180ms ease;
+    }
+
+    .more-panel a:hover {
+      color: var(--ink);
+      background: rgba(15, 159, 142, 0.08);
+    }
+
     .brand-name {
       white-space: nowrap;
     }
@@ -218,6 +278,38 @@
         linear-gradient(90deg, rgba(15, 159, 142, 0.08), rgba(37, 99, 235, 0.06), rgba(217, 106, 67, 0.08));
       border-top: 1px solid rgba(17, 24, 39, 0.06);
       border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+    }
+
+    #knowledge-vault,
+    #tool-vault,
+    #case-vault,
+    #vision-mission,
+    #dispatch,
+    #evolution,
+    #demo {
+      scroll-margin-top: 120px;
+    }
+
+    .mission-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 228px;
+      padding: 28px;
+    }
+
+    .mission-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(15, 159, 142, 0.16), transparent 34%),
+        radial-gradient(circle at 92% 12%, rgba(211, 145, 44, 0.16), transparent 30%);
+      pointer-events: none;
+    }
+
+    .mission-card > * {
+      position: relative;
+      z-index: 1;
     }
 
     .metric {
@@ -733,11 +825,24 @@
       }
 
       .nav-links {
-        display: none !important;
+        order: 3;
+        width: 100%;
+        gap: 8px;
+        overflow-x: auto;
+        padding-top: 8px;
+        scrollbar-width: none;
+      }
+
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav-link-main {
+        padding: 7px 10px;
       }
 
       .hero {
-        padding-top: 112px;
+        padding-top: 154px;
         min-height: auto;
       }
 
@@ -755,6 +860,17 @@
 
       .node {
         width: 112px;
+      }
+
+      .more-menu {
+        flex: 0 0 auto;
+      }
+
+      .more-panel {
+        position: fixed;
+        top: 100px;
+        right: 14px;
+        width: min(250px, calc(100vw - 28px));
       }
 
       .dispatch-console {
@@ -776,7 +892,7 @@
       }
 
       .brand-name {
-        max-width: 178px;
+        max-width: 228px;
         white-space: normal;
         font-size: 18px;
         line-height: 1.15;
@@ -800,20 +916,28 @@
   <canvas id="network-canvas" aria-hidden="true"></canvas>
 
   <header class="nav liquid">
-    <div class="flex items-center justify-between gap-4 px-4 py-3">
+    <div class="flex flex-wrap items-center justify-between gap-4 px-4 py-3">
       <a href="#top" class="flex items-center gap-3" aria-label="AI Knowledge Bank home">
         <img class="brand-mark" src="./assets/brand/akb-love-logo.svg" alt="AI Knowledge Bank logo" />
         <span class="brand-name font-extrabold text-lg sm:text-xl">AI Knowledge Bank</span>
       </a>
-      <nav class="nav-links flex items-center gap-7 text-sm font-semibold" aria-label="Primary navigation">
-        <a class="nav-link" href="#vision" data-i18n="navVision">愿景</a>
-        <a class="nav-link" href="#vaults" data-i18n="navVaults">三库</a>
-        <a class="nav-link" href="#dispatch" data-i18n="navDispatch">调度</a>
-        <a class="nav-link" href="#evolution" data-i18n="navEvolution">演化</a>
-        <a class="nav-link" href="#demo" data-i18n="navDemo">验证</a>
+      <nav class="nav-links nav-primary flex items-center gap-2 text-sm font-semibold" aria-label="Primary navigation">
+        <a class="nav-link nav-link-main" href="#knowledge-vault" data-i18n="navKnowledge">知识库</a>
+        <a class="nav-link nav-link-main" href="#tool-vault" data-i18n="navTools">工具库</a>
+        <a class="nav-link nav-link-main" href="#case-vault" data-i18n="navCases">案例库</a>
+        <a class="nav-link nav-link-main" href="#evolution" data-i18n="navCommunity">社区</a>
+        <details class="more-menu">
+          <summary class="nav-link nav-link-main" data-i18n="navMore">更多</summary>
+          <div class="more-panel text-sm font-semibold">
+            <a href="#vision-mission" data-i18n="moreVision">愿景与使命</a>
+            <a href="#dispatch" data-i18n="moreDispatch">AI 调度引擎</a>
+            <a href="#demo" data-i18n="moreValidation">验证演示</a>
+            <a href="dashboard.html" data-i18n="moreDashboard">控制台</a>
+            <a href="https://github.com/Greatbeing/AI-Knowledge-Bank" target="_blank" rel="noreferrer" data-i18n="moreGithub">GitHub 仓库</a>
+          </div>
+        </details>
       </nav>
       <div class="flex items-center gap-2">
-        <a class="btn btn-secondary hidden sm:inline-flex px-4 text-sm" href="dashboard.html" data-i18n="dashboard">控制台</a>
         <button id="language-toggle" class="btn btn-secondary px-4 text-sm" type="button" aria-label="Switch language">EN</button>
       </div>
     </div>
@@ -858,6 +982,31 @@
       </div>
     </section>
 
+    <section id="vision-mission" class="section">
+      <div class="shell grid items-start gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div class="reveal">
+          <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="missionKicker">VISION & MISSION</div>
+          <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="missionTitle">让每一次 AI 实践，都能沉淀为可传承的公共能力。</h2>
+          <p class="mt-6 text-lg leading-8 text-slate-600" data-i18n="missionCopy">
+            AI 正在把知识生产从“专家写教程”推向“人人在现场试错”。AI Knowledge Bank 的使命，是把这些分散在个人、团队和行业里的真实经验，组织成可验证、可复用、可持续进化的知识网络。
+          </p>
+        </div>
+
+        <div class="grid gap-4">
+          <article class="mission-card card reveal">
+            <div class="font-mono text-xs font-bold uppercase text-emerald-700" data-i18n="visionLabel">Vision</div>
+            <h3 class="mt-4 text-2xl font-extrabold text-slate-950" data-i18n="visionTitle">成为 AI 时代的公共知识银行。</h3>
+            <p class="mt-4 leading-7 text-slate-600" data-i18n="visionCopy">我们希望任何人遇到一个 AI 场景，都能找到可信的解释、可执行的工具路径，以及被真实结果验证过的案例，而不是从零开始反复摸索。</p>
+          </article>
+          <article class="mission-card card reveal">
+            <div class="font-mono text-xs font-bold uppercase text-blue-700" data-i18n="missionLabel">Mission</div>
+            <h3 class="mt-4 text-2xl font-extrabold text-slate-950" data-i18n="missionCardTitle">降低 AI 能力迁移的成本。</h3>
+            <p class="mt-4 leading-7 text-slate-600" data-i18n="missionCardCopy">我们通过三库结构、个性化调度和社区演化机制，把个人经验转化为群体资产，让好方法被看见、被验证、被改进，并最终成为新的公共标准。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section id="vaults" class="section section-band">
       <div class="shell">
         <div class="mx-auto max-w-3xl text-center reveal">
@@ -869,7 +1018,7 @@
         </div>
 
         <div class="mt-12 grid gap-4 lg:grid-cols-3">
-          <article class="vault-card card card-hover reveal" data-vault="knowledge">
+          <article id="knowledge-vault" class="vault-card card card-hover reveal" data-vault="knowledge">
             <div class="flex items-start justify-between gap-4">
               <div class="vault-icon" aria-hidden="true">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -888,7 +1037,7 @@
             </div>
           </article>
 
-          <article class="vault-card card card-hover reveal" data-vault="tool">
+          <article id="tool-vault" class="vault-card card card-hover reveal" data-vault="tool">
             <div class="flex items-start justify-between gap-4">
               <div class="vault-icon" aria-hidden="true">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -907,7 +1056,7 @@
             </div>
           </article>
 
-          <article class="vault-card card card-hover reveal" data-vault="case">
+          <article id="case-vault" class="vault-card card card-hover reveal" data-vault="case">
             <div class="flex items-start justify-between gap-4">
               <div class="vault-icon" aria-hidden="true">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -1159,11 +1308,16 @@
   <script>
     const translations = {
       zh: {
-        navVision: '愿景',
-        navVaults: '三库',
-        navDispatch: '调度',
-        navEvolution: '演化',
-        navDemo: '验证',
+        navKnowledge: '知识库',
+        navTools: '工具库',
+        navCases: '案例库',
+        navCommunity: '社区',
+        navMore: '更多',
+        moreVision: '愿景与使命',
+        moreDispatch: 'AI 调度引擎',
+        moreValidation: '验证演示',
+        moreDashboard: '控制台',
+        moreGithub: 'GitHub 仓库',
         dashboard: '控制台',
         eyebrow: '复杂适应系统 · 知识演化网络',
         heroCopy: '以知识库、工具库、案例库为骨架，用 AI 个性化调度和社区互助演化，把分散经验沉淀为可验证、可复用、可持续升级的知识资产。',
@@ -1172,6 +1326,15 @@
         metricNodes: '三库节点',
         metricForks: '调度路径',
         metricValidations: '社区信号',
+        missionKicker: 'VISION & MISSION',
+        missionTitle: '让每一次 AI 实践，都能沉淀为可传承的公共能力。',
+        missionCopy: 'AI 正在把知识生产从“专家写教程”推向“人人在现场试错”。AI Knowledge Bank 的使命，是把这些分散在个人、团队和行业里的真实经验，组织成可验证、可复用、可持续进化的知识网络。',
+        visionLabel: 'Vision',
+        visionTitle: '成为 AI 时代的公共知识银行。',
+        visionCopy: '我们希望任何人遇到一个 AI 场景，都能找到可信的解释、可执行的工具路径，以及被真实结果验证过的案例，而不是从零开始反复摸索。',
+        missionLabel: 'Mission',
+        missionCardTitle: '降低 AI 能力迁移的成本。',
+        missionCardCopy: '我们通过三库结构、个性化调度和社区演化机制，把个人经验转化为群体资产，让好方法被看见、被验证、被改进，并最终成为新的公共标准。',
         vaultsKicker: 'THREE VAULTS',
         vaultsTitle: '三库不是目录，而是 AI 调度的知识骨架。',
         vaultsCopy: '每个节点都被放入清晰的能力坐标：先解释为什么，再给出怎么做，最后用真实案例证明它是否有效。',
@@ -1255,11 +1418,16 @@
         toggle: 'EN'
       },
       en: {
-        navVision: 'Vision',
-        navVaults: 'Vaults',
-        navDispatch: 'Dispatch',
-        navEvolution: 'Evolution',
-        navDemo: 'Validate',
+        navKnowledge: 'Knowledge',
+        navTools: 'Tools',
+        navCases: 'Cases',
+        navCommunity: 'Community',
+        navMore: 'More',
+        moreVision: 'Vision & Mission',
+        moreDispatch: 'AI Dispatch Engine',
+        moreValidation: 'Validation Demo',
+        moreDashboard: 'Dashboard',
+        moreGithub: 'GitHub Repository',
         dashboard: 'Dashboard',
         eyebrow: 'Complex Adaptive System · Knowledge Evolution Network',
         heroCopy: 'A three-vault product system for the AI era: knowledge, tools, and cases coordinated by personalized AI dispatch and community-driven evolution.',
@@ -1268,6 +1436,15 @@
         metricNodes: 'Vault nodes',
         metricForks: 'Dispatch routes',
         metricValidations: 'Community signals',
+        missionKicker: 'VISION & MISSION',
+        missionTitle: 'Turn every AI practice into a public capability people can inherit.',
+        missionCopy: 'AI is moving knowledge production from expert-written lessons to field-tested experiments by everyone. AI Knowledge Bank exists to organize those scattered practices from individuals, teams, and industries into a verifiable, reusable, and continuously evolving knowledge network.',
+        visionLabel: 'Vision',
+        visionTitle: 'Become the public knowledge bank for the AI era.',
+        visionCopy: 'When people face an AI scenario, they should find trusted explanations, executable tool paths, and cases validated by real outcomes instead of starting from scratch every time.',
+        missionLabel: 'Mission',
+        missionCardTitle: 'Lower the cost of transferring AI capability.',
+        missionCardCopy: 'Through the three-vault structure, personalized dispatch, and community evolution, we turn individual practice into collective assets so strong methods can be seen, validated, improved, and merged into shared standards.',
         vaultsKicker: 'THREE VAULTS',
         vaultsTitle: 'The three vaults are not folders. They are the skeleton of AI dispatch.',
         vaultsCopy: 'Every node sits in a capability coordinate: explain why, show how, and prove where it works.',
@@ -1580,6 +1757,13 @@
 
     languageToggle.addEventListener('click', () => {
       applyLanguage(currentLanguage === 'zh' ? 'en' : 'zh');
+    });
+
+    document.querySelectorAll('.more-panel a').forEach((link) => {
+      link.addEventListener('click', () => {
+        const menu = link.closest('details');
+        if (menu) menu.removeAttribute('open');
+      });
     });
 
     document.querySelectorAll('.scenario-btn').forEach((button) => {
