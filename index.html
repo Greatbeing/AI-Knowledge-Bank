@@ -2022,6 +2022,7 @@
       try {
         const data = await fetchApi('/vaults');
         if (!data.ok || data.source !== 'supabase') return;
+        if (data.schema && data.schema !== 'knowledge_nodes') return;
 
         const total = Number(data.stats?.total || 0);
         if (total > 0) {
