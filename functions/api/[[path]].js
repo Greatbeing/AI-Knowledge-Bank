@@ -297,7 +297,7 @@ async function fetchAvailableVaultNodes(env) {
     };
   } catch (knowledgeError) {
     try {
-      const rows = await supabaseFetch(env, '/rest/v1/nodes?select=id,title,description,content,node_type,weight,is_mainline,is_emerging,created_at,updated_at&order=created_at.desc&limit=36');
+      const rows = await supabaseFetch(env, '/rest/v1/nodes?select=id,title,content,node_type,weight,is_mainline,is_emerging,version_label,created_at,updated_at&order=created_at.desc&limit=36');
       return {
         rows: Array.isArray(rows) ? rows : [],
         schema: 'nodes',
