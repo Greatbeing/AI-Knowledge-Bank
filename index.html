@@ -485,6 +485,278 @@
       font-size: clamp(2.25rem, 3.9vw, 3.45rem);
     }
 
+    .method-workbench {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.28fr);
+      gap: 18px;
+      min-height: 520px;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(15, 159, 142, 0.2), transparent 34%),
+        radial-gradient(circle at 88% 12%, rgba(211, 145, 44, 0.18), transparent 30%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.36));
+      box-shadow:
+        0 28px 80px rgba(17, 24, 39, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(24px) saturate(165%);
+      -webkit-backdrop-filter: blur(24px) saturate(165%);
+    }
+
+    .method-workbench::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(17, 24, 39, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17, 24, 39, 0.045) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(110deg, rgba(0, 0, 0, 0.18), transparent 62%);
+    }
+
+    .method-workbench::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 38%;
+      pointer-events: none;
+      background: linear-gradient(112deg, transparent 12%, rgba(255, 255, 255, 0.48) 46%, transparent 72%);
+      opacity: 0;
+      transform: translateX(-130%);
+    }
+
+    .method-workbench.is-generated::after {
+      animation: emergenceSweep 1.25s ease-out forwards;
+    }
+
+    .method-query-panel,
+    .method-results-panel {
+      position: relative;
+      z-index: 1;
+      border-radius: 8px;
+    }
+
+    .method-query-panel {
+      display: flex;
+      min-height: 484px;
+      flex-direction: column;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid rgba(17, 24, 39, 0.08);
+    }
+
+    .method-input {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      outline: 0;
+      border-radius: 8px;
+      padding: 14px 15px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.78);
+      font: inherit;
+      font-weight: 700;
+      line-height: 1.65;
+      transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .method-input:focus {
+      border-color: rgba(15, 159, 142, 0.34);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 0 0 4px rgba(15, 159, 142, 0.1);
+    }
+
+    .method-chip-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .method-chip {
+      min-height: 44px;
+      border-radius: 8px;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      padding: 10px 12px;
+      color: rgba(17, 24, 39, 0.68);
+      background: rgba(255, 255, 255, 0.6);
+      text-align: left;
+      font-size: 13px;
+      font-weight: 800;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .method-chip:hover,
+    .method-chip.is-active {
+      transform: translateY(-1px);
+      color: var(--ink);
+      border-color: rgba(15, 159, 142, 0.28);
+      background: linear-gradient(135deg, rgba(15, 159, 142, 0.12), rgba(255, 255, 255, 0.78));
+    }
+
+    .method-status {
+      min-height: 24px;
+      color: rgba(17, 24, 39, 0.58);
+      font-size: 13px;
+      font-weight: 800;
+      transition: color 220ms ease, text-shadow 220ms ease;
+    }
+
+    .method-status.is-hot {
+      color: #8a5d0c;
+      text-shadow: 0 0 22px rgba(250, 204, 21, 0.28);
+    }
+
+    .method-results-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 484px;
+      padding: 24px;
+      color: white;
+      background:
+        radial-gradient(circle at 14% 10%, rgba(15, 159, 142, 0.22), transparent 32%),
+        radial-gradient(circle at 92% 6%, rgba(109, 91, 208, 0.24), transparent 30%),
+        linear-gradient(145deg, rgba(9, 14, 25, 0.96), rgba(21, 34, 45, 0.94));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .method-results-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .method-result-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-content: stretch;
+    }
+
+    .method-result {
+      position: relative;
+      display: flex;
+      min-height: 312px;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 18px;
+      background:
+        radial-gradient(circle at 16% 0%, var(--method-glow), transparent 36%),
+        rgba(255, 255, 255, 0.08);
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease, background 220ms ease;
+    }
+
+    .method-result::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--method-start), var(--method-end));
+      opacity: 0.82;
+    }
+
+    .method-result.is-hot {
+      transform: translateY(-3px);
+      border-color: rgba(251, 215, 122, 0.34);
+      background:
+        radial-gradient(circle at 16% 0%, var(--method-glow), transparent 36%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
+      box-shadow: 0 20px 46px rgba(214, 164, 48, 0.12);
+    }
+
+    .method-result[data-layer="knowledge"] {
+      --method-glow: rgba(15, 159, 142, 0.24);
+      --method-start: var(--jade);
+      --method-end: var(--blue);
+    }
+
+    .method-result[data-layer="tool"] {
+      --method-glow: rgba(109, 91, 208, 0.26);
+      --method-start: var(--violet);
+      --method-end: var(--blue);
+    }
+
+    .method-result[data-layer="case"] {
+      --method-glow: rgba(211, 145, 44, 0.28);
+      --method-start: var(--gold);
+      --method-end: var(--coral);
+    }
+
+    .method-result p {
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .method-reason {
+      min-height: 72px;
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .method-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .method-action {
+      min-height: 34px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      font-weight: 900;
+      transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .method-action:hover {
+      transform: translateY(-1px);
+      color: white;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .method-trust {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .method-trust::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), #fde68a);
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.38);
+    }
+
     .section {
       padding: 96px 0;
       position: relative;
@@ -501,6 +773,8 @@
     #knowledge-vault,
     #tool-vault,
     #case-vault,
+    #method-finder,
+    #vaults,
     #vision-mission,
     #engines,
     #co-create,
@@ -1297,6 +1571,16 @@
       .entry-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .method-workbench {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .method-query-panel,
+      .method-results-panel {
+        min-height: auto;
+      }
     }
 
     @media (max-width: 860px) {
@@ -1379,14 +1663,29 @@
 
       .value-grid,
       .engine-grid,
+      .method-result-grid,
       .flow-grid,
       .entry-grid {
         grid-template-columns: 1fr;
       }
 
       .engine-card,
+      .method-query-panel,
+      .method-results-panel,
       .cta-panel {
         padding: 26px;
+      }
+
+      .method-workbench {
+        padding: 12px;
+      }
+
+      .method-result {
+        min-height: 260px;
+      }
+
+      .method-actions {
+        grid-template-columns: 1fr;
       }
 
       .engine-orbit {
@@ -1477,8 +1776,8 @@
           <span data-i18n="searchLabel">搜索</span>
           <span class="kbd">⌘K</span>
         </button>
-        <a class="start-btn" href="./community.html">
-          <span data-i18n="startLearning">加入共创</span>
+        <a class="start-btn" href="#method-finder">
+          <span data-i18n="startLearning">找方法</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
@@ -1487,6 +1786,7 @@
         <details class="more-menu">
           <summary class="more-summary"><span data-i18n="navMore">更多</span></summary>
           <div class="more-panel text-sm font-semibold">
+            <a href="#method-finder" data-i18n="moreMethod">找可用方法</a>
             <a href="#vision-mission" data-i18n="moreVision">愿景与使命</a>
             <a href="#experience-map" data-i18n="moreExperience">体验地图</a>
             <a href="#dispatch" data-i18n="moreDispatch">AI 调度引擎</a>
@@ -1549,7 +1849,7 @@
         </p>
 
         <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row reveal">
-          <a class="btn btn-primary w-full px-6 sm:w-auto" href="./community.html" data-i18n="primaryCta">加入共创</a>
+          <a class="btn btn-primary w-full px-6 sm:w-auto" href="#method-finder" data-i18n="primaryCta">找可用方法</a>
           <a class="btn btn-secondary w-full px-6 sm:w-auto" href="#vaults" data-i18n="secondaryCta">探索三库</a>
         </div>
 
@@ -1565,6 +1865,103 @@
           <div class="metric liquid text-left">
             <div id="metric-signals-value" class="font-mono text-3xl font-bold text-slate-950">42,891</div>
             <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricValidations">社区信号</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="method-finder" class="section section-band">
+      <div class="shell">
+        <div class="mb-10 grid items-end gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div class="reveal">
+            <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="methodKicker">METHOD FINDER</div>
+            <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="methodTitle">把问题丢进来，直接拿到可用的 AI 方法。</h2>
+          </div>
+          <p class="reveal text-lg leading-8 text-slate-600" data-i18n="methodCopy">
+            先不用理解系统架构。输入你要解决的问题，AI Knowledge Bank 会从知识库、工具库、案例库给出三层结果：为什么、怎么做、哪里验证过。
+          </p>
+        </div>
+
+        <div id="method-workbench" class="method-workbench reveal">
+          <div class="method-query-panel">
+            <div class="font-mono text-xs font-bold uppercase text-slate-500" data-i18n="methodInputLabel">Your AI task</div>
+            <label class="sr-only" for="method-query" data-i18n="methodInputLabel">Your AI task</label>
+            <textarea id="method-query" class="method-input mt-4" data-i18n-placeholder="methodPlaceholder" placeholder="例如：我想用 AI 把团队的客户反馈整理成可复用 SOP"></textarea>
+
+            <div class="mt-5 text-sm font-extrabold text-slate-700" data-i18n="methodScenarioLabel">选择一个常见场景</div>
+            <div class="method-chip-row" aria-label="Example AI scenarios">
+              <button class="method-chip is-active" type="button" data-method-scenario="marketing" data-i18n="methodScenarioMarketing">跨境营销 SOP</button>
+              <button class="method-chip" type="button" data-method-scenario="education" data-i18n="methodScenarioEducation">教师 AI 助教工作流</button>
+              <button class="method-chip" type="button" data-method-scenario="support" data-i18n="methodScenarioSupport">客服 FAQ 自动化</button>
+            </div>
+
+            <div class="mt-auto pt-6">
+              <button id="method-run" class="btn btn-primary w-full px-5" type="button" data-i18n="methodRun">生成可用方法</button>
+              <div id="method-status" class="method-status mt-4" data-i18n="methodStatusReady">选择场景或输入问题后开始生成。</div>
+            </div>
+          </div>
+
+          <div class="method-results-panel">
+            <div class="relative z-10 mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+              <div>
+                <div class="font-mono text-xs font-bold uppercase text-emerald-300" data-i18n="methodOutputLabel">Three-layer answer</div>
+                <p id="method-synthesis" class="mt-3 max-w-2xl text-sm font-semibold leading-6 text-white/68"></p>
+              </div>
+              <div id="method-useful-count" class="pill border-white/10 bg-white/10 px-3 py-1.5 text-xs font-bold text-white">0</div>
+            </div>
+
+            <div class="method-result-grid">
+              <article class="method-result is-hot" data-layer="knowledge">
+                <div>
+                  <div class="font-mono text-xs font-bold uppercase text-emerald-300" data-i18n="methodKnowledgeLabel">知识层</div>
+                  <h3 id="method-knowledge-title" class="mt-4 text-xl font-extrabold leading-snug"></h3>
+                  <p id="method-knowledge-copy" class="mt-3 text-sm leading-6"></p>
+                </div>
+                <div>
+                  <div id="method-knowledge-reason" class="method-reason"></div>
+                  <div class="mt-3 method-trust"><span id="method-knowledge-trust"></span></div>
+                  <div class="method-actions">
+                    <button class="method-action" type="button" data-method-action="copy" data-layer="knowledge" data-i18n="methodCopyAction">复制</button>
+                    <button class="method-action" type="button" data-method-action="improve" data-layer="knowledge" data-i18n="methodImproveAction">改进</button>
+                    <button class="method-action" type="button" data-method-action="useful" data-layer="knowledge" data-i18n="methodUsefulAction">有用</button>
+                  </div>
+                </div>
+              </article>
+
+              <article class="method-result" data-layer="tool">
+                <div>
+                  <div class="font-mono text-xs font-bold uppercase text-violet-300" data-i18n="methodToolLabel">工具层</div>
+                  <h3 id="method-tool-title" class="mt-4 text-xl font-extrabold leading-snug"></h3>
+                  <p id="method-tool-copy" class="mt-3 text-sm leading-6"></p>
+                </div>
+                <div>
+                  <div id="method-tool-reason" class="method-reason"></div>
+                  <div class="mt-3 method-trust"><span id="method-tool-trust"></span></div>
+                  <div class="method-actions">
+                    <button class="method-action" type="button" data-method-action="copy" data-layer="tool" data-i18n="methodCopyAction">复制</button>
+                    <button class="method-action" type="button" data-method-action="improve" data-layer="tool" data-i18n="methodImproveAction">改进</button>
+                    <button class="method-action" type="button" data-method-action="useful" data-layer="tool" data-i18n="methodUsefulAction">有用</button>
+                  </div>
+                </div>
+              </article>
+
+              <article class="method-result" data-layer="case">
+                <div>
+                  <div class="font-mono text-xs font-bold uppercase text-amber-200" data-i18n="methodCaseLabel">案例层</div>
+                  <h3 id="method-case-title" class="mt-4 text-xl font-extrabold leading-snug"></h3>
+                  <p id="method-case-copy" class="mt-3 text-sm leading-6"></p>
+                </div>
+                <div>
+                  <div id="method-case-reason" class="method-reason"></div>
+                  <div class="mt-3 method-trust"><span id="method-case-trust"></span></div>
+                  <div class="method-actions">
+                    <button class="method-action" type="button" data-method-action="copy" data-layer="case" data-i18n="methodCopyAction">复制</button>
+                    <button class="method-action" type="button" data-method-action="improve" data-layer="case" data-i18n="methodImproveAction">改进</button>
+                    <button class="method-action" type="button" data-method-action="useful" data-layer="case" data-i18n="methodUsefulAction">有用</button>
+                  </div>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </div>
@@ -2122,7 +2519,7 @@
         navCommunity: '社区',
         navMore: '更多',
         searchLabel: '搜索',
-        startLearning: '加入共创',
+        startLearning: '找方法',
         searchPanelLabel: 'Search AI Knowledge Bank',
         searchClose: '关闭',
         apiChecking: '后端连接检查中',
@@ -2141,6 +2538,7 @@
         searchCaseCopy: 'Before/After、SOP 复盘和验证证据',
         searchCommunityTitle: '社区',
         searchCommunityCopy: '验证、分叉、合并和演化信号',
+        moreMethod: '找可用方法',
         moreVision: '愿景与使命',
         moreExperience: '体验地图',
         moreDispatch: 'AI 调度引擎',
@@ -2152,11 +2550,37 @@
         heroTitleBrand: 'AI Knowledge Bank',
         heroTitleAccent: '别再一个人摸索 AI',
         heroCopy: '别人试过的方法，你直接拿去用。',
-        primaryCta: '加入共创',
+        primaryCta: '找可用方法',
         secondaryCta: '探索三库',
         metricNodes: '三库节点',
         metricForks: '调度路径',
         metricValidations: '社区信号',
+        methodKicker: 'METHOD FINDER',
+        methodTitle: '把问题丢进来，直接拿到可用的 AI 方法。',
+        methodCopy: '先不用理解系统架构。输入你要解决的问题，AI Knowledge Bank 会从知识库、工具库、案例库给出三层结果：为什么、怎么做、哪里验证过。',
+        methodInputLabel: '你的 AI 任务',
+        methodPlaceholder: '例如：我想用 AI 把团队的客户反馈整理成可复用 SOP',
+        methodScenarioLabel: '选择一个常见场景',
+        methodScenarioMarketing: '跨境营销 SOP',
+        methodScenarioEducation: '教师 AI 助教工作流',
+        methodScenarioSupport: '客服 FAQ 自动化',
+        methodRun: '生成可用方法',
+        methodStatusReady: '选择场景或输入问题后开始生成。',
+        methodStatusRunning: '正在从三库组合可用方法...',
+        methodStatusGenerated: '已生成三层结果：先理解，再执行，最后用案例校验。',
+        methodStatusCopied: '已复制，可直接拿去改写或执行。',
+        methodStatusImproved: '已改进为更具体的版本。',
+        methodStatusUseful: '已记录为有用反馈，会进入社区演化信号。',
+        methodOutputLabel: 'Three-layer answer',
+        methodKnowledgeLabel: '知识层',
+        methodToolLabel: '工具层',
+        methodCaseLabel: '案例层',
+        methodCopyAction: '复制',
+        methodImproveAction: '改进',
+        methodUsefulAction: '有用',
+        methodTrust: '可信度',
+        methodUsefulCount: '有用反馈',
+        methodCustomPrefix: '针对你输入的问题，建议先把目标、边界和可验证结果写清楚，再调用三库组合出可执行路径：',
         missionKicker: 'VISION & MISSION',
         missionTitle: '让每一次 AI 实践，都成为可验证、可复用、可共创的公共知识资产。',
         missionCopy: 'AI 正在把知识生产从少数人的经验，推向人人都能参与验证和改进的现场。我们希望把个人、团队和行业中的真实实践沉淀下来，让后来者不必从零开始。',
@@ -2340,7 +2764,7 @@
         navCommunity: 'Community',
         navMore: 'More',
         searchLabel: 'Search',
-        startLearning: 'Join',
+        startLearning: 'Find',
         searchPanelLabel: 'Search AI Knowledge Bank',
         searchClose: 'Close',
         apiChecking: 'Checking backend connection',
@@ -2359,6 +2783,7 @@
         searchCaseCopy: 'Before/After records, SOP reviews, and validation evidence',
         searchCommunityTitle: 'Community',
         searchCommunityCopy: 'Validation, forks, merges, and evolution signals',
+        moreMethod: 'Find a tested method',
         moreVision: 'Vision & Mission',
         moreExperience: 'Experience Map',
         moreDispatch: 'AI Dispatch Engine',
@@ -2370,11 +2795,37 @@
         heroTitleBrand: 'AI Knowledge Bank',
         heroTitleAccent: 'Stop figuring out AI alone',
         heroCopy: 'Use AI methods that others have already tested.',
-        primaryCta: 'Join Co-creation',
+        primaryCta: 'Find a Method',
         secondaryCta: 'Explore Vaults',
         metricNodes: 'Vault nodes',
         metricForks: 'Dispatch routes',
         metricValidations: 'Community signals',
+        methodKicker: 'METHOD FINDER',
+        methodTitle: 'Find an AI method you can use.',
+        methodCopy: 'You do not need to understand the whole architecture first. Describe the problem, and AI Knowledge Bank returns three layers from knowledge, tools, and cases: why it works, how to do it, and where it has been validated.',
+        methodInputLabel: 'Your AI task',
+        methodPlaceholder: 'Example: I want AI to turn customer feedback into reusable team SOPs',
+        methodScenarioLabel: 'Choose a common scenario',
+        methodScenarioMarketing: 'Cross-border marketing SOP',
+        methodScenarioEducation: 'Teacher AI assistant workflow',
+        methodScenarioSupport: 'Support FAQ automation',
+        methodRun: 'Find a tested method',
+        methodStatusReady: 'Choose a scenario or enter a problem to begin.',
+        methodStatusRunning: 'Composing a usable method across the three vaults...',
+        methodStatusGenerated: 'Three layers generated: understand first, execute next, validate with cases.',
+        methodStatusCopied: 'Copied. You can adapt or run it directly.',
+        methodStatusImproved: 'Improved into a more specific version.',
+        methodStatusUseful: 'Useful feedback recorded as a community evolution signal.',
+        methodOutputLabel: 'Three-layer answer',
+        methodKnowledgeLabel: 'Knowledge layer',
+        methodToolLabel: 'Tool layer',
+        methodCaseLabel: 'Case layer',
+        methodCopyAction: 'Copy',
+        methodImproveAction: 'Improve',
+        methodUsefulAction: 'Useful',
+        methodTrust: 'Trust',
+        methodUsefulCount: 'useful',
+        methodCustomPrefix: 'For your question, first define the goal, boundaries, and proof of success, then combine the three vaults into an executable path:',
         missionKicker: 'VISION & MISSION',
         missionTitle: 'Turn every AI practice into a verifiable, reusable, co-created public knowledge asset.',
         missionCopy: 'AI is moving knowledge from isolated expertise into field-tested practice that anyone can validate and improve. We preserve real experience from individuals, teams, and industries so others do not have to restart from zero.',
@@ -2553,6 +3004,163 @@
       }
     };
 
+    const methodCatalog = {
+      zh: {
+        marketing: {
+          query: '跨境营销团队要用 AI 重做本地化 SOP',
+          synthesis: '先把本地化拆成语言、文化、渠道和合规四类判断，再用 Agent 链完成翻译评审和素材复用，最后拿真实广告结果校验。',
+          knowledge: {
+            title: '本地化判断框架',
+            copy: '把“翻译得对不对”升级为“用户是否理解、是否信任、是否愿意行动”。',
+            reason: '适合先统一团队判断标准，避免每个市场各做各的。',
+            improved: '先建立语言、文化、渠道、合规四象限，每个素材上线前都要标注风险、受众和预期动作。',
+            confidence: 91
+          },
+          tool: {
+            title: '翻译评审 Agent 链',
+            copy: '用生成、校验、风格统一、风险标注四步完成本地化初稿。',
+            reason: '工具层负责把判断框架变成可以每天执行的工作流。',
+            improved: '把 Agent 链拆成 Brief 解析、初稿生成、本地语气校准、禁用词检查、A/B 版本输出五个节点。',
+            confidence: 86
+          },
+          case: {
+            title: '拉美素材复用案例',
+            copy: '复用 37 条广告素材，按地区重新校准表达并追踪点击率变化。',
+            reason: '案例层提供“这种方法在哪些市场有效”的证据。',
+            improved: '优先选择已有转化数据的素材，记录改写前后 CTR、CPA 和评论语义变化，形成下一轮 SOP。',
+            confidence: 83
+          }
+        },
+        education: {
+          query: '培训机构要为老师建立 AI 助教工作流',
+          synthesis: '先界定老师和 AI 的边界，再把备课、课堂问答、作业反馈分成三个可控流程，最后用小班课程数据验证效果。',
+          knowledge: {
+            title: 'AI 助教边界模型',
+            copy: '把解释、练习、反馈、评估拆开，明确哪些交给 AI，哪些必须由老师判断。',
+            reason: '教育场景最怕泛化，先定义边界能降低误用风险。',
+            improved: '为每类教学任务写出“AI 可做、老师复核、禁止自动化”三列规则，并随课程持续更新。',
+            confidence: 88
+          },
+          tool: {
+            title: '备课到反馈工作流',
+            copy: '串联课程大纲、例题生成、学生画像、反馈摘要四个节点。',
+            reason: '让老师每天真正省时间，而不是多维护一个系统。',
+            improved: '把课前材料生成、课堂高频问题聚类、课后个性化反馈做成三个模板，老师只改关键判断。',
+            confidence: 84
+          },
+          case: {
+            title: '小班课助教复盘',
+            copy: '老师批改时间减少，学生问题被更快聚类，复习材料更贴近薄弱点。',
+            reason: '用真实课堂结果证明工作流是否值得扩散。',
+            improved: '记录每节课的提问数量、反馈耗时、二次答疑率，连续四周后再决定是否合并为标准流程。',
+            confidence: 79
+          }
+        },
+        support: {
+          query: '客服团队要把高频问题变成自动化案例库',
+          synthesis: '先做意图分类和升级边界，再用 FAQ 聚类生成回复流程，最后用真实工单验证自动化覆盖率。',
+          knowledge: {
+            title: '客服意图分类框架',
+            copy: '把问题分为查询、操作、异常、投诉和升级，避免 AI 把敏感问题自动答错。',
+            reason: '分类越清晰，自动化越容易被团队信任。',
+            improved: '为每类意图绑定风险等级、必要字段和升级条件，让 AI 只处理可控范围。',
+            confidence: 89
+          },
+          tool: {
+            title: 'FAQ 聚类与回复 Agent',
+            copy: '自动归并同义问题，生成可审核的回复草案和知识库条目。',
+            reason: '把聊天记录转成可维护的工具流，减少重复劳动。',
+            improved: '每天自动聚类新工单，输出待审核 FAQ、标准回复、升级建议和需要人工补充的缺口。',
+            confidence: 82
+          },
+          case: {
+            title: '工单自动化覆盖案例',
+            copy: '高频问题自动命中率提升，人工升级路径更清楚。',
+            reason: '用覆盖率和满意度判断是否进入主干知识库。',
+            improved: '用命中率、人工改写率、客户追问率三个指标评估，每周合并表现稳定的回答版本。',
+            confidence: 80
+          }
+        }
+      },
+      en: {
+        marketing: {
+          query: 'A cross-border marketing team rebuilds localization SOPs with AI',
+          synthesis: 'Split localization into language, culture, channel, and compliance decisions, run a translation-review agent chain, then validate with campaign outcomes.',
+          knowledge: {
+            title: 'Localization Decision Frame',
+            copy: 'Move from “is the translation correct” to “will users understand, trust, and act on it”.',
+            reason: 'Useful when teams need one shared standard across markets.',
+            improved: 'Create a four-quadrant review for language, culture, channel, and compliance, with risk, audience, and intended action labeled before launch.',
+            confidence: 91
+          },
+          tool: {
+            title: 'Translation Review Agent Chain',
+            copy: 'Draft, check, align tone, and label risk in a repeatable route.',
+            reason: 'The tool layer turns the decision frame into daily execution.',
+            improved: 'Break the route into brief parsing, first draft, local tone check, restricted-term review, and A/B variant output.',
+            confidence: 86
+          },
+          case: {
+            title: 'LatAm Content Reuse Case',
+            copy: 'Reuse 37 ad assets with localized expression and tracked click-through changes.',
+            reason: 'The case layer shows where this method has evidence.',
+            improved: 'Start with assets that already have conversion data, then record CTR, CPA, and comment semantics before and after localization.',
+            confidence: 83
+          }
+        },
+        education: {
+          query: 'A training company builds AI teaching-assistant workflows',
+          synthesis: 'Define teacher and AI boundaries first, split prep, classroom Q&A, and assignment feedback into controlled flows, then validate with small-class data.',
+          knowledge: {
+            title: 'AI Teaching Boundary Model',
+            copy: 'Separate explanation, practice, feedback, and assessment, then decide what AI can do and what teachers must judge.',
+            reason: 'Education needs boundaries before automation.',
+            improved: 'For each teaching task, write three rules: AI may handle, teacher must review, and never automate.',
+            confidence: 88
+          },
+          tool: {
+            title: 'Prep-to-Feedback Workflow',
+            copy: 'Connect syllabus, example generation, learner profiles, and feedback summaries.',
+            reason: 'The workflow must save teacher time instead of adding system upkeep.',
+            improved: 'Create three templates for lesson prep, question clustering, and personalized feedback, with teachers editing only key judgments.',
+            confidence: 84
+          },
+          case: {
+            title: 'Small-Class Assistant Review',
+            copy: 'Teacher grading time dropped, student questions clustered faster, and review material matched weak points.',
+            reason: 'Classroom outcomes decide whether the workflow should spread.',
+            improved: 'Track questions, feedback time, and follow-up rate for four weeks before merging the process into a standard SOP.',
+            confidence: 79
+          }
+        },
+        support: {
+          query: 'A support team turns FAQs into an automation case library',
+          synthesis: 'Classify intent and escalation boundaries, use FAQ clustering to generate reply flows, then validate automation coverage with real tickets.',
+          knowledge: {
+            title: 'Support Intent Taxonomy',
+            copy: 'Group issues into query, operation, exception, complaint, and escalation so AI does not answer sensitive cases blindly.',
+            reason: 'Clear taxonomy makes automation easier to trust.',
+            improved: 'Attach risk level, required fields, and escalation rules to each intent so AI stays inside controllable work.',
+            confidence: 89
+          },
+          tool: {
+            title: 'FAQ Clustering Reply Agent',
+            copy: 'Merge equivalent questions and create reviewable reply drafts and knowledge entries.',
+            reason: 'Turns scattered chat history into maintainable workflow.',
+            improved: 'Cluster new tickets daily and output pending FAQs, standard replies, escalation suggestions, and missing knowledge gaps.',
+            confidence: 82
+          },
+          case: {
+            title: 'Ticket Automation Case',
+            copy: 'Higher hit rate on frequent issues and clearer human escalation.',
+            reason: 'Coverage and satisfaction show whether it belongs in the main vault.',
+            improved: 'Evaluate hit rate, human rewrite rate, and customer follow-up rate, then merge stable answers every week.',
+            confidence: 80
+          }
+        }
+      }
+    };
+
     const scenarioCatalog = {
       zh: {
         marketing: {
@@ -2678,6 +3286,10 @@
     let currentLanguage = ['zh', 'en'].includes(localStorage.getItem('language'))
       ? localStorage.getItem('language')
       : 'zh';
+    let activeMethodScenario = 'marketing';
+    let methodImproved = false;
+    let methodUsefulCount = 0;
+    let methodGenerationTimers = [];
     let activeScenario = 'marketing';
     let dispatchTimers = [];
     let searchDebounce = null;
@@ -2690,6 +3302,12 @@
     const metricRoutesValue = document.getElementById('metric-routes-value');
     const metricSignalsValue = document.getElementById('metric-signals-value');
     const liveVaultGrid = document.getElementById('live-vault-grid');
+    const methodWorkbench = document.getElementById('method-workbench');
+    const methodQuery = document.getElementById('method-query');
+    const methodRun = document.getElementById('method-run');
+    const methodStatus = document.getElementById('method-status');
+    const methodSynthesis = document.getElementById('method-synthesis');
+    const methodUsefulCountBadge = document.getElementById('method-useful-count');
 
     function resolveApiBase() {
       if (window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:') {
@@ -2833,7 +3451,140 @@
       return translations[currentLanguage].liveVaultsKnowledge;
     }
 
+    function clearMethodTimers() {
+      methodGenerationTimers.forEach((timer) => window.clearTimeout(timer));
+      methodGenerationTimers = [];
+    }
+
+    function getMethodPayload() {
+      const base = methodCatalog[currentLanguage][activeMethodScenario] || methodCatalog[currentLanguage].marketing;
+      const query = methodQuery.value.trim();
+      return {
+        ...base,
+        query: query || base.query,
+        synthesis: query ? `${translations[currentLanguage].methodCustomPrefix} ${query}` : base.synthesis
+      };
+    }
+
+    function renderMethodResults(options = {}) {
+      if (!methodWorkbench) return;
+      const { keepStatus = false } = options;
+      const dict = translations[currentLanguage];
+      const data = getMethodPayload();
+
+      document.querySelectorAll('.method-chip').forEach((button) => {
+        button.classList.toggle('is-active', button.dataset.methodScenario === activeMethodScenario);
+      });
+
+      methodSynthesis.textContent = data.synthesis;
+      methodUsefulCountBadge.textContent = `${methodUsefulCount} ${dict.methodUsefulCount}`;
+
+      ['knowledge', 'tool', 'case'].forEach((layer) => {
+        const item = data[layer];
+        document.getElementById(`method-${layer}-title`).textContent = item.title;
+        document.getElementById(`method-${layer}-copy`).textContent = methodImproved ? item.improved : item.copy;
+        document.getElementById(`method-${layer}-reason`).textContent = item.reason;
+        document.getElementById(`method-${layer}-trust`).textContent = `${dict.methodTrust} ${item.confidence}%`;
+      });
+
+      if (!keepStatus) {
+        methodStatus.textContent = dict.methodStatusReady;
+        methodStatus.classList.remove('is-hot');
+      }
+    }
+
+    function runMethodFinder() {
+      if (!methodWorkbench) return;
+      clearMethodTimers();
+      methodImproved = false;
+      renderMethodResults({ keepStatus: true });
+      methodRun.disabled = true;
+      methodStatus.textContent = translations[currentLanguage].methodStatusRunning;
+      methodStatus.classList.add('is-hot');
+      methodWorkbench.classList.remove('is-generated');
+      document.querySelectorAll('.method-result').forEach((card) => card.classList.remove('is-hot'));
+
+      window.requestAnimationFrame(() => methodWorkbench.classList.add('is-generated'));
+
+      ['knowledge', 'tool', 'case'].forEach((layer, index) => {
+        const timer = window.setTimeout(() => {
+          document.querySelectorAll('.method-result').forEach((card) => {
+            card.classList.toggle('is-hot', card.dataset.layer === layer);
+          });
+        }, index * 320);
+        methodGenerationTimers.push(timer);
+      });
+
+      methodGenerationTimers.push(window.setTimeout(() => {
+        document.querySelectorAll('.method-result').forEach((card) => card.classList.add('is-hot'));
+        methodStatus.textContent = translations[currentLanguage].methodStatusGenerated;
+        methodRun.disabled = false;
+      }, 1180));
+    }
+
+    function methodLayerText(layer) {
+      const data = getMethodPayload();
+      const item = data[layer];
+      const layerNames = {
+        knowledge: translations[currentLanguage].methodKnowledgeLabel,
+        tool: translations[currentLanguage].methodToolLabel,
+        case: translations[currentLanguage].methodCaseLabel
+      };
+
+      return [
+        `AI Knowledge Bank`,
+        `${translations[currentLanguage].methodInputLabel}: ${data.query}`,
+        `${translations[currentLanguage].methodOutputLabel}: ${data.synthesis}`,
+        `${layerNames[layer]}: ${item.title}`,
+        methodImproved ? item.improved : item.copy,
+        `${translations[currentLanguage].methodTrust}: ${item.confidence}%`
+      ].join('\n');
+    }
+
+    async function copyMethodLayer(layer) {
+      const text = methodLayerText(layer);
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const helper = document.createElement('textarea');
+        helper.value = text;
+        helper.setAttribute('readonly', '');
+        helper.style.position = 'fixed';
+        helper.style.opacity = '0';
+        document.body.append(helper);
+        helper.select();
+        document.execCommand('copy');
+        helper.remove();
+      }
+      methodStatus.textContent = translations[currentLanguage].methodStatusCopied;
+      methodStatus.classList.add('is-hot');
+    }
+
+    function improveMethodLayer(layer) {
+      methodImproved = true;
+      renderMethodResults({ keepStatus: true });
+      const card = document.querySelector(`.method-result[data-layer="${layer}"]`);
+      if (card) {
+        card.classList.add('is-hot');
+        card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+      methodStatus.textContent = translations[currentLanguage].methodStatusImproved;
+      methodStatus.classList.add('is-hot');
+    }
+
+    function markMethodUseful(layer) {
+      methodUsefulCount += 1;
+      methodUsefulCountBadge.textContent = `${methodUsefulCount} ${translations[currentLanguage].methodUsefulCount}`;
+      const card = document.querySelector(`.method-result[data-layer="${layer}"]`);
+      if (card) card.classList.add('is-hot');
+      methodStatus.textContent = translations[currentLanguage].methodStatusUseful;
+      methodStatus.classList.add('is-hot');
+    }
+
     function applyLanguage(lang) {
+      const previousLanguage = currentLanguage;
+      const previousMethodQuery = methodQuery.value.trim();
+      const previousScenarioQuery = methodCatalog[previousLanguage]?.[activeMethodScenario]?.query || '';
       currentLanguage = lang;
       localStorage.setItem('language', lang);
       document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
@@ -2850,6 +3601,10 @@
       });
 
       languageToggle.textContent = dict.toggle;
+      if (previousMethodQuery && previousMethodQuery === previousScenarioQuery) {
+        methodQuery.value = methodCatalog[lang][activeMethodScenario].query;
+      }
+      renderMethodResults({ keepStatus: true });
       renderScenario(activeScenario, false);
       if (latestVaultData) renderLiveVaults(latestVaultData);
       if (searchOverlay.classList.contains('is-open')) {
@@ -3150,6 +3905,28 @@
         const menu = link.closest('details');
         if (menu) menu.removeAttribute('open');
       });
+    });
+
+    document.querySelectorAll('.method-chip').forEach((button) => {
+      button.addEventListener('click', () => {
+        activeMethodScenario = button.dataset.methodScenario || 'marketing';
+        methodImproved = false;
+        methodQuery.value = methodCatalog[currentLanguage][activeMethodScenario].query;
+        renderMethodResults();
+      });
+    });
+
+    methodRun.addEventListener('click', runMethodFinder);
+
+    methodWorkbench.addEventListener('click', (event) => {
+      const button = event.target instanceof Element ? event.target.closest('[data-method-action]') : null;
+      if (!button) return;
+
+      const layer = button.dataset.layer || 'knowledge';
+      const action = button.dataset.methodAction;
+      if (action === 'copy') copyMethodLayer(layer);
+      if (action === 'improve') improveMethodLayer(layer);
+      if (action === 'useful') markMethodUseful(layer);
     });
 
     document.querySelectorAll('.scenario-btn').forEach((button) => {
