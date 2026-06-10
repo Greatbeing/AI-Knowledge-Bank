@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Evolution | AI Knowledge Bank</title>
+  <meta name="description" content="Community Evolution page for AI Knowledge Bank." />
+  <link rel="icon" href="./assets/brand/akb-love-logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/vault-page.css" />
+</head>
+<body data-page="community">
+  <canvas id="network-canvas" aria-hidden="true"></canvas>
+  <header class="nav">
+    <div class="shell nav-inner">
+      <a class="brand" href="./index.html" aria-label="AI Knowledge Bank home">
+        <img class="brand-mark" src="./assets/brand/akb-love-logo.svg" alt="AI Knowledge Bank logo" />
+        <span>AI Knowledge Bank</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a class="nav-link" href="./knowledge.html" data-nav="knowledge" data-i18n="navKnowledge">知识库</a>
+        <a class="nav-link" href="./tools.html" data-nav="tools" data-i18n="navTools">工具库</a>
+        <a class="nav-link" href="./cases.html" data-nav="cases" data-i18n="navCases">案例库</a>
+        <a class="nav-link" href="./community.html" data-nav="community" data-i18n="navCommunity">社区</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="nav-button" href="./index.html" data-i18n="backHome">首页</a>
+        <a class="nav-button primary" href="./index.html#dispatch" data-i18n="startLearning">开始学习</a>
+        <button id="language-toggle" class="nav-button" type="button" aria-label="Switch language">EN</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <section class="page-hero">
+      <div class="shell hero-grid">
+        <div>
+          <div class="pill" data-page-i18n="pageKicker">COMMUNITY EVOLUTION</div>
+          <h1 class="hero-title" data-page-i18n="pageTitle">社区：让验证、分叉、合并和信誉信号推动知识自然演化。</h1>
+        </div>
+        <div class="hero-panel">
+          <p class="hero-copy" data-page-i18n="pageCopy">社区不是简单点赞，而是把真实使用、验证、复用、争议和合并变成演化信号。</p>
+          <div class="metric-grid mt-6">
+            <div class="metric"><strong id="metric-nodes">0</strong><span data-i18n="nodeCount">节点</span></div>
+            <div class="metric"><strong id="metric-routes">0</strong><span data-i18n="routeCount">路径</span></div>
+            <div class="metric"><strong id="metric-signals">0</strong><span data-i18n="signalCount">信号</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2 class="section-title" data-page-i18n="sectionTitle">社区演化机制</h2></div>
+          <p class="section-copy" data-page-i18n="sectionCopy">每个信号都会影响节点权重。</p>
+        </div>
+        <div class="toolbar"><input id="page-search" class="search-input" type="search" placeholder="筛选当前页面内容" /></div>
+        <div id="node-grid" class="node-grid" aria-live="polite"></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2 class="section-title" data-page-i18n="insightTitle">社区如何推动演化</h2></div>
+          <p class="section-copy" data-page-i18n="insightCopy">社区把个人实践转化为共同资产。</p>
+        </div>
+        <div id="insight-grid" class="insight-grid"></div>
+        <div class="community-only community-layout">
+          <div id="signal-grid" class="signal-grid"></div>
+          <aside class="action-panel">
+            <h3 data-i18n="panelTitleCommunity">实时验证信号</h3>
+            <p data-i18n="panelCopyCommunity">点击后会向现有 Cloudflare API 提交一次社区验证信号。</p>
+            <button id="run-validation" class="run-button" type="button" data-i18n="runValidation">运行社区验证</button>
+            <p id="status-line" class="status-line" data-i18n="validationReady">准备接收社区验证信号</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><div class="shell" data-i18n="footer">AI Knowledge Bank：构建、验证并演化 AI 时代的知识资产。</div></footer>
+  <script type="module" src="./assets/vault-page.js"></script>
+</body>
+</html>

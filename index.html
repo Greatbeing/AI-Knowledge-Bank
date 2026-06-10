@@ -1254,10 +1254,10 @@
         <span class="brand-name font-extrabold text-lg sm:text-xl">AI Knowledge Bank</span>
       </a>
       <nav class="nav-links nav-primary flex items-center gap-2 text-sm font-semibold" aria-label="Primary navigation">
-        <a class="nav-link nav-link-main" href="#knowledge-vault" data-i18n="navKnowledge">知识库</a>
-        <a class="nav-link nav-link-main" href="#tool-vault" data-i18n="navTools">工具库</a>
-        <a class="nav-link nav-link-main" href="#case-vault" data-i18n="navCases">案例库</a>
-        <a class="nav-link nav-link-main" href="#evolution" data-i18n="navCommunity">社区</a>
+        <a class="nav-link nav-link-main" href="./knowledge.html" data-i18n="navKnowledge">知识库</a>
+        <a class="nav-link nav-link-main" href="./tools.html" data-i18n="navTools">工具库</a>
+        <a class="nav-link nav-link-main" href="./cases.html" data-i18n="navCases">案例库</a>
+        <a class="nav-link nav-link-main" href="./community.html" data-i18n="navCommunity">社区</a>
       </nav>
       <div class="nav-actions text-sm">
         <button id="search-trigger" class="command-btn" type="button" aria-label="Search">
@@ -2423,10 +2423,10 @@
     const siteSearch = document.getElementById('site-search');
     const searchResultsContainer = document.getElementById('search-results');
     const fallbackSearchEntries = [
-      { href: '#knowledge-vault', titleKey: 'searchKnowledgeTitle', copyKey: 'searchKnowledgeCopy', vault_type: 'knowledge' },
-      { href: '#tool-vault', titleKey: 'searchToolTitle', copyKey: 'searchToolCopy', vault_type: 'tool' },
-      { href: '#case-vault', titleKey: 'searchCaseTitle', copyKey: 'searchCaseCopy', vault_type: 'case' },
-      { href: '#evolution', titleKey: 'searchCommunityTitle', copyKey: 'searchCommunityCopy', vault_type: 'community' }
+      { href: './knowledge.html', titleKey: 'searchKnowledgeTitle', copyKey: 'searchKnowledgeCopy', vault_type: 'knowledge' },
+      { href: './tools.html', titleKey: 'searchToolTitle', copyKey: 'searchToolCopy', vault_type: 'tool' },
+      { href: './cases.html', titleKey: 'searchCaseTitle', copyKey: 'searchCaseCopy', vault_type: 'case' },
+      { href: './community.html', titleKey: 'searchCommunityTitle', copyKey: 'searchCommunityCopy', vault_type: 'community' }
     ];
 
     function openSearch() {
@@ -2505,10 +2505,10 @@
     }
 
     function vaultHref(vaultType) {
-      if (vaultType === 'tool') return '#tool-vault';
-      if (vaultType === 'case') return '#case-vault';
-      if (vaultType === 'community') return '#evolution';
-      return '#knowledge-vault';
+      if (vaultType === 'tool') return './tools.html';
+      if (vaultType === 'case') return './cases.html';
+      if (vaultType === 'community') return './community.html';
+      return './knowledge.html';
     }
 
     function vaultLabel(vaultType) {
