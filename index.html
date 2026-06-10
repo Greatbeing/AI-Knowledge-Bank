@@ -485,6 +485,57 @@
       font-size: clamp(2.25rem, 3.9vw, 3.45rem);
     }
 
+    .hero-quick {
+      width: min(760px, 100%);
+      margin: 34px auto 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    .hero-quick-input {
+      min-height: 52px;
+      border: 0;
+      outline: 0;
+      border-radius: 8px;
+      padding: 0 16px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.72);
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .hero-quick-input:focus {
+      box-shadow: 0 0 0 4px rgba(15, 159, 142, 0.1);
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    .hero-quick-run {
+      min-height: 52px;
+      border-radius: 8px;
+      padding: 0 18px;
+      color: white;
+      background: linear-gradient(135deg, var(--ink), var(--jade-dark));
+      box-shadow: 0 16px 34px rgba(15, 159, 142, 0.18);
+      font-weight: 900;
+      white-space: nowrap;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .hero-quick-run:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 40px rgba(15, 159, 142, 0.24);
+    }
+
+    .hero-quick-hint {
+      margin-top: 10px;
+      color: rgba(71, 85, 105, 0.7);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
     .method-workbench {
       position: relative;
       overflow: hidden;
@@ -637,6 +688,31 @@
         linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
       background-size: 32px 32px;
+    }
+
+    .method-header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .method-copy-all {
+      min-height: 34px;
+      border-radius: 8px;
+      padding: 0 12px;
+      color: #34260a;
+      background: linear-gradient(135deg, #fff7d1, #f1d16b);
+      box-shadow: 0 14px 30px rgba(214, 164, 48, 0.18);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .method-copy-all:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 36px rgba(214, 164, 48, 0.25);
     }
 
     .method-result-grid {
@@ -1638,6 +1714,15 @@
         min-height: auto;
       }
 
+      .hero-quick {
+        grid-template-columns: 1fr;
+        margin-top: 28px;
+      }
+
+      .hero-quick-run {
+        width: 100%;
+      }
+
       .hero-mark {
         width: 66px;
         height: 66px;
@@ -1678,6 +1763,10 @@
 
       .method-workbench {
         padding: 12px;
+      }
+
+      .method-header-actions {
+        justify-content: flex-start;
       }
 
       .method-result {
@@ -1848,6 +1937,13 @@
           别人试过的方法，你直接拿去用。
         </p>
 
+        <div class="hero-quick liquid reveal" role="search" aria-label="Fast AI method finder">
+          <label class="sr-only" for="hero-problem" data-i18n="heroQuickLabel">你想用 AI 解决什么问题？</label>
+          <input id="hero-problem" class="hero-quick-input" type="text" autocomplete="off" data-i18n-placeholder="heroQuickPlaceholder" placeholder="输入你的业务问题，例如：用 AI 提高客服回复效率" />
+          <button id="hero-quick-run" class="hero-quick-run" type="button" data-i18n="heroQuickRun">极速生成</button>
+        </div>
+        <div class="hero-quick-hint reveal" data-i18n="heroQuickHint">30 秒得到知识层、工具层、案例层三层结果。</div>
+
         <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row reveal">
           <a class="btn btn-primary w-full px-6 sm:w-auto" href="#method-finder" data-i18n="primaryCta">找可用方法</a>
           <a class="btn btn-secondary w-full px-6 sm:w-auto" href="#vaults" data-i18n="secondaryCta">探索三库</a>
@@ -1907,7 +2003,10 @@
                 <div class="font-mono text-xs font-bold uppercase text-emerald-300" data-i18n="methodOutputLabel">Three-layer answer</div>
                 <p id="method-synthesis" class="mt-3 max-w-2xl text-sm font-semibold leading-6 text-white/68"></p>
               </div>
-              <div id="method-useful-count" class="pill border-white/10 bg-white/10 px-3 py-1.5 text-xs font-bold text-white">0</div>
+              <div class="method-header-actions">
+                <button id="method-copy-all" class="method-copy-all" type="button" data-i18n="methodCopyAll">复制完整方案</button>
+                <div id="method-useful-count" class="pill border-white/10 bg-white/10 px-3 py-1.5 text-xs font-bold text-white">0</div>
+              </div>
             </div>
 
             <div class="method-result-grid">
@@ -2550,6 +2649,10 @@
         heroTitleBrand: 'AI Knowledge Bank',
         heroTitleAccent: '别再一个人摸索 AI',
         heroCopy: '别人试过的方法，你直接拿去用。',
+        heroQuickLabel: '你想用 AI 解决什么问题？',
+        heroQuickPlaceholder: '输入你的业务问题，例如：用 AI 提高客服回复效率',
+        heroQuickRun: '极速生成',
+        heroQuickHint: '30 秒得到知识层、工具层、案例层三层结果。',
         primaryCta: '找可用方法',
         secondaryCta: '探索三库',
         metricNodes: '三库节点',
@@ -2576,6 +2679,7 @@
         methodToolLabel: '工具层',
         methodCaseLabel: '案例层',
         methodCopyAction: '复制',
+        methodCopyAll: '复制完整方案',
         methodImproveAction: '改进',
         methodUsefulAction: '有用',
         methodTrust: '可信度',
@@ -2795,6 +2899,10 @@
         heroTitleBrand: 'AI Knowledge Bank',
         heroTitleAccent: 'Stop figuring out AI alone',
         heroCopy: 'Use AI methods that others have already tested.',
+        heroQuickLabel: 'What do you want AI to solve?',
+        heroQuickPlaceholder: 'Enter a work problem, e.g. use AI to improve support replies',
+        heroQuickRun: 'Generate fast',
+        heroQuickHint: 'Get knowledge, tool, and case layers in 30 seconds.',
         primaryCta: 'Find a Method',
         secondaryCta: 'Explore Vaults',
         metricNodes: 'Vault nodes',
@@ -2821,6 +2929,7 @@
         methodToolLabel: 'Tool layer',
         methodCaseLabel: 'Case layer',
         methodCopyAction: 'Copy',
+        methodCopyAll: 'Copy full method',
         methodImproveAction: 'Improve',
         methodUsefulAction: 'Useful',
         methodTrust: 'Trust',
@@ -3302,9 +3411,12 @@
     const metricRoutesValue = document.getElementById('metric-routes-value');
     const metricSignalsValue = document.getElementById('metric-signals-value');
     const liveVaultGrid = document.getElementById('live-vault-grid');
+    const heroProblem = document.getElementById('hero-problem');
+    const heroQuickRun = document.getElementById('hero-quick-run');
     const methodWorkbench = document.getElementById('method-workbench');
     const methodQuery = document.getElementById('method-query');
     const methodRun = document.getElementById('method-run');
+    const methodCopyAll = document.getElementById('method-copy-all');
     const methodStatus = document.getElementById('method-status');
     const methodSynthesis = document.getElementById('method-synthesis');
     const methodUsefulCountBadge = document.getElementById('method-useful-count');
@@ -3541,8 +3653,33 @@
       ].join('\n');
     }
 
-    async function copyMethodLayer(layer) {
-      const text = methodLayerText(layer);
+    function methodFullText() {
+      const data = getMethodPayload();
+      const layerNames = {
+        knowledge: translations[currentLanguage].methodKnowledgeLabel,
+        tool: translations[currentLanguage].methodToolLabel,
+        case: translations[currentLanguage].methodCaseLabel
+      };
+
+      const sections = ['knowledge', 'tool', 'case'].map((layer) => {
+        const item = data[layer];
+        return [
+          `【${layerNames[layer]}】${item.title}`,
+          methodImproved ? item.improved : item.copy,
+          `${translations[currentLanguage].methodTrust}: ${item.confidence}%`
+        ].join('\n');
+      });
+
+      return [
+        `AI Knowledge Bank`,
+        `${translations[currentLanguage].methodInputLabel}: ${data.query}`,
+        `${translations[currentLanguage].methodOutputLabel}: ${data.synthesis}`,
+        '',
+        ...sections
+      ].join('\n\n');
+    }
+
+    async function copyTextToClipboard(text) {
       try {
         await navigator.clipboard.writeText(text);
       } catch {
@@ -3556,8 +3693,27 @@
         document.execCommand('copy');
         helper.remove();
       }
+    }
+
+    async function copyMethodLayer(layer) {
+      await copyTextToClipboard(methodLayerText(layer));
       methodStatus.textContent = translations[currentLanguage].methodStatusCopied;
       methodStatus.classList.add('is-hot');
+    }
+
+    async function copyFullMethod() {
+      await copyTextToClipboard(methodFullText());
+      methodStatus.textContent = translations[currentLanguage].methodStatusCopied;
+      methodStatus.classList.add('is-hot');
+      methodWorkbench.classList.remove('is-generated');
+      window.requestAnimationFrame(() => methodWorkbench.classList.add('is-generated'));
+    }
+
+    function runHeroQuickSearch() {
+      const query = heroProblem.value.trim();
+      if (query) methodQuery.value = query;
+      document.getElementById('method-finder').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(runMethodFinder, 420);
     }
 
     function improveMethodLayer(layer) {
@@ -3907,6 +4063,13 @@
       });
     });
 
+    heroQuickRun.addEventListener('click', runHeroQuickSearch);
+    heroProblem.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      runHeroQuickSearch();
+    });
+
     document.querySelectorAll('.method-chip').forEach((button) => {
       button.addEventListener('click', () => {
         activeMethodScenario = button.dataset.methodScenario || 'marketing';
@@ -3917,6 +4080,7 @@
     });
 
     methodRun.addEventListener('click', runMethodFinder);
+    methodCopyAll.addEventListener('click', copyFullMethod);
 
     methodWorkbench.addEventListener('click', (event) => {
       const button = event.target instanceof Element ? event.target.closest('[data-method-action]') : null;
