@@ -482,6 +482,7 @@
     #tool-vault,
     #case-vault,
     #vision-mission,
+    #live-vaults,
     #dispatch,
     #evolution,
     #demo {
@@ -623,6 +624,110 @@
       font-size: 12px;
       font-weight: 800;
       color: rgba(17, 24, 39, 0.62);
+    }
+
+    .live-vault-card {
+      position: relative;
+      display: grid;
+      min-height: 230px;
+      overflow: hidden;
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      background:
+        radial-gradient(circle at 14% 0%, var(--live-glow), transparent 34%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.42));
+      box-shadow: 0 22px 58px rgba(17, 24, 39, 0.08);
+      backdrop-filter: blur(18px) saturate(155%);
+      -webkit-backdrop-filter: blur(18px) saturate(155%);
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+
+    .live-vault-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(112deg, transparent 18%, rgba(255, 255, 255, 0.38) 45%, transparent 70%);
+      opacity: 0;
+      transform: translateX(-120%);
+      pointer-events: none;
+    }
+
+    .live-vault-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 28px 70px rgba(17, 24, 39, 0.11);
+    }
+
+    .live-vault-card:hover::before {
+      animation: emergenceSweep 1.25s ease-out forwards;
+    }
+
+    .live-vault-card[data-vault="knowledge"] {
+      --live-glow: rgba(15, 159, 142, 0.18);
+      border-color: rgba(15, 159, 142, 0.22);
+    }
+
+    .live-vault-card[data-vault="tool"] {
+      --live-glow: rgba(109, 91, 208, 0.18);
+      border-color: rgba(109, 91, 208, 0.22);
+    }
+
+    .live-vault-card[data-vault="case"] {
+      --live-glow: rgba(211, 145, 44, 0.2);
+      border-color: rgba(211, 145, 44, 0.26);
+    }
+
+    .live-vault-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .live-vault-meta span {
+      border-radius: 999px;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      background: rgba(255, 255, 255, 0.58);
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(17, 24, 39, 0.58);
+    }
+
+    .live-vault-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: rgba(17, 24, 39, 0.64);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .live-vault-score::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), var(--coral));
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.36);
+    }
+
+    .live-vault-summary {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .live-vault-empty {
+      grid-column: 1 / -1;
+      min-height: 156px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: rgba(17, 24, 39, 0.54);
+      font-weight: 700;
     }
 
     .dispatch-console {
@@ -1347,6 +1452,24 @@
       </div>
     </section>
 
+    <section id="live-vaults" class="section">
+      <div class="shell">
+        <div class="grid items-end gap-6 lg:grid-cols-[0.82fr_1.18fr]">
+          <div class="reveal">
+            <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="liveVaultsKicker">LIVE VAULTS</div>
+            <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="liveVaultsTitle">真实三库内容，正在从 Supabase 返回。</h2>
+          </div>
+          <p class="reveal text-lg leading-8 text-slate-600" data-i18n="liveVaultsCopy">
+            这里展示当前知识库、工具库、案例库中的真实节点。每张卡片都保留可信度、来源和语义归属，后续可直接接入 Cross-Vault RAG。
+          </p>
+        </div>
+
+        <div id="live-vault-grid" class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3" aria-live="polite">
+          <div class="live-vault-empty card" data-i18n="liveVaultsLoading">正在读取实时三库内容...</div>
+        </div>
+      </div>
+    </section>
+
     <section id="dispatch" class="section">
       <div class="shell grid items-center gap-10 lg:grid-cols-[0.82fr_1.18fr]">
         <div class="reveal">
@@ -1642,6 +1765,16 @@
         vaultCaseTagA: 'SOP',
         vaultCaseTagB: 'Before/After',
         vaultCaseTagC: '证据链',
+        liveVaultsKicker: 'LIVE VAULTS',
+        liveVaultsTitle: '真实三库内容，正在从 Supabase 返回。',
+        liveVaultsCopy: '这里展示当前知识库、工具库、案例库中的真实节点。每张卡片都保留可信度、来源和语义归属，后续可直接接入 Cross-Vault RAG。',
+        liveVaultsLoading: '正在读取实时三库内容...',
+        liveVaultsEmpty: '暂时没有可展示的实时节点',
+        liveVaultsSource: '实时数据',
+        liveVaultsTrust: '可信度',
+        liveVaultsKnowledge: '知识库',
+        liveVaultsTool: '工具库',
+        liveVaultsCase: '案例库',
         dispatchKicker: 'CROSS-VAULT RAG',
         dispatchTitle: 'AI 个性化调度引擎，让答案同时有认知、路径和证据。',
         dispatchCopy: '用户不是在一个库里搜索关键词，而是把目标交给调度引擎。系统会跨三库取回知识解释、工具流程和案例证据，再组合成可执行建议。',
@@ -1774,6 +1907,16 @@
         vaultCaseTagA: 'SOP',
         vaultCaseTagB: 'Before/After',
         vaultCaseTagC: 'Evidence',
+        liveVaultsKicker: 'LIVE VAULTS',
+        liveVaultsTitle: 'Real vault content is now coming back from Supabase.',
+        liveVaultsCopy: 'This section renders active nodes from the Knowledge, Tools, and Cases vaults. Each card keeps trust, source, and semantic ownership so it can plug into Cross-Vault RAG later.',
+        liveVaultsLoading: 'Loading live vault content...',
+        liveVaultsEmpty: 'No live vault nodes are available yet',
+        liveVaultsSource: 'Live data',
+        liveVaultsTrust: 'Trust',
+        liveVaultsKnowledge: 'Knowledge',
+        liveVaultsTool: 'Tool',
+        liveVaultsCase: 'Case',
         dispatchKicker: 'CROSS-VAULT RAG',
         dispatchTitle: 'Personalized AI dispatch gives every answer cognition, route, and evidence.',
         dispatchCopy: 'Users do not search one repository. They give the engine a goal. The engine retrieves knowledge, tool paths, and case evidence across all vaults, then assembles executable guidance.',
@@ -1971,12 +2114,14 @@
     let dispatchTimers = [];
     let searchDebounce = null;
     let searchRequestId = 0;
+    let latestVaultData = null;
 
     const apiBase = resolveApiBase();
     const apiStatus = document.getElementById('api-status');
     const metricNodesValue = document.getElementById('metric-nodes-value');
     const metricRoutesValue = document.getElementById('metric-routes-value');
     const metricSignalsValue = document.getElementById('metric-signals-value');
+    const liveVaultGrid = document.getElementById('live-vault-grid');
 
     function resolveApiBase() {
       if (window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:') {
@@ -2021,6 +2166,8 @@
     async function loadVaultStats() {
       try {
         const data = await fetchApi('/vaults');
+        latestVaultData = data;
+        renderLiveVaults(data);
         if (!data.ok || data.source !== 'supabase') return;
         if (data.schema && data.schema !== 'knowledge_nodes') return;
 
@@ -2031,8 +2178,91 @@
           metricSignalsValue.textContent = Math.max(total * 6, total * 8).toLocaleString();
         }
       } catch {
+        renderLiveVaults(null);
         // Static metrics remain as the brand-level demo numbers.
       }
+    }
+
+    function renderLiveVaults(data) {
+      if (!liveVaultGrid) return;
+      const dict = translations[currentLanguage];
+
+      if (!data?.ok) {
+        const empty = document.createElement('div');
+        empty.className = 'live-vault-empty card';
+        empty.textContent = dict.liveVaultsEmpty;
+        liveVaultGrid.replaceChildren(empty);
+        return;
+      }
+
+      const groups = [
+        { type: 'knowledge', items: data.vaults?.knowledge || [] },
+        { type: 'tool', items: data.vaults?.tools || [] },
+        { type: 'case', items: data.vaults?.cases || [] }
+      ];
+
+      const cards = groups.flatMap((group) => group.items.slice(0, 2).map((item) => ({
+        ...item,
+        vault_type: group.type
+      })));
+
+      if (!cards.length) {
+        const empty = document.createElement('div');
+        empty.className = 'live-vault-empty card';
+        empty.textContent = dict.liveVaultsEmpty;
+        liveVaultGrid.replaceChildren(empty);
+        return;
+      }
+
+      liveVaultGrid.replaceChildren(...cards.map((item) => createLiveVaultCard(item, data.source)));
+    }
+
+    function createLiveVaultCard(item, source) {
+      const dict = translations[currentLanguage];
+      const article = document.createElement('article');
+      article.className = 'live-vault-card';
+      article.dataset.vault = item.vault_type;
+
+      const header = document.createElement('div');
+      header.className = 'flex items-start justify-between gap-4';
+
+      const label = document.createElement('div');
+      label.className = 'font-mono text-xs font-bold uppercase text-slate-500';
+      label.textContent = liveVaultLabel(item.vault_type);
+
+      const score = document.createElement('div');
+      score.className = 'live-vault-score';
+      score.textContent = `${dict.liveVaultsTrust} ${Math.max(0, Number(item.confidence || 0))}%`;
+
+      header.append(label, score);
+
+      const title = document.createElement('h3');
+      title.className = 'mt-5 text-xl font-extrabold leading-snug text-slate-950';
+      title.textContent = item.title || liveVaultLabel(item.vault_type);
+
+      const summary = document.createElement('p');
+      summary.className = 'live-vault-summary mt-4 leading-7 text-slate-600';
+      summary.textContent = item.summary || item.recommendation_reason || '';
+
+      const reason = document.createElement('p');
+      reason.className = 'mt-4 text-sm font-semibold leading-6 text-slate-500';
+      reason.textContent = item.recommendation_reason || '';
+
+      const meta = document.createElement('div');
+      meta.className = 'live-vault-meta';
+      meta.append(createMetaToken(`${dict.liveVaultsSource}: ${source === 'supabase' ? 'Supabase' : 'Demo'}`));
+      (item.scenario_tags || []).slice(0, 2).forEach((tag) => meta.append(createMetaToken(tag)));
+
+      article.append(header, title, summary);
+      if (reason.textContent && reason.textContent !== summary.textContent) article.append(reason);
+      article.append(meta);
+      return article;
+    }
+
+    function liveVaultLabel(vaultType) {
+      if (vaultType === 'tool') return translations[currentLanguage].liveVaultsTool;
+      if (vaultType === 'case') return translations[currentLanguage].liveVaultsCase;
+      return translations[currentLanguage].liveVaultsKnowledge;
     }
 
     function applyLanguage(lang) {
@@ -2053,6 +2283,7 @@
 
       languageToggle.textContent = dict.toggle;
       renderScenario(activeScenario, false);
+      if (latestVaultData) renderLiveVaults(latestVaultData);
       if (searchOverlay.classList.contains('is-open')) {
         scheduleSearch(siteSearch.value);
       }

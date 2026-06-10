@@ -420,16 +420,17 @@ function buildSignalResponse(signal, source, persisted) {
 }
 
 function normalizeNode(row) {
-  const vaultType = normalizeVaultType(row.vault_type || getContentVault(row.content), row.category, row.node_type);
-  const summary = row.summary || row.description || summarizeText(row.content) || fallbackSummary(vaultType);
+  const content = parseContent(row.content);
+  const vaultType = normalizeVaultType(row.vault_type || getContentVault(content), row.category || content?.category, row.node_type);
+  const summary = cleanText(row.summary || row.description || content?.summary || content?.description || summarizeText(content) || fallbackSummary(vaultType));
   const weight = Number(row.weight);
   const trustScore = clampNumber(
-    Number(row.trust_score ?? (Number.isFinite(weight) ? weight / 120 : 0.72)),
+    Number(row.trust_score ?? content?.trust_score ?? (Number.isFinite(weight) ? weight / 120 : 0.72)),
     0,
     1
   );
   const emergence = clampNumber(
-    Number(row.emergence_level ?? (row.is_emerging ? 0.86 : Number.isFinite(weight) ? weight / 140 : 0.5)),
+    Number(row.emergence_level ?? content?.emergence_level ?? (row.is_emerging ? 0.86 : Number.isFinite(weight) ? weight / 140 : 0.5)),
     0,
     1
   );
@@ -437,20 +438,41 @@ function normalizeNode(row) {
   return {
     id: String(row.id),
     vault_type: vaultType,
-    title: row.title || fallbackTitle(vaultType),
+    title: cleanText(row.title || content?.title || fallbackTitle(vaultType)),
     summary,
-    recommendation_reason: row.recommendation_reason || buildReason(vaultType, trustScore, emergence),
+    recommendation_reason: cleanText(row.recommendation_reason || content?.recommendation_reason || content?.reason || buildReason(vaultType, trustScore, emergence)),
     trust_score: trustScore,
     emergence_level: emergence,
     confidence: Math.round((trustScore * 0.65 + emergence * 0.35) * 100),
-    source_refs: normalizeRefs(row.source_refs),
-    scenario_tags: Array.isArray(row.scenario_tags) ? row.scenario_tags : [],
-    language: row.language || 'bilingual',
-    validation_count: Number(row.validation_count || 0),
-    fork_count: Number(row.fork_count || 0),
-    merge_count: Number(row.merge_count || 0),
+    source_refs: normalizeRefs(row.source_refs ?? content?.source_refs ?? content?.sources ?? content?.references),
+    scenario_tags: normalizeArray(row.scenario_tags ?? row.tags ?? content?.scenario_tags ?? content?.keywords ?? content?.tags),
+    language: row.language || content?.language || 'bilingual',
+    validation_count: Number(row.validation_count || content?.validation_count || 0),
+    fork_count: Number(row.fork_count || content?.fork_count || 0),
+    merge_count: Number(row.merge_count || content?.merge_count || 0),
     created_at: row.created_at || null
   };
+}
+
+function cleanText(value) {
+  if (value === null || value === undefined) return '';
+  if (Array.isArray(value)) return value.map(cleanText).filter(Boolean).join(' · ');
+  if (typeof value === 'object') return summarizeText(value);
+  return String(value).replace(/\s+/g, ' ').trim();
+}
+
+function normalizeArray(value) {
+  if (Array.isArray(value)) return value.map(cleanText).filter(Boolean);
+  if (typeof value !== 'string' || !value.trim()) return [];
+
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed.map(cleanText).filter(Boolean);
+  } catch {
+    // Plain comma-separated strings are supported below.
+  }
+
+  return value.split(/[,，]/).map(cleanText).filter(Boolean);
 }
 
 function normalizeVaultType(vaultType, category = '', nodeType = '') {
