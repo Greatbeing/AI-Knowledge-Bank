@@ -157,14 +157,14 @@ body::before {
 }
 
 .page-hero {
-  padding: 168px 0 72px;
+  padding: 142px 0 56px;
 }
 
 .hero-grid {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   gap: 42px;
-  align-items: end;
+  align-items: center;
 }
 
 .pill {
@@ -185,8 +185,8 @@ body::before {
   margin: 26px 0 0;
   max-width: 820px;
   color: #050816;
-  font-size: clamp(3rem, 6vw, 6.2rem);
-  line-height: 0.95;
+  font-size: clamp(2.9rem, 5vw, 4.8rem);
+  line-height: 1.02;
   font-weight: 900;
 }
 
@@ -596,7 +596,11 @@ body[data-page="community"] #insight-grid {
   }
 
   .page-hero {
-    padding-top: 168px;
+    padding-top: 228px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.65rem, 12.5vw, 4.2rem);
   }
 
   .hero-copy {
