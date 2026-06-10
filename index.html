@@ -451,11 +451,14 @@
     }
 
     .hero-title {
-      font-size: clamp(3rem, 7vw, 6.2rem);
-      line-height: 0.96;
+      display: grid;
+      gap: 10px;
+      font-size: clamp(3.25rem, 6.2vw, 5.7rem);
+      line-height: 0.98;
       font-weight: 800;
-      max-width: 980px;
+      max-width: 1180px;
       margin: 0 auto;
+      text-wrap: balance;
     }
 
     .hero-title span {
@@ -473,8 +476,13 @@
     }
 
     .hero-title .hero-title-accent {
-      font-size: clamp(2.35rem, 5.6vw, 5.8rem);
-      line-height: 1.02;
+      font-size: clamp(2.55rem, 4.55vw, 4.2rem);
+      line-height: 0.98;
+      font-weight: 800;
+    }
+
+    html[lang="en"] .hero-title .hero-title-accent {
+      font-size: clamp(2.25rem, 3.9vw, 3.45rem);
     }
 
     .section {
@@ -1342,12 +1350,27 @@
       }
 
       .hero {
-        padding-top: 168px;
+        padding-top: 224px;
         min-height: auto;
       }
 
+      .hero-mark {
+        width: 66px;
+        height: 66px;
+        margin-bottom: 14px;
+      }
+
       .hero-title {
-        font-size: clamp(2.8rem, 14vw, 4.9rem);
+        gap: 8px;
+        font-size: clamp(2.1rem, 9vw, 3.3rem);
+      }
+
+      .hero-title .hero-title-accent {
+        font-size: clamp(1.65rem, 7.2vw, 3.3rem);
+      }
+
+      html[lang="en"] .hero-title .hero-title-accent {
+        font-size: clamp(1.35rem, 5.8vw, 2.7rem);
       }
 
       .section {
@@ -1518,7 +1541,7 @@
 
         <h1 class="hero-title reveal">
           <span class="hero-title-main" data-i18n="heroTitleBrand">AI Knowledge Bank</span>
-          <span class="hero-title-accent" data-i18n="heroTitleAccent">让 AI 实践成为公共知识资产</span>
+          <span class="hero-title-accent" data-i18n="heroTitleAccent">AI驱动的人类技能进化网络</span>
         </h1>
 
         <p class="mx-auto mt-7 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl reveal" data-i18n="heroCopy">
@@ -2127,7 +2150,7 @@
         dashboard: '控制台',
         eyebrow: '复杂适应系统 · 知识演化网络',
         heroTitleBrand: 'AI Knowledge Bank',
-        heroTitleAccent: '让 AI 实践成为公共知识资产',
+        heroTitleAccent: 'AI驱动的人类技能进化网络',
         heroCopy: 'AI Knowledge Bank 连接知识库、工具库、案例库，用个性化调度和社区演化机制，把分散经验沉淀为面向所有人的 AI 能力网络。',
         primaryCta: '加入共创',
         secondaryCta: '探索三库',
@@ -2345,7 +2368,7 @@
         dashboard: 'Dashboard',
         eyebrow: 'Complex Adaptive System · Knowledge Evolution Network',
         heroTitleBrand: 'AI Knowledge Bank',
-        heroTitleAccent: 'Verified AI practice, shared as public knowledge',
+        heroTitleAccent: 'AI Skill Evolution Network',
         heroCopy: 'AI Knowledge Bank connects knowledge, tools, and cases with personalized dispatch and community evolution, turning scattered AI experience into a capability network for everyone.',
         primaryCta: 'Join Co-creation',
         secondaryCta: 'Explore Vaults',
