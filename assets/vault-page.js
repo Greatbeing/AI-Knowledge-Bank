@@ -60,7 +60,7 @@ const dictionaries = {
     validationFailed: '后端暂不可用，已保留为本地演示状态',
     panelTitleCommunity: '实时验证信号',
     panelCopyCommunity: '点击后会向现有 Cloudflare API 提交一次社区验证信号，用来模拟内容从个人经验进入公共演化循环。',
-    footer: 'AI Knowledge Bank：构建、验证并演化 AI 时代的知识资产。'
+    footer: 'AI Knowledge Bank：AI 时代的公共知识银行。'
   },
   en: {
     navKnowledge: 'Knowledge',
@@ -116,7 +116,7 @@ const dictionaries = {
     validationFailed: 'Backend unavailable; kept as local demo state',
     panelTitleCommunity: 'Live Validation Signal',
     panelCopyCommunity: 'This sends one community validation signal to the existing Cloudflare API and simulates how personal practice enters the shared evolution loop.',
-    footer: 'AI Knowledge Bank: build, validate, and evolve knowledge assets for the AI era.'
+    footer: 'AI Knowledge Bank: Where AI experience grows together.'
   }
 };
 
