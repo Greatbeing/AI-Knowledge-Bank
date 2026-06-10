@@ -157,7 +157,7 @@ body::before {
 }
 
 .page-hero {
-  padding: 142px 0 56px;
+  padding: 130px 0 42px;
 }
 
 .hero-grid {
@@ -185,7 +185,7 @@ body::before {
   margin: 26px 0 0;
   max-width: 820px;
   color: #050816;
-  font-size: clamp(2.9rem, 5vw, 4.8rem);
+  font-size: clamp(2.6rem, 4.35vw, 4rem);
   line-height: 1.02;
   font-weight: 900;
 }
@@ -247,7 +247,7 @@ body::before {
 }
 
 .section {
-  padding: 74px 0;
+  padding: 58px 0;
 }
 
 .section-head {
@@ -600,7 +600,7 @@ body[data-page="community"] #insight-grid {
   }
 
   .hero-title {
-    font-size: clamp(2.65rem, 12.5vw, 4.2rem);
+    font-size: clamp(2.45rem, 11vw, 3.65rem);
   }
 
   .hero-copy {
