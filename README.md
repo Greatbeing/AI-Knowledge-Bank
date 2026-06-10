@@ -103,6 +103,7 @@ The system borrows collaboration ideas from Git, but applies them to human skill
 | --- | --- |
 | Frontend | Vite 6, TypeScript, HTML5, Canvas |
 | UI system | Tailwind CSS, liquid glass visual language |
+| Backend API | Cloudflare Pages Functions under `/api/*` |
 | Data layer | Supabase, PostgreSQL, Row Level Security |
 | Workflow logic | TypeScript service, SQL triggers, optimized views |
 | Deployment | Cloudflare Pages, GitHub Pages, Vercel |
@@ -141,7 +142,26 @@ Then configure / 然后配置：
 ```env
 VITE_SUPABASE_URL=your-project-url
 VITE_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_URL=your-project-url
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
+
+`VITE_*` keys are for browser-side auth flows. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are Cloudflare Pages Function variables and must not be exposed in client code.
+
+`VITE_*` 用于浏览器侧登录流程；`SUPABASE_URL` 和 `SUPABASE_SERVICE_ROLE_KEY` 用于 Cloudflare Pages Functions，不能写入前端代码。
+
+## Backend API / 后端接口
+
+Cloudflare Pages serves the real backend API from `functions/api/[[path]].js`. GitHub Pages remains a static mirror; when opened there, the homepage calls the Cloudflare API automatically and falls back to demo data if the backend is unavailable.
+
+Cloudflare Pages 通过 `functions/api/[[path]].js` 提供真实后端接口。GitHub Pages 仍是静态镜像；从 GitHub Pages 打开时，首页会自动调用 Cloudflare API，后端不可用时回退到演示数据。
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/health` | Backend health, runtime, Supabase configuration state |
+| `GET /api/vaults` | Three-vault grouped node data and stats |
+| `GET /api/search?q=&locale=&limit=` | Cross-Vault RAG search contract returning knowledge, tools, and cases |
+| `POST /api/community-signals` | Community validation, usage, fork, merge, comment, and dispute signals |
 
 Related docs / 相关文档：
 
@@ -158,6 +178,7 @@ Related docs / 相关文档：
 ├── index.html                 # Main experience and particle network UI
 ├── assets/readme/             # Repository homepage visual assets
 ├── components/                # React components and visual modules
+├── functions/api/             # Cloudflare Pages Functions backend API
 ├── lib/                       # Auth, workflow, and shared utilities
 ├── supabase/migrations/       # Database schema, policies, triggers, views
 ├── types/                     # TypeScript definitions

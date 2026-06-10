@@ -10,6 +10,7 @@
 确保以下核心文件存在：
 - ✅ `index.html` - 主页面
 - ✅ `dashboard.html` - 用户控制台
+- ✅ `functions/api/[[path]].js` - Cloudflare Pages 后端 API
 - ✅ `lib/auth.ts` - 认证逻辑
 - ✅ `supabase/migrations/*.sql` - 数据库迁移文件
 
@@ -28,6 +29,7 @@
    - `supabase/migrations/001_cas_emergence_algorithm.sql`
    - `supabase/migrations/002_user_system.sql`
    - `supabase/migrations/003_knowledge_workflow.sql` (如果存在)
+   - `supabase/migrations/004_three_vault_cross_rag.sql`
 3. 每次执行后确认显示 "Success"
 
 ### 4. 配置 OAuth 登录 (GitHub)
@@ -48,44 +50,51 @@
 在 Supabase 项目 → **Settings** → **API** 中复制：
 - **Project URL**: `https://xxxxx.supabase.co`
 - **anon/public key**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+- **service_role key**: 仅用于 Cloudflare Pages Functions，不要写入前端代码
 
 ---
 
 ## 🌐 部署方案 (三选一)
 
-### 方案 A: Vercel (推荐 ⭐⭐⭐⭐⭐)
-**优点**: 自动 CI/CD、全球 CDN、自定义域名免费、与 GitHub 深度集成
+### 方案 A: Cloudflare Pages (推荐 ⭐⭐⭐⭐⭐)
+**优点**: 静态前端和 `/api/*` 后端接口在同一域名下运行，适合当前三库两引擎架构
 
 #### 步骤:
 1. **推送代码到 GitHub**
    ```bash
-   # 在本地终端执行
-   git remote add origin https://github.com/YOUR_USERNAME/ai-knowledge-bank.git
-   git branch -M main
-   git push -u origin main
+   git push origin main
    ```
 
-2. **部署到 Vercel**
-   - 访问 [vercel.com](https://vercel.com) 并登录 (推荐用 GitHub 登录)
-   - 点击 **"Add New..."** → **"Project"**
-   - 选择您的 `ai-knowledge-bank` 仓库
-   - 点击 **"Import"**
-   - 保持默认构建设置 (无需构建命令)
-   - 点击 **"Deploy"**
+2. **构建项目**
+   ```bash
+   npm install
+   npm run lint
+   npm run build
+   ```
 
-3. **等待部署完成**
-   - 约 30 秒后显示 "Congratulations!"
-   - 获得链接：`https://ai-knowledge-bank-YOUR_USERNAME.vercel.app`
+3. **部署到 Cloudflare Pages**
+   ```bash
+   npx wrangler pages deploy dist --project-name aiknowledgebank --branch main
+   ```
 
-4. **更新环境变量 (可选)**
-   - 在项目设置 → **Environment Variables**
-   - 添加 `NEXT_PUBLIC_SUPABASE_URL` 和 `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - 重新部署
+4. **配置后端环境变量**
+   - Cloudflare Dashboard → Pages → `aiknowledgebank` → Settings → Environment variables
+   - 添加：
+     - `SUPABASE_URL`
+     - `SUPABASE_SERVICE_ROLE_KEY`
+     - `VITE_SUPABASE_URL` (如需浏览器侧登录)
+     - `VITE_SUPABASE_ANON_KEY` (如需浏览器侧登录)
+   - `SUPABASE_SERVICE_ROLE_KEY` 只放在 Cloudflare 环境变量中，不要提交到仓库
+
+5. **验证接口**
+   - 打开 `https://aiknowledgebank.pages.dev/api/health`
+   - 搜索接口示例：`https://aiknowledgebank.pages.dev/api/search?q=marketing&locale=zh`
+   - 首页搜索面板会显示“后端已连接”或“演示数据模式”
 
 ---
 
-### 方案 B: Netlify (备选 ⭐⭐⭐⭐)
-**优点**: 拖拽部署、表单处理、简单的界面
+### 方案 B: Netlify (静态备选 ⭐⭐⭐)
+**优点**: 拖拽部署、简单的界面。注意：Netlify 只作为静态镜像时，不会运行本项目的 Cloudflare Pages Functions。
 
 #### 步骤:
 1. **使用 Netlify CLI**
@@ -104,7 +113,7 @@
 ---
 
 ### 方案 C: GitHub Pages (最简单 ⭐⭐⭐)
-**优点**: 无需额外账户、完全免费、适合静态站点
+**优点**: 无需额外账户、完全免费、适合静态站点。注意：GitHub Pages 不运行 `/api/*` 后端，首页会自动调用 Cloudflare Pages API 或回退到演示数据。
 
 #### 步骤:
 1. 推送代码到 GitHub (同方案 A 第 1 步)
@@ -122,15 +131,14 @@
 
 ## 🔧 部署后配置
 
-### 1. 更新前端配置文件
-在部署平台上设置环境变量，或直接在代码中替换：
+### 1. 更新部署环境变量
+在 Cloudflare Pages 中设置环境变量，不要把密钥写入前端代码：
 
-```typescript
-// lib/auth.ts 或单独创建 config.ts
-export const SUPABASE_CONFIG = {
-  url: 'https://YOUR_PROJECT.supabase.co',
-  anonKey: 'YOUR_ANON_KEY'
-}
+```env
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 ```
 
 ### 2. 回填 OAuth 回调 URL
@@ -140,6 +148,8 @@ export const SUPABASE_CONFIG = {
 
 ### 3. 测试完整流程
 - [ ] 打开部署链接
+- [ ] 打开 `/api/health` 检查后端状态
+- [ ] 打开 `/api/search?q=marketing&locale=zh` 检查 Cross-Vault RAG 接口
 - [ ] 点击 "Sign In" 测试 OAuth 登录
 - [ ] 检查 Dashboard 是否显示用户信息
 - [ ] 测试知识节点浏览功能
@@ -196,8 +206,10 @@ export const SUPABASE_CONFIG = {
 - [ ] 数据库迁移脚本已执行
 - [ ] OAuth 提供商已配置
 - [ ] 代码已推送到 GitHub
-- [ ] Vercel/Netlify/GitHub Pages 部署成功
+- [ ] Cloudflare Pages 部署成功
+- [ ] GitHub Pages 静态镜像部署成功
 - [ ] 环境变量已配置
+- [ ] `/api/health` 返回正常
 - [ ] OAuth 回调 URL 已更新
 - [ ] 登录功能测试通过
 - [ ] 移动端适配测试通过

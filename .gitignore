@@ -24,3 +24,4 @@ output/
 
 # Vercel local project state
 .vercel/
+.wrangler/

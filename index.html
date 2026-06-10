@@ -322,9 +322,68 @@
       transition: background 160ms ease, transform 160ms ease;
     }
 
+    .search-result[data-source="supabase"] {
+      background:
+        linear-gradient(135deg, rgba(15, 159, 142, 0.08), transparent 46%),
+        rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(15, 159, 142, 0.12);
+    }
+
     .search-result:hover {
       background: rgba(15, 159, 142, 0.09);
       transform: translateY(-1px);
+    }
+
+    .search-result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 11px;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      color: rgba(71, 85, 105, 0.78);
+      text-transform: uppercase;
+    }
+
+    .search-empty {
+      border-radius: 8px;
+      padding: 18px;
+      color: rgba(71, 85, 105, 0.78);
+      background: rgba(241, 245, 249, 0.82);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .api-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: rgba(71, 85, 105, 0.86);
+      background: rgba(241, 245, 249, 0.86);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .api-status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #94a3b8;
+      box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.14);
+    }
+
+    .api-status[data-state="connected"]::before {
+      background: var(--jade);
+      box-shadow: 0 0 0 4px rgba(15, 159, 142, 0.14), 0 0 18px rgba(15, 159, 142, 0.46);
+    }
+
+    .api-status[data-state="fallback"]::before {
+      background: var(--gold);
+      box-shadow: 0 0 0 4px rgba(211, 145, 44, 0.14), 0 0 18px rgba(211, 145, 44, 0.38);
     }
 
     .more-panel a {
@@ -1125,7 +1184,10 @@
   <div id="search-overlay" class="search-overlay" aria-hidden="true">
     <div class="search-panel">
       <div class="flex items-center justify-between gap-3">
-        <div class="font-mono text-xs font-bold uppercase text-slate-500" data-i18n="searchPanelLabel">Search AI Knowledge Bank</div>
+        <div>
+          <div class="font-mono text-xs font-bold uppercase text-slate-500" data-i18n="searchPanelLabel">Search AI Knowledge Bank</div>
+          <div id="api-status" class="api-status mt-3" data-state="checking" data-i18n="apiChecking">后端连接检查中</div>
+        </div>
         <button id="search-close" class="btn btn-secondary min-h-0 px-3 py-2 text-sm" type="button" data-i18n="searchClose">关闭</button>
       </div>
       <input id="site-search" class="search-input mt-4" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="搜索知识库、工具库、案例库或社区内容" />
@@ -1174,15 +1236,15 @@
 
         <div class="mt-14 grid gap-3 sm:grid-cols-3 reveal">
           <div class="metric liquid text-left">
-            <div class="font-mono text-3xl font-bold text-slate-950">2,847</div>
+            <div id="metric-nodes-value" class="font-mono text-3xl font-bold text-slate-950">2,847</div>
             <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricNodes">三库节点</div>
           </div>
           <div class="metric liquid text-left">
-            <div class="font-mono text-3xl font-bold text-slate-950">15,234</div>
+            <div id="metric-routes-value" class="font-mono text-3xl font-bold text-slate-950">15,234</div>
             <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricForks">调度路径</div>
           </div>
           <div class="metric liquid text-left">
-            <div class="font-mono text-3xl font-bold text-slate-950">42,891</div>
+            <div id="metric-signals-value" class="font-mono text-3xl font-bold text-slate-950">42,891</div>
             <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricValidations">社区信号</div>
           </div>
         </div>
@@ -1524,7 +1586,14 @@
         startLearning: '开始学习',
         searchPanelLabel: 'Search AI Knowledge Bank',
         searchClose: '关闭',
+        apiChecking: '后端连接检查中',
+        apiConnected: '后端已连接',
+        apiDemoMode: '演示数据模式',
+        apiOffline: '后端暂不可用',
         searchPlaceholder: '搜索知识库、工具库、案例库或社区内容',
+        searchEmpty: '没有找到匹配结果',
+        searchSourceSupabase: 'Supabase',
+        searchSourceFallback: 'Demo',
         searchKnowledgeTitle: '知识库',
         searchKnowledgeCopy: '认知模型、原理解释和判断框架',
         searchToolTitle: '工具库',
@@ -1622,6 +1691,8 @@
         statusIdle: '准备接收社区验证信号',
         statusRunning: '正在计算验证权重...',
         statusMerged: '已触发涌现：分支合并为新的公共标准',
+        statusMergedPersisted: '已触发涌现：社区信号已写入后端',
+        statusMergedSimulated: '已触发涌现：社区信号已进入演示队列',
         validateComplete: '涌现已完成',
         branchMerged: 'V2.0 新主干',
         branchMergedCopy: '社区验证通过',
@@ -1647,7 +1718,14 @@
         startLearning: 'Start Learning',
         searchPanelLabel: 'Search AI Knowledge Bank',
         searchClose: 'Close',
+        apiChecking: 'Checking backend connection',
+        apiConnected: 'Backend connected',
+        apiDemoMode: 'Demo data mode',
+        apiOffline: 'Backend unavailable',
         searchPlaceholder: 'Search knowledge, tools, cases, or community signals',
+        searchEmpty: 'No matching result yet',
+        searchSourceSupabase: 'Supabase',
+        searchSourceFallback: 'Demo',
         searchKnowledgeTitle: 'Knowledge Vault',
         searchKnowledgeCopy: 'Cognitive models, principles, and decision frames',
         searchToolTitle: 'Tools Vault',
@@ -1745,6 +1823,8 @@
         statusIdle: 'Ready to receive community validation signals',
         statusRunning: 'Calculating validation weight...',
         statusMerged: 'Emergence triggered: branch merged into the shared standard',
+        statusMergedPersisted: 'Emergence triggered: community signal written to backend',
+        statusMergedSimulated: 'Emergence triggered: community signal queued in demo mode',
         validateComplete: 'Emergence Complete',
         branchMerged: 'V2.0 New Mainline',
         branchMergedCopy: 'Community validated',
@@ -1889,6 +1969,70 @@
       : 'zh';
     let activeScenario = 'marketing';
     let dispatchTimers = [];
+    let searchDebounce = null;
+    let searchRequestId = 0;
+
+    const apiBase = resolveApiBase();
+    const apiStatus = document.getElementById('api-status');
+    const metricNodesValue = document.getElementById('metric-nodes-value');
+    const metricRoutesValue = document.getElementById('metric-routes-value');
+    const metricSignalsValue = document.getElementById('metric-signals-value');
+
+    function resolveApiBase() {
+      if (window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:') {
+        return 'https://aiknowledgebank.pages.dev/api';
+      }
+
+      return `${window.location.origin}/api`;
+    }
+
+    function setApiStatus(state, key) {
+      if (!apiStatus) return;
+      apiStatus.dataset.state = state;
+      apiStatus.dataset.i18n = key;
+      apiStatus.textContent = translations[currentLanguage][key];
+    }
+
+    async function fetchApi(path, options = {}) {
+      const headers = { ...(options.headers || {}) };
+      if (options.body) headers['Content-Type'] = 'application/json';
+
+      const response = await fetch(`${apiBase}${path}`, {
+        ...options,
+        headers
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with ${response.status}`);
+      }
+
+      return response.json();
+    }
+
+    async function checkApiHealth() {
+      try {
+        const data = await fetchApi('/health');
+        setApiStatus(data.supabase?.configured ? 'connected' : 'fallback', data.supabase?.configured ? 'apiConnected' : 'apiDemoMode');
+      } catch {
+        setApiStatus('fallback', 'apiOffline');
+      }
+    }
+
+    async function loadVaultStats() {
+      try {
+        const data = await fetchApi('/vaults');
+        if (!data.ok || data.source !== 'supabase') return;
+
+        const total = Number(data.stats?.total || 0);
+        if (total > 0) {
+          metricNodesValue.textContent = total.toLocaleString();
+          metricRoutesValue.textContent = Math.max(total * 2, Number(data.stats?.tools || 0) + Number(data.stats?.cases || 0)).toLocaleString();
+          metricSignalsValue.textContent = Math.max(total * 6, total * 8).toLocaleString();
+        }
+      } catch {
+        // Static metrics remain as the brand-level demo numbers.
+      }
+    }
 
     function applyLanguage(lang) {
       currentLanguage = lang;
@@ -1908,6 +2052,9 @@
 
       languageToggle.textContent = dict.toggle;
       renderScenario(activeScenario, false);
+      if (searchOverlay.classList.contains('is-open')) {
+        scheduleSearch(siteSearch.value);
+      }
 
       if (demoState.merged) {
         document.getElementById('branch-title').textContent = dict.branchMerged;
@@ -1943,16 +2090,56 @@
 
       if (animate) {
         runDispatch();
-        return;
+      } else {
+        document.getElementById('dispatch-status').textContent = translations[currentLanguage].dispatchIdle;
+        document.querySelectorAll('.dispatch-chip').forEach((chip) => {
+          chip.classList.toggle('is-active', chip.dataset.route === 'knowledge');
+        });
+        document.querySelectorAll('.result-card').forEach((card) => {
+          card.classList.toggle('is-hot', card.dataset.result === 'knowledge');
+        });
       }
 
-      document.getElementById('dispatch-status').textContent = translations[currentLanguage].dispatchIdle;
-      document.querySelectorAll('.dispatch-chip').forEach((chip) => {
-        chip.classList.toggle('is-active', chip.dataset.route === 'knowledge');
-      });
-      document.querySelectorAll('.result-card').forEach((card) => {
-        card.classList.toggle('is-hot', card.dataset.result === 'knowledge');
-      });
+      syncDispatchResults(data.query);
+    }
+
+    let dispatchRequestId = 0;
+
+    async function syncDispatchResults(query) {
+      const requestId = dispatchRequestId + 1;
+      dispatchRequestId = requestId;
+
+      try {
+        const data = await fetchApi(`/search?q=${encodeURIComponent(query)}&locale=${currentLanguage}&limit=1`);
+        if (requestId !== dispatchRequestId || !data?.ok) return;
+
+        const knowledge = data.results?.knowledge?.[0];
+        const tool = data.results?.tools?.[0];
+        const caseItem = data.results?.cases?.[0];
+
+        if (knowledge) {
+          document.getElementById('result-knowledge-title').textContent = knowledge.title;
+          document.getElementById('result-knowledge-copy').textContent = knowledge.summary;
+          document.getElementById('result-knowledge-confidence').style.width = `${Math.max(62, knowledge.confidence)}%`;
+        }
+
+        if (tool) {
+          document.getElementById('result-tool-title').textContent = tool.title;
+          document.getElementById('result-tool-copy').textContent = tool.summary;
+          document.getElementById('result-tool-confidence').style.width = `${Math.max(62, tool.confidence)}%`;
+        }
+
+        if (caseItem) {
+          document.getElementById('result-case-title').textContent = caseItem.title;
+          document.getElementById('result-case-copy').textContent = caseItem.summary;
+          document.getElementById('result-case-confidence').style.width = `${Math.max(62, caseItem.confidence)}%`;
+        }
+
+        document.getElementById('dispatch-synthesis').textContent = data.synthesis;
+        setApiStatus(data.source === 'supabase' ? 'connected' : 'fallback', data.source === 'supabase' ? 'apiConnected' : 'apiDemoMode');
+      } catch {
+        // Keep the local scenario copy when the backend is unavailable.
+      }
     }
 
     function runDispatch() {
@@ -2001,14 +2188,20 @@
     const searchTrigger = document.getElementById('search-trigger');
     const searchClose = document.getElementById('search-close');
     const siteSearch = document.getElementById('site-search');
-    const searchResults = Array.from(document.querySelectorAll('.search-result'));
+    const searchResultsContainer = document.getElementById('search-results');
+    const fallbackSearchEntries = [
+      { href: '#knowledge-vault', titleKey: 'searchKnowledgeTitle', copyKey: 'searchKnowledgeCopy', vault_type: 'knowledge' },
+      { href: '#tool-vault', titleKey: 'searchToolTitle', copyKey: 'searchToolCopy', vault_type: 'tool' },
+      { href: '#case-vault', titleKey: 'searchCaseTitle', copyKey: 'searchCaseCopy', vault_type: 'case' },
+      { href: '#evolution', titleKey: 'searchCommunityTitle', copyKey: 'searchCommunityCopy', vault_type: 'community' }
+    ];
 
     function openSearch() {
       searchOverlay.classList.add('is-open');
       searchOverlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
       siteSearch.value = '';
-      filterSearchResults('');
+      renderFallbackSearchResults('');
       window.setTimeout(() => siteSearch.focus(), 30);
     }
 
@@ -2018,12 +2211,116 @@
       document.body.style.overflow = '';
     }
 
-    function filterSearchResults(query) {
+    function renderFallbackSearchResults(query) {
       const normalized = query.trim().toLowerCase();
-      searchResults.forEach((item) => {
-        const text = item.textContent.toLowerCase();
-        item.style.display = !normalized || text.includes(normalized) ? 'block' : 'none';
+      const entries = fallbackSearchEntries.filter((entry) => {
+        const text = `${translations[currentLanguage][entry.titleKey]} ${translations[currentLanguage][entry.copyKey]}`.toLowerCase();
+        return !normalized || text.includes(normalized);
       });
+
+      renderSearchList(entries.map((entry) => ({
+        href: entry.href,
+        title: translations[currentLanguage][entry.titleKey],
+        summary: translations[currentLanguage][entry.copyKey],
+        vault_type: entry.vault_type,
+        source: 'local'
+      })), 'local');
+    }
+
+    function renderSearchList(items, source) {
+      searchResultsContainer.replaceChildren();
+
+      if (!items.length) {
+        const empty = document.createElement('div');
+        empty.className = 'search-empty';
+        empty.textContent = translations[currentLanguage].searchEmpty;
+        searchResultsContainer.append(empty);
+        return;
+      }
+
+      items.forEach((item) => {
+        const link = document.createElement('a');
+        link.className = 'search-result';
+        link.href = item.href || vaultHref(item.vault_type);
+        link.dataset.source = source === 'supabase' ? 'supabase' : 'fallback';
+
+        const title = document.createElement('div');
+        title.className = 'font-bold';
+        title.textContent = item.title;
+
+        const summary = document.createElement('div');
+        summary.className = 'mt-1 text-sm text-slate-500';
+        summary.textContent = item.summary;
+
+        const meta = document.createElement('div');
+        meta.className = 'search-result-meta';
+        meta.append(createMetaToken(vaultLabel(item.vault_type)));
+        if (item.confidence) meta.append(createMetaToken(`${item.confidence}%`));
+        if (item.source && item.source !== 'local') {
+          meta.append(createMetaToken(source === 'supabase' ? translations[currentLanguage].searchSourceSupabase : translations[currentLanguage].searchSourceFallback));
+        }
+
+        link.append(title, summary, meta);
+        searchResultsContainer.append(link);
+      });
+    }
+
+    function createMetaToken(text) {
+      const token = document.createElement('span');
+      token.textContent = text;
+      return token;
+    }
+
+    function vaultHref(vaultType) {
+      if (vaultType === 'tool') return '#tool-vault';
+      if (vaultType === 'case') return '#case-vault';
+      if (vaultType === 'community') return '#evolution';
+      return '#knowledge-vault';
+    }
+
+    function vaultLabel(vaultType) {
+      if (vaultType === 'tool') return translations[currentLanguage].searchToolTitle;
+      if (vaultType === 'case') return translations[currentLanguage].searchCaseTitle;
+      if (vaultType === 'community') return translations[currentLanguage].searchCommunityTitle;
+      return translations[currentLanguage].searchKnowledgeTitle;
+    }
+
+    function flattenSearchResults(data) {
+      return [
+        ...(data.results?.knowledge || []),
+        ...(data.results?.tools || []),
+        ...(data.results?.cases || [])
+      ].map((item) => ({
+        href: vaultHref(item.vault_type),
+        title: item.title,
+        summary: item.summary || item.recommendation_reason || '',
+        confidence: item.confidence,
+        vault_type: item.vault_type,
+        source: data.source
+      }));
+    }
+
+    async function updateSearchResults(query) {
+      const normalized = query.trim();
+      const requestId = searchRequestId + 1;
+      searchRequestId = requestId;
+
+      renderFallbackSearchResults(normalized);
+      if (normalized.length < 2) return;
+
+      try {
+        const data = await fetchApi(`/search?q=${encodeURIComponent(normalized)}&locale=${currentLanguage}&limit=4`);
+        if (requestId !== searchRequestId) return;
+        renderSearchList(flattenSearchResults(data), data.source);
+        setApiStatus(data.source === 'supabase' ? 'connected' : 'fallback', data.source === 'supabase' ? 'apiConnected' : 'apiDemoMode');
+      } catch {
+        if (requestId === searchRequestId) setApiStatus('fallback', 'apiOffline');
+      }
+    }
+
+    function scheduleSearch(query) {
+      window.clearTimeout(searchDebounce);
+      searchDebounce = window.setTimeout(() => updateSearchResults(query), 180);
     }
 
     searchTrigger.addEventListener('click', openSearch);
@@ -2031,9 +2328,9 @@
     searchOverlay.addEventListener('click', (event) => {
       if (event.target === searchOverlay) closeSearch();
     });
-    siteSearch.addEventListener('input', () => filterSearchResults(siteSearch.value));
-    searchResults.forEach((link) => {
-      link.addEventListener('click', closeSearch);
+    siteSearch.addEventListener('input', () => scheduleSearch(siteSearch.value));
+    searchResultsContainer.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) closeSearch();
     });
 
     window.addEventListener('keydown', (event) => {
@@ -2188,12 +2485,47 @@
       weightFill.style.width = `${Math.min(value, 112)}%`;
     }
 
+    async function submitCommunitySignal() {
+      const payload = {
+        node_id: null,
+        signal_type: 'validated',
+        impact_delta: 18,
+        confidence: Math.min(0.98, 0.72 + (demoState.weight / 180)),
+        metadata: {
+          scenario: activeScenario,
+          language: currentLanguage,
+          source: 'homepage-validation-demo'
+        }
+      };
+
+      try {
+        return await fetchApi('/community-signals', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+      } catch {
+        return null;
+      }
+    }
+
     validateButton.addEventListener('click', () => {
       if (demoState.running || demoState.merged) return;
 
       demoState.running = true;
       validateButton.disabled = true;
       demoStatus.textContent = translations[currentLanguage].statusRunning;
+      const signalPromise = submitCommunitySignal();
+      let signalResult = null;
+
+      signalPromise.then((signal) => {
+        signalResult = signal;
+        if (!signal || !signal.ok || !demoState.merged) return;
+
+        demoStatus.textContent = signal.persisted
+          ? translations[currentLanguage].statusMergedPersisted
+          : translations[currentLanguage].statusMergedSimulated;
+        setApiStatus(signal.persisted ? 'connected' : 'fallback', signal.persisted ? 'apiConnected' : 'apiDemoMode');
+      });
 
       const start = demoState.weight;
       const target = start + 31.5;
@@ -2223,14 +2555,22 @@
         branchCopy.textContent = translations[currentLanguage].branchMergedCopy;
         branchState.textContent = translations[currentLanguage].branchStateMerged;
         branchState.className = 'font-mono text-xs font-bold text-emerald-300';
-        demoStatus.textContent = translations[currentLanguage].statusMerged;
         validateButton.querySelector('span').textContent = translations[currentLanguage].validateComplete;
+        demoStatus.textContent = translations[currentLanguage].statusMerged;
+        if (signalResult && signalResult.ok) {
+          demoStatus.textContent = signalResult.persisted
+            ? translations[currentLanguage].statusMergedPersisted
+            : translations[currentLanguage].statusMergedSimulated;
+          setApiStatus(signalResult.persisted ? 'connected' : 'fallback', signalResult.persisted ? 'apiConnected' : 'apiDemoMode');
+        }
       }
 
       requestAnimationFrame(animate);
     });
 
     applyLanguage(currentLanguage);
+    checkApiHealth();
+    loadVaultStats();
 
     window.addEventListener('beforeunload', () => {
       if (animationFrame) cancelAnimationFrame(animationFrame);
