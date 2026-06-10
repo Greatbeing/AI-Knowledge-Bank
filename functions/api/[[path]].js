@@ -155,9 +155,12 @@ async function handleVaults(env) {
   }
 
   try {
-    const rows = await supabaseFetch(env, '/rest/v1/knowledge_nodes?select=id,title,summary,content,tags,category,vault_type,trust_score,source_refs,scenario_tags,language,validation_count,fork_count,merge_count,emergence_level,created_at&order=created_at.desc&limit=36');
-    const nodes = Array.isArray(rows) && rows.length > 0 ? rows.map(normalizeNode) : FALLBACK_NODES;
-    return buildVaultPayload(nodes, Array.isArray(rows) && rows.length > 0 ? 'supabase' : 'fallback');
+    const result = await fetchAvailableVaultNodes(env);
+    const nodes = result.rows.length > 0 ? result.rows.map(normalizeNode) : FALLBACK_NODES;
+    return {
+      ...buildVaultPayload(nodes, result.rows.length > 0 ? 'supabase' : 'fallback'),
+      schema: result.schema
+    };
   } catch (error) {
     return {
       ...buildVaultPayload(FALLBACK_NODES, 'fallback'),
@@ -188,6 +191,14 @@ async function handleSearch(request, env) {
         return buildSearchPayload(query, locale, rows.map(normalizeNode), 'supabase', limitPerVault);
       }
     } catch (error) {
+      const tableSearch = await searchSupabaseTables(env, query, locale, limitPerVault);
+      if (tableSearch) {
+        return {
+          ...tableSearch,
+          warning: `RPC unavailable, searched Supabase table instead: ${sanitizeError(error)}`
+        };
+      }
+
       return {
         ...buildSearchPayload(query, locale, filterFallbackNodes(query, locale), 'fallback', limitPerVault),
         warning: sanitizeError(error)
@@ -275,6 +286,45 @@ async function supabaseFetch(env, path, options = {}) {
 
   if (response.status === 204) return null;
   return response.json();
+}
+
+async function fetchAvailableVaultNodes(env) {
+  try {
+    const rows = await supabaseFetch(env, '/rest/v1/knowledge_nodes?select=id,title,summary,content,tags,category,vault_type,trust_score,source_refs,scenario_tags,language,validation_count,fork_count,merge_count,emergence_level,created_at&order=created_at.desc&limit=36');
+    return {
+      rows: Array.isArray(rows) ? rows : [],
+      schema: 'knowledge_nodes'
+    };
+  } catch (knowledgeError) {
+    try {
+      const rows = await supabaseFetch(env, '/rest/v1/nodes?select=id,title,description,content,node_type,weight,is_mainline,is_emerging,created_at,updated_at&order=created_at.desc&limit=36');
+      return {
+        rows: Array.isArray(rows) ? rows : [],
+        schema: 'nodes',
+        warning: sanitizeError(knowledgeError)
+      };
+    } catch (legacyError) {
+      throw httpError(legacyError.status || knowledgeError.status || 500, sanitizeError(legacyError));
+    }
+  }
+}
+
+async function searchSupabaseTables(env, query, locale, limitPerVault) {
+  try {
+    const result = await fetchAvailableVaultNodes(env);
+    const normalized = result.rows.map(normalizeNode);
+    const filtered = filterNodes(normalized, query, locale);
+    const nodes = filtered.length > 0 ? filtered : normalized;
+
+    if (!nodes.length) return null;
+
+    return {
+      ...buildSearchPayload(query, locale, nodes, 'supabase', limitPerVault),
+      schema: result.schema
+    };
+  } catch {
+    return null;
+  }
 }
 
 function buildVaultPayload(nodes, source) {
@@ -370,10 +420,19 @@ function buildSignalResponse(signal, source, persisted) {
 }
 
 function normalizeNode(row) {
-  const vaultType = normalizeVaultType(row.vault_type, row.category);
-  const summary = row.summary || summarizeText(row.content) || fallbackSummary(vaultType);
-  const trustScore = clampNumber(Number(row.trust_score ?? 0.72), 0, 1);
-  const emergence = clampNumber(Number(row.emergence_level ?? 0.5), 0, 1);
+  const vaultType = normalizeVaultType(row.vault_type, row.category, row.node_type);
+  const summary = row.summary || row.description || summarizeText(row.content) || fallbackSummary(vaultType);
+  const weight = Number(row.weight);
+  const trustScore = clampNumber(
+    Number(row.trust_score ?? (Number.isFinite(weight) ? weight / 120 : 0.72)),
+    0,
+    1
+  );
+  const emergence = clampNumber(
+    Number(row.emergence_level ?? (row.is_emerging ? 0.86 : Number.isFinite(weight) ? weight / 140 : 0.5)),
+    0,
+    1
+  );
 
   return {
     id: String(row.id),
@@ -394,8 +453,12 @@ function normalizeNode(row) {
   };
 }
 
-function normalizeVaultType(vaultType, category = '') {
+function normalizeVaultType(vaultType, category = '', nodeType = '') {
   if (vaultType === 'tool' || vaultType === 'case' || vaultType === 'knowledge') return vaultType;
+  if (nodeType === 'workflow') return 'tool';
+  if (nodeType === 'case_study') return 'case';
+  if (nodeType === 'prompt') return 'knowledge';
+
   const categoryText = String(category || '').toLowerCase();
   if (['tool', 'workflow', 'agent', 'sandbox'].some((term) => categoryText.includes(term))) return 'tool';
   if (['case', 'study', 'sop', 'example'].some((term) => categoryText.includes(term))) return 'case';
@@ -415,15 +478,25 @@ function normalizeRefs(value) {
   return [];
 }
 
-function filterFallbackNodes(query, locale) {
+function filterNodes(nodes, query, locale) {
   const normalized = query.trim().toLowerCase();
-  return FALLBACK_NODES.filter((node) => {
+  return nodes.filter((node) => {
     const localeMatch = locale === 'bilingual' || node.language === 'bilingual' || node.language === locale;
     if (!localeMatch) return false;
     if (!normalized) return true;
-    const haystack = [node.title, node.summary, node.recommendation_reason, ...node.scenario_tags].join(' ').toLowerCase();
+    const haystack = [
+      node.title,
+      node.summary,
+      node.recommendation_reason,
+      ...node.scenario_tags,
+      ...node.source_refs
+    ].join(' ').toLowerCase();
     return normalized.split(/\s+/).some((term) => haystack.includes(term));
   });
+}
+
+function filterFallbackNodes(query, locale) {
+  return filterNodes(FALLBACK_NODES.map(normalizeNode), query, locale);
 }
 
 function buildSynthesis(query, results, locale) {
@@ -452,8 +525,9 @@ function buildReason(vaultType, trustScore, emergence) {
 }
 
 function summarizeText(text) {
-  if (typeof text !== 'string') return '';
-  const trimmed = text.replace(/\s+/g, ' ').trim();
+  if (text === null || text === undefined) return '';
+  const raw = typeof text === 'string' ? text : JSON.stringify(text);
+  const trimmed = raw.replace(/\s+/g, ' ').trim();
   return trimmed.length > 130 ? `${trimmed.slice(0, 130)}...` : trimmed;
 }
 
