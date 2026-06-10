@@ -2165,7 +2165,7 @@
 
     async function loadVaultStats() {
       try {
-        const data = await fetchApi('/vaults');
+        const data = await fetchApi(`/vaults?locale=${currentLanguage}`);
         latestVaultData = data;
         renderLiveVaults(data);
         if (!data.ok || data.source !== 'supabase') return;
@@ -2414,6 +2414,7 @@
 
     languageToggle.addEventListener('click', () => {
       applyLanguage(currentLanguage === 'zh' ? 'en' : 'zh');
+      loadVaultStats();
     });
 
     const searchOverlay = document.getElementById('search-overlay');

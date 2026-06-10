@@ -98,7 +98,7 @@ export async function onRequest(context) {
     }
 
     if (route === 'vaults' && request.method === 'GET') {
-      return jsonResponse(await handleVaults(context.env));
+      return jsonResponse(await handleVaults(request, context.env));
     }
 
     if (route === 'search' && request.method === 'GET') {
@@ -147,23 +147,25 @@ function handleHealth(env) {
   };
 }
 
-async function handleVaults(env) {
+async function handleVaults(request, env) {
+  const url = new URL(request.url);
+  const locale = normalizeLocale(url.searchParams.get('locale') || 'bilingual');
   const supabase = getSupabaseConfig(env);
 
   if (!supabase) {
-    return buildVaultPayload(FALLBACK_NODES, 'fallback');
+    return buildVaultPayload(FALLBACK_NODES, 'fallback', locale);
   }
 
   try {
     const result = await fetchAvailableVaultNodes(env);
-    const nodes = result.rows.length > 0 ? result.rows.map(normalizeNode) : FALLBACK_NODES;
+    const nodes = result.rows.length > 0 ? result.rows : FALLBACK_NODES;
     return {
-      ...buildVaultPayload(nodes, result.rows.length > 0 ? 'supabase' : 'fallback'),
+      ...buildVaultPayload(nodes, result.rows.length > 0 ? 'supabase' : 'fallback', locale),
       schema: result.schema
     };
   } catch (error) {
     return {
-      ...buildVaultPayload(FALLBACK_NODES, 'fallback'),
+      ...buildVaultPayload(FALLBACK_NODES, 'fallback', locale),
       warning: sanitizeError(error)
     };
   }
@@ -312,7 +314,7 @@ async function fetchAvailableVaultNodes(env) {
 async function searchSupabaseTables(env, query, locale, limitPerVault) {
   try {
     const result = await fetchAvailableVaultNodes(env);
-    const normalized = result.rows.map(normalizeNode);
+    const normalized = result.rows.map((row) => normalizeNode(row, locale));
     const filtered = filterNodes(normalized, query, locale);
     const nodes = filtered.length > 0 ? filtered : normalized;
 
@@ -327,8 +329,8 @@ async function searchSupabaseTables(env, query, locale, limitPerVault) {
   }
 }
 
-function buildVaultPayload(nodes, source) {
-  const normalized = nodes.map(normalizeNode);
+function buildVaultPayload(nodes, source, locale = 'bilingual') {
+  const normalized = nodes.map((node) => normalizeNode(node, locale));
   const vaults = {
     knowledge: normalized.filter((node) => node.vault_type === 'knowledge'),
     tools: normalized.filter((node) => node.vault_type === 'tool'),
@@ -338,6 +340,7 @@ function buildVaultPayload(nodes, source) {
   return {
     ok: true,
     source,
+    locale,
     vaults,
     stats: {
       knowledge: vaults.knowledge.length,
@@ -350,7 +353,7 @@ function buildVaultPayload(nodes, source) {
 }
 
 function buildSearchPayload(query, locale, nodes, source, limitPerVault) {
-  const normalized = nodes.map(normalizeNode);
+  const normalized = nodes.map((node) => normalizeNode(node, locale));
   const covered = source === 'fallback' ? ensureVaultCoverage(normalized, locale, limitPerVault) : normalized;
   const grouped = {
     knowledge: covered.filter((node) => node.vault_type === 'knowledge'),
@@ -419,10 +422,11 @@ function buildSignalResponse(signal, source, persisted) {
   };
 }
 
-function normalizeNode(row) {
+function normalizeNode(row, locale = 'bilingual') {
   const content = parseContent(row.content);
+  const localized = getLocalizedContent(content, locale);
   const vaultType = normalizeVaultType(row.vault_type || getContentVault(content), row.category || content?.category, row.node_type);
-  const summary = cleanText(row.summary || row.description || content?.summary || content?.description || summarizeText(content) || fallbackSummary(vaultType));
+  const summary = cleanText(localized?.summary || row.summary || row.description || content?.summary || content?.description || summarizeText(content) || fallbackSummary(vaultType));
   const weight = Number(row.weight);
   const trustScore = clampNumber(
     Number(row.trust_score ?? content?.trust_score ?? (Number.isFinite(weight) ? weight / 120 : 0.72)),
@@ -438,20 +442,31 @@ function normalizeNode(row) {
   return {
     id: String(row.id),
     vault_type: vaultType,
-    title: cleanText(row.title || content?.title || fallbackTitle(vaultType)),
+    title: cleanText(localized?.title || row.title || content?.title || fallbackTitle(vaultType)),
     summary,
-    recommendation_reason: cleanText(row.recommendation_reason || content?.recommendation_reason || content?.reason || buildReason(vaultType, trustScore, emergence)),
+    recommendation_reason: cleanText(localized?.recommendation_reason || row.recommendation_reason || content?.recommendation_reason || content?.reason || buildReason(vaultType, trustScore, emergence)),
     trust_score: trustScore,
     emergence_level: emergence,
     confidence: Math.round((trustScore * 0.65 + emergence * 0.35) * 100),
     source_refs: normalizeRefs(row.source_refs ?? content?.source_refs ?? content?.sources ?? content?.references),
     scenario_tags: normalizeArray(row.scenario_tags ?? row.tags ?? content?.scenario_tags ?? content?.keywords ?? content?.tags),
-    language: row.language || content?.language || 'bilingual',
+    language: locale === 'zh' || locale === 'en' ? locale : row.language || content?.language || 'bilingual',
     validation_count: Number(row.validation_count || content?.validation_count || 0),
     fork_count: Number(row.fork_count || content?.fork_count || 0),
     merge_count: Number(row.merge_count || content?.merge_count || 0),
     created_at: row.created_at || null
   };
+}
+
+function getLocalizedContent(content, locale) {
+  if (!content || typeof content !== 'object') return null;
+  if (locale !== 'en' && locale !== 'zh') return null;
+
+  const i18n = content.i18n;
+  if (!i18n || typeof i18n !== 'object') return null;
+
+  const localized = i18n[locale];
+  return localized && typeof localized === 'object' ? localized : null;
 }
 
 function cleanText(value) {

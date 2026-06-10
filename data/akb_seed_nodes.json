@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "id": "00000000-0000-0000-0000-000000000101",
     "title": "AI 场景拆解四层法",
@@ -11,8 +11,25 @@
       "vault": "knowledge",
       "summary": "把一个模糊 AI 需求拆成目标、输入、约束、验证四层，避免直接从工具或 Prompt 开始。",
       "when_to_use": "用户只有一个想法，但还没有明确数据、流程、责任边界和验收指标。",
-      "framework": ["目标层：用户真正要改善的结果", "输入层：可用数据、样例、权限和上下文", "约束层：成本、隐私、合规、人工确认点", "验证层：怎样证明 AI 输出有效"],
-      "keywords": ["scenario mapping", "AI strategy", "goal input constraint validation", "知识库"]
+      "framework": [
+        "目标层：用户真正要改善的结果",
+        "输入层：可用数据、样例、权限和上下文",
+        "约束层：成本、隐私、合规、人工确认点",
+        "验证层：怎样证明 AI 输出有效"
+      ],
+      "keywords": [
+        "scenario mapping",
+        "AI strategy",
+        "goal input constraint validation",
+        "知识库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Four-Layer AI Scenario Mapping",
+          "summary": "Break a vague AI request into goal, input, constraints, and validation layers so the work does not start from a tool or prompt too early.",
+          "recommendation_reason": "Use it to clarify ambiguous AI opportunities before choosing tools."
+        }
+      }
     }
   },
   {
@@ -26,9 +43,30 @@
     "content": {
       "vault": "knowledge",
       "summary": "高风险 Prompt 必须声明未知处理、引用要求、人工复核点和禁止猜测范围。",
-      "principles": ["无法确认时输出待核验，而不是补全细节", "事实结论必须带来源或可追溯证据", "把生成任务和判断任务拆开", "关键决策保留人工复核"],
-      "failure_signals": ["引用不存在", "把建议写成事实", "跳过用户给出的限制条件"],
-      "keywords": ["prompt safety", "anti hallucination", "verification", "知识库"]
+      "principles": [
+        "无法确认时输出待核验，而不是补全细节",
+        "事实结论必须带来源或可追溯证据",
+        "把生成任务和判断任务拆开",
+        "关键决策保留人工复核"
+      ],
+      "failure_signals": [
+        "引用不存在",
+        "把建议写成事实",
+        "跳过用户给出的限制条件"
+      ],
+      "keywords": [
+        "prompt safety",
+        "anti hallucination",
+        "verification",
+        "知识库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Anti-Hallucination Prompt Boundary Principles",
+          "summary": "High-risk prompts must define unknown handling, citation requirements, human review points, and the scope where guessing is forbidden.",
+          "recommendation_reason": "Use it as a safety frame for factual or operational prompt outputs."
+        }
+      }
     }
   },
   {
@@ -42,9 +80,26 @@
     "content": {
       "vault": "knowledge",
       "summary": "RAG 不是把文件塞进向量库，而是把可引用、可分段、可更新、可验证的知识变成检索资产。",
-      "checklist": ["每段只表达一个稳定知识点", "保留来源、作者、时间和适用场景", "区分事实、经验、观点和模板", "为过期内容设置复审周期"],
+      "checklist": [
+        "每段只表达一个稳定知识点",
+        "保留来源、作者、时间和适用场景",
+        "区分事实、经验、观点和模板",
+        "为过期内容设置复审周期"
+      ],
       "quality_metric": "命中结果能否支持用户直接采取下一步行动。",
-      "keywords": ["RAG", "knowledge ingestion", "source refs", "知识库"]
+      "keywords": [
+        "RAG",
+        "knowledge ingestion",
+        "source refs",
+        "知识库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "RAG Ingestion Quality Standard",
+          "summary": "RAG is not dumping files into a vector store; it turns citable, chunked, updateable, and verifiable knowledge into retrieval assets.",
+          "recommendation_reason": "Use it to raise retrieval quality before scaling a knowledge base."
+        }
+      }
     }
   },
   {
@@ -59,8 +114,24 @@
       "vault": "knowledge",
       "summary": "用节省时间、质量提升、风险降低、复用频次四个维度评估 AI 工作流是否值得产品化。",
       "formula": "ROI = time_saved + quality_gain + risk_reduction + reuse_frequency - operating_cost",
-      "use_with": ["流程自动化", "Agent 方案评审", "团队知识库建设"],
-      "keywords": ["ROI", "workflow evaluation", "AI operations", "知识库"]
+      "use_with": [
+        "流程自动化",
+        "Agent 方案评审",
+        "团队知识库建设"
+      ],
+      "keywords": [
+        "ROI",
+        "workflow evaluation",
+        "AI operations",
+        "知识库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "AI Workflow ROI Evaluation Model",
+          "summary": "Evaluate whether an AI workflow deserves productization through time saved, quality gain, risk reduction, and reuse frequency.",
+          "recommendation_reason": "Use it to decide which workflows should become reusable assets."
+        }
+      }
     }
   },
   {
@@ -74,9 +145,27 @@
     "content": {
       "vault": "knowledge",
       "summary": "验证信号不能只看数量，要同时考虑验证者信誉、证据强度、场景相似度和时间衰减。",
-      "signals": ["validated", "used", "forked", "merged", "disputed"],
+      "signals": [
+        "validated",
+        "used",
+        "forked",
+        "merged",
+        "disputed"
+      ],
       "risk": "高热度但低证据的内容不能直接合并为公共标准。",
-      "keywords": ["community evolution", "trust score", "validation", "知识库"]
+      "keywords": [
+        "community evolution",
+        "trust score",
+        "validation",
+        "知识库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Community Validation Trust Model",
+          "summary": "Validation signal quality depends on validator reputation, evidence strength, scenario similarity, and time decay, not just volume.",
+          "recommendation_reason": "Use it to keep popular but weakly evidenced practices from becoming standards too early."
+        }
+      }
     }
   },
   {
@@ -90,9 +179,24 @@
     "content": {
       "vault": "knowledge",
       "summary": "好的 AI SOP 明确人负责目标和判断，AI 负责生成、归纳、检索和备选方案。",
-      "roles": ["人：定义目标、确认风险、决定采用", "AI：生成初稿、提取结构、补全候选、执行检索"],
+      "roles": [
+        "人：定义目标、确认风险、决定采用",
+        "AI：生成初稿、提取结构、补全候选、执行检索"
+      ],
       "boundary": "越靠近法律、财务、医疗和品牌承诺，越需要人工复核。",
-      "keywords": ["human AI collaboration", "SOP", "governance", "知识库"]
+      "keywords": [
+        "human AI collaboration",
+        "SOP",
+        "governance",
+        "知识库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Human-AI SOP Design Principles",
+          "summary": "A strong AI SOP keeps people accountable for goals and judgment while AI handles generation, summarization, retrieval, and options.",
+          "recommendation_reason": "Use it to define clear responsibility boundaries in AI-assisted workflows."
+        }
+      }
     }
   },
   {
@@ -106,9 +210,27 @@
     "content": {
       "vault": "tool",
       "summary": "一次查询同时调度知识解释、工具路径和案例证据，输出可执行建议。",
-      "steps": ["解析用户目标和场景", "从知识库找判断框架", "从工具库找执行流程", "从案例库找证据", "合成下一步行动"],
+      "steps": [
+        "解析用户目标和场景",
+        "从知识库找判断框架",
+        "从工具库找执行流程",
+        "从案例库找证据",
+        "合成下一步行动"
+      ],
       "output": "认知解释 + 工具路线 + 案例证据 + 风险提示",
-      "keywords": ["Cross-Vault RAG", "dispatch", "tool vault", "工具库"]
+      "keywords": [
+        "Cross-Vault RAG",
+        "dispatch",
+        "tool vault",
+        "工具库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Cross-Vault RAG Dispatch Template",
+          "summary": "Dispatch one query across knowledge explanations, tool routes, and case evidence to produce executable guidance.",
+          "recommendation_reason": "Use it as the minimum contract for the personalized dispatch engine."
+        }
+      }
     }
   },
   {
@@ -122,9 +244,27 @@
     "content": {
       "vault": "tool",
       "summary": "把一次有效 Prompt 变成团队可复用 SOP，而不是停留在个人技巧。",
-      "steps": ["记录原始 Prompt 和输出", "标注适用条件和失败条件", "拆成输入、步骤、检查点", "加入示例和反例", "设置复审周期"],
+      "steps": [
+        "记录原始 Prompt 和输出",
+        "标注适用条件和失败条件",
+        "拆成输入、步骤、检查点",
+        "加入示例和反例",
+        "设置复审周期"
+      ],
       "template": "目标 / 输入 / 步骤 / 质量标准 / 人工复核 / 更新记录",
-      "keywords": ["PromptOps", "SOP", "workflow", "工具库"]
+      "keywords": [
+        "PromptOps",
+        "SOP",
+        "workflow",
+        "工具库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Prompt-to-SOP Conversion Workflow",
+          "summary": "Turn an effective prompt into a reusable team SOP instead of leaving it as an individual trick.",
+          "recommendation_reason": "Use it to convert proven prompts into repeatable operating standards."
+        }
+      }
     }
   },
   {
@@ -138,9 +278,27 @@
     "content": {
       "vault": "tool",
       "summary": "把 PDF、网页、聊天记录和表格清洗成可检索、可引用、可更新的知识片段。",
-      "steps": ["去重和格式统一", "按主题切片", "提取来源引用", "标注语言和场景", "抽样检索测试"],
+      "steps": [
+        "去重和格式统一",
+        "按主题切片",
+        "提取来源引用",
+        "标注语言和场景",
+        "抽样检索测试"
+      ],
       "quality_gate": "随机抽 10 个真实问题，检查检索结果是否能支持回答。",
-      "keywords": ["data cleaning", "RAG ingestion", "source refs", "工具库"]
+      "keywords": [
+        "data cleaning",
+        "RAG ingestion",
+        "source refs",
+        "工具库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "AI Material Cleaning and Ingestion Flow",
+          "summary": "Clean PDFs, web pages, chat logs, and spreadsheets into searchable, citable, and updateable knowledge chunks.",
+          "recommendation_reason": "Use it before building retrieval over messy team materials."
+        }
+      }
     }
   },
   {
@@ -154,9 +312,29 @@
     "content": {
       "vault": "tool",
       "summary": "把一次 AI 实践复盘成案例库资产，保留 Before/After、证据和可复用边界。",
-      "fields": ["背景", "原流程", "AI 介入点", "工具链", "结果指标", "失败点", "复用建议"],
+      "fields": [
+        "背景",
+        "原流程",
+        "AI 介入点",
+        "工具链",
+        "结果指标",
+        "失败点",
+        "复用建议"
+      ],
       "evidence": "至少包含一个可验证指标，例如时间、成本、准确率、转化率或满意度。",
-      "keywords": ["case review", "before after", "evidence", "工具库"]
+      "keywords": [
+        "case review",
+        "before after",
+        "evidence",
+        "工具库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Case Retrospective Template",
+          "summary": "Turn one AI practice into a case asset by preserving before/after state, evidence, and reuse boundaries.",
+          "recommendation_reason": "Use it to make successful practices understandable and reusable."
+        }
+      }
     }
   },
   {
@@ -170,9 +348,26 @@
     "content": {
       "vault": "tool",
       "summary": "提交社区验证前，用事实性、逻辑性、完整性、可复用性四项检查内容。",
-      "checks": ["事实是否可追溯", "推理是否跳步", "边界条件是否写清", "他人是否能复现"],
+      "checks": [
+        "事实是否可追溯",
+        "推理是否跳步",
+        "边界条件是否写清",
+        "他人是否能复现"
+      ],
       "review_output": "approve / needs_revision / reject + 证据说明",
-      "keywords": ["validation checklist", "peer review", "governance", "工具库"]
+      "keywords": [
+        "validation checklist",
+        "peer review",
+        "governance",
+        "工具库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Validation Review Checklist",
+          "summary": "Before submitting community validation, check factuality, logic, completeness, and reusability.",
+          "recommendation_reason": "Use it to keep validation signals concrete and comparable."
+        }
+      }
     }
   },
   {
@@ -186,9 +381,31 @@
     "content": {
       "vault": "tool",
       "summary": "把高频客服问题聚类，生成标准回复、升级规则和案例库记录。",
-      "steps": ["导入历史工单", "按意图聚类", "生成回复草稿", "人工审核", "记录命中率和升级率"],
-      "metrics": ["first response time", "resolution rate", "human escalation"],
-      "keywords": ["customer support", "FAQ automation", "workflow", "工具库"]
+      "steps": [
+        "导入历史工单",
+        "按意图聚类",
+        "生成回复草稿",
+        "人工审核",
+        "记录命中率和升级率"
+      ],
+      "metrics": [
+        "first response time",
+        "resolution rate",
+        "human escalation"
+      ],
+      "keywords": [
+        "customer support",
+        "FAQ automation",
+        "workflow",
+        "工具库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Support FAQ Automation Flow",
+          "summary": "Cluster frequent support questions, generate standard replies, define escalation rules, and create case records.",
+          "recommendation_reason": "Use it to turn repetitive support work into an automation-ready asset."
+        }
+      }
     }
   },
   {
@@ -204,8 +421,24 @@
       "summary": "团队用本地化判断框架和翻译评审 Agent，把广告脚本生产从 2 天缩短到 4 小时。",
       "before": "人工翻译后再由市场团队多轮修改，风格不稳定。",
       "after": "AI 先生成区域版本，Agent 做风险标注，人工只复核高风险表达。",
-      "evidence": ["交付周期缩短约 75%", "复审意见减少", "本地化禁用词命中率下降"],
-      "keywords": ["marketing", "localization", "case study", "案例库"]
+      "evidence": [
+        "交付周期缩短约 75%",
+        "复审意见减少",
+        "本地化禁用词命中率下降"
+      ],
+      "keywords": [
+        "marketing",
+        "localization",
+        "case study",
+        "案例库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Cross-Border Localization SOP Case",
+          "summary": "A team used localization decision frames and translation-review agents to cut ad script production from two days to four hours.",
+          "recommendation_reason": "Use it as evidence for combining judgment frames with review agents."
+        }
+      }
     }
   },
   {
@@ -221,8 +454,24 @@
       "summary": "培训机构把课堂记录、作业和学生画像输入 AI，自动生成课后反馈初稿。",
       "before": "老师每次课后手动整理反馈，平均 90 分钟。",
       "after": "AI 生成结构化反馈，老师复核和补充个性化建议，平均 20 分钟。",
-      "evidence": ["整理时间下降", "反馈结构更稳定", "老师保留最终判断权"],
-      "keywords": ["education", "teacher assistant", "case study", "案例库"]
+      "evidence": [
+        "整理时间下降",
+        "反馈结构更稳定",
+        "老师保留最终判断权"
+      ],
+      "keywords": [
+        "education",
+        "teacher assistant",
+        "case study",
+        "案例库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "AI Teaching Assistant Feedback Case",
+          "summary": "A training company used class records, assignments, and learner profiles to generate first drafts of after-class feedback.",
+          "recommendation_reason": "Use it to see where teachers should keep review control while AI reduces repetitive drafting."
+        }
+      }
     }
   },
   {
@@ -238,8 +487,25 @@
       "summary": "客服团队把 3 个月工单聚类为 FAQ 知识库，并建立人工升级边界。",
       "before": "新人客服重复搜索历史答案，回复质量依赖个人经验。",
       "after": "AI 推荐标准回复和相似案例，复杂问题自动升级给人工。",
-      "evidence": ["首响时间缩短", "标准答案复用率提升", "投诉类问题仍由人工确认"],
-      "keywords": ["support", "FAQ", "automation", "case study", "案例库"]
+      "evidence": [
+        "首响时间缩短",
+        "标准答案复用率提升",
+        "投诉类问题仍由人工确认"
+      ],
+      "keywords": [
+        "support",
+        "FAQ",
+        "automation",
+        "case study",
+        "案例库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Support FAQ Automation Case",
+          "summary": "A support team clustered three months of tickets into an FAQ knowledge base and defined human escalation boundaries.",
+          "recommendation_reason": "Use it as evidence for automation coverage with clear escalation rules."
+        }
+      }
     }
   },
   {
@@ -255,8 +521,25 @@
       "summary": "独立开发者用 AI 把 PRD 转成领域模型、接口契约和测试清单，再进入人工编码。",
       "before": "需求直接写代码，接口边界频繁返工。",
       "after": "先生成模型和 OpenAPI 草案，人工确认后再开发。",
-      "evidence": ["返工次数减少", "接口评审更快", "边缘用例覆盖更完整"],
-      "keywords": ["developer", "PRD", "OpenAPI", "case study", "案例库"]
+      "evidence": [
+        "返工次数减少",
+        "接口评审更快",
+        "边缘用例覆盖更完整"
+      ],
+      "keywords": [
+        "developer",
+        "PRD",
+        "OpenAPI",
+        "case study",
+        "案例库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Indie Developer PRD-to-Code Skeleton Case",
+          "summary": "An indie developer used AI to turn a PRD into domain models, API contracts, and test checklists before human coding.",
+          "recommendation_reason": "Use it to structure early product engineering without skipping review."
+        }
+      }
     }
   },
   {
@@ -272,8 +555,25 @@
       "summary": "金融分析师用长文本 RAG 提取 10-K 风险因子，并对比年份变化。",
       "before": "人工阅读数百页 PDF，容易漏掉细微措辞变化。",
       "after": "AI 先抽取风险段落和引用页码，分析师复核高影响变化。",
-      "evidence": ["初筛时间下降", "引用可追溯", "最终判断仍由分析师负责"],
-      "keywords": ["finance", "10-K", "risk factors", "RAG", "案例库"]
+      "evidence": [
+        "初筛时间下降",
+        "引用可追溯",
+        "最终判断仍由分析师负责"
+      ],
+      "keywords": [
+        "finance",
+        "10-K",
+        "risk factors",
+        "RAG",
+        "案例库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Financial Report Risk Factor Extraction Case",
+          "summary": "A financial analyst used long-context RAG to extract 10-K risk factors and compare changes across years.",
+          "recommendation_reason": "Use it as a case for citable retrieval in regulated analysis work."
+        }
+      }
     }
   },
   {
@@ -289,9 +589,25 @@
       "summary": "运营团队把分散在文档、聊天和表格里的经验迁移成可检索的三库资产。",
       "before": "新人靠问人和翻聊天记录学习流程。",
       "after": "知识解释、工具流程和真实案例分库存放，由搜索和调度统一访问。",
-      "evidence": ["新人上手更快", "重复提问减少", "旧经验通过复审机制降权"],
-      "keywords": ["knowledge base", "migration", "team operations", "case study", "案例库"]
+      "evidence": [
+        "新人上手更快",
+        "重复提问减少",
+        "旧经验通过复审机制降权"
+      ],
+      "keywords": [
+        "knowledge base",
+        "migration",
+        "team operations",
+        "case study",
+        "案例库"
+      ],
+      "i18n": {
+        "en": {
+          "title": "Team Knowledge Base Migration Case",
+          "summary": "An operations team migrated scattered experience from documents, chats, and spreadsheets into searchable three-vault assets.",
+          "recommendation_reason": "Use it as a practical migration path from scattered knowledge to shared assets."
+        }
+      }
     }
   }
 ]
-
