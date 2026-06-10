@@ -420,7 +420,7 @@ function buildSignalResponse(signal, source, persisted) {
 }
 
 function normalizeNode(row) {
-  const vaultType = normalizeVaultType(row.vault_type, row.category, row.node_type);
+  const vaultType = normalizeVaultType(row.vault_type || getContentVault(row.content), row.category, row.node_type);
   const summary = row.summary || row.description || summarizeText(row.content) || fallbackSummary(vaultType);
   const weight = Number(row.weight);
   const trustScore = clampNumber(
@@ -456,7 +456,7 @@ function normalizeNode(row) {
 function normalizeVaultType(vaultType, category = '', nodeType = '') {
   if (vaultType === 'tool' || vaultType === 'case' || vaultType === 'knowledge') return vaultType;
   if (nodeType === 'workflow') return 'tool';
-  if (nodeType === 'case_study') return 'case';
+  if (nodeType === 'case_study' || nodeType === 'case') return 'case';
   if (nodeType === 'prompt') return 'knowledge';
 
   const categoryText = String(category || '').toLowerCase();
@@ -476,6 +476,23 @@ function normalizeRefs(value) {
     }
   }
   return [];
+}
+
+function getContentVault(content) {
+  const parsed = parseContent(content);
+  if (!parsed || typeof parsed !== 'object') return '';
+  const vault = parsed.vault;
+  return vault === 'knowledge' || vault === 'tool' || vault === 'case' ? vault : '';
+}
+
+function parseContent(content) {
+  if (content && typeof content === 'object') return content;
+  if (typeof content !== 'string' || !content.trim()) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    return null;
+  }
 }
 
 function filterNodes(nodes, query, locale) {
