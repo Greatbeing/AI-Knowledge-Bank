@@ -1,4 +1,4 @@
-# Dependencies
+﻿# Dependencies
 node_modules/
 
 # Build output
@@ -14,10 +14,23 @@ output/
 .env
 .env.local
 .env.*
+!.env.example
 
 # Editors
 .vscode/
 .idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Supabase local development (if used)
+supabase/.branches
+supabase/.temp
+supabase/config.toml.local
+
+# Vite
+.vite/
 
 # Original rules preserved
 *.log
@@ -25,3 +38,6 @@ output/
 # Vercel local project state
 .vercel/
 .wrangler/
+
+# Cloudflare
+.pages/

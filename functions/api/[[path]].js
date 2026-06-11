@@ -2,6 +2,15 @@ const API_VERSION = '2026-06-10.cross-vault-backend';
 const VALID_SIGNAL_TYPES = new Set(['validated', 'used', 'forked', 'commented', 'merged', 'disputed']);
 const VAULT_TYPES = ['knowledge', 'tool', 'case'];
 
+// Rate limiting: max requests per IP per window (ms)
+const RATE_LIMIT_MAX = 60;
+const RATE_LIMIT_WINDOW = 60000;
+const rateLimitStore = new Map();
+
+// Input validation helpers
+const MAX_QUERY_LENGTH = 200;
+const MAX_PAYLOAD_SIZE = 50000;
+
 const FALLBACK_NODES = [
   {
     id: 'demo-knowledge-localization-framework',
@@ -90,6 +99,18 @@ export async function onRequest(context) {
     return new Response(null, { status: 204, headers: corsHeaders() });
   }
 
+  const rateLimitEntry = checkRateLimit(getClientIp(request));
+  const rateHeaders = getRateLimitHeaders(rateLimitEntry);
+
+  if (rateLimitEntry.count > RATE_LIMIT_MAX) {
+    return jsonResponse({
+      ok: false,
+      error: 'rate_limited',
+      message: 'Too many requests. Please retry after a moment.',
+      retryAfter: Math.ceil((rateLimitEntry.windowStart + RATE_LIMIT_WINDOW - Date.now()) / 1000)
+    }, 429, rateHeaders);
+  }
+
   try {
     const route = getRoute(context);
 
@@ -109,6 +130,15 @@ export async function onRequest(context) {
       return jsonResponse(await handleCommunitySignals(request, context.env), 201);
     }
 
+    if (route.startsWith('vaults/') && request.method === 'GET') {
+      const nodeId = route.replace('vaults/', '');
+      return jsonResponse(await handleVaultNodeDetail(nodeId, context.env, context.request));
+    }
+
+    if (route === 'leaderboard' && request.method === 'GET') {
+      return jsonResponse(await handleLeaderboard(request, context.env));
+    }
+
     return jsonResponse({
       ok: false,
       error: 'not_found',
@@ -120,7 +150,7 @@ export async function onRequest(context) {
       ok: false,
       error: status === 500 ? 'internal_error' : 'request_error',
       message: error.message || 'Unexpected API error.'
-    }, status);
+    }, status, rateHeaders);
   }
 }
 
@@ -142,7 +172,7 @@ function handleHealth(env) {
       configured: Boolean(supabase),
       hasServiceRole: Boolean(env.SUPABASE_SERVICE_ROLE_KEY)
     },
-    endpoints: ['/api/health', '/api/vaults', '/api/search', '/api/community-signals'],
+    endpoints: ['/api/health', '/api/vaults', '/api/vaults/:id', '/api/search', '/api/community-signals', '/api/leaderboard'],
     generatedAt: new Date().toISOString()
   };
 }
@@ -251,6 +281,60 @@ async function handleCommunitySignals(request, env) {
   }
 
   return buildSignalResponse(event, 'fallback', false);
+}
+
+async function handleVaultNodeDetail(nodeId, env, request) {
+  if (!nodeId || nodeId.length < 3) {
+    return { ok: false, error: 'invalid_id', message: 'Node ID must be at least 3 characters.', generatedAt: new Date().toISOString() };
+  }
+
+  const supabase = getSupabaseConfig(env);
+  if (!supabase) {
+    const fallback = FALLBACK_NODES.find((n) => n.id === nodeId);
+    return {
+      ok: !!fallback,
+      source: 'fallback',
+      node: fallback ? normalizeNode(fallback) : null,
+      generatedAt: new Date().toISOString()
+    };
+  }
+
+  try {
+    const rows = await supabaseFetch(env, '/rest/v1/knowledge_nodes?select=*&id=eq.' + encodeURIComponent(nodeId));
+    const row = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+    if (row) {
+      return { ok: true, source: 'supabase', node: normalizeNode(row), generatedAt: new Date().toISOString() };
+    }
+    // Try legacy nodes table
+    const legacyRows = await supabaseFetch(env, '/rest/v1/nodes?select=*&id=eq.' + encodeURIComponent(nodeId));
+    const legacy = Array.isArray(legacyRows) && legacyRows.length > 0 ? legacyRows[0] : null;
+    return { ok: !!legacy, source: 'supabase', node: legacy ? normalizeNode(legacy) : null, generatedAt: new Date().toISOString() };
+  } catch (error) {
+    return { ok: false, error: 'fetch_failed', message: sanitizeError(error), generatedAt: new Date().toISOString() };
+  }
+}
+
+async function handleLeaderboard(request, env) {
+  const url = new URL(request.url);
+  const limit = clampNumber(Number(url.searchParams.get('limit') || 10), 1, 50);
+  const supabase = getSupabaseConfig(env);
+
+  if (!supabase) {
+    return { ok: true, source: 'fallback', leaderboard: [], generatedAt: new Date().toISOString() };
+  }
+
+  try {
+    const rows = await supabaseFetch(env, '/rest/v1/user_leaderboard?select=*&order=reputation_score.desc&limit=' + limit);
+    return { ok: true, source: 'supabase', leaderboard: Array.isArray(rows) ? rows : [], generatedAt: new Date().toISOString() };
+  } catch (error) {
+    // Try querying user_profiles directly
+    try {
+      const rows = await supabaseFetch(env, '/rest/v1/user_profiles?select=*&order=reputation_score.desc&limit=' + limit);
+      return { ok: true, source: 'supabase', leaderboard: Array.isArray(rows) ? rows : [], generatedAt: new Date().toISOString() };
+    } catch (directError) {
+      return { ok: false, error: 'fetch_failed', message: sanitizeError(directError), generatedAt: new Date().toISOString() };
+    }
+  }
 }
 
 function getSupabaseConfig(env) {
@@ -650,7 +734,7 @@ function httpError(status, message) {
   return error;
 }
 
-function jsonResponse(payload, status = 200) {
+function jsonResponse(payload, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(payload), {
     status,
     headers: {
@@ -659,6 +743,39 @@ function jsonResponse(payload, status = 200) {
       'Cache-Control': 'no-store'
     }
   });
+}
+
+function checkRateLimit(clientIp) {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW;
+  let entry = rateLimitStore.get(clientIp);
+  if (!entry || entry.windowStart < windowStart) {
+    entry = { count: 0, windowStart: now };
+  }
+  entry.count += 1;
+  rateLimitStore.set(clientIp, entry);
+  if (entry.count === 1 && now % 300000 < 1000) {
+    for (const [ip, e] of rateLimitStore) {
+      if (e.windowStart < now - RATE_LIMIT_WINDOW) rateLimitStore.delete(ip);
+    }
+  }
+  return entry;
+}
+
+function getRateLimitHeaders(entry) {
+  return {
+    'X-RateLimit-Limit': String(RATE_LIMIT_MAX),
+    'X-RateLimit-Remaining': String(Math.max(0, RATE_LIMIT_MAX - entry.count)),
+    'X-RateLimit-Reset': String(Math.ceil((entry.windowStart + RATE_LIMIT_WINDOW) / 1000))
+  };
+}
+
+function getClientIp(request) {
+  const cfIp = request.headers.get('CF-Connecting-IP');
+  if (cfIp) return cfIp;
+  const xff = request.headers.get('X-Forwarded-For');
+  if (xff) return xff.split(',')[0].trim();
+  return 'unknown';
 }
 
 function corsHeaders() {
