@@ -2685,6 +2685,18 @@
         methodTrust: '可信度',
         methodUsefulCount: '有用反馈',
         methodCustomPrefix: '针对你输入的问题，建议先把目标、边界和可验证结果写清楚，再调用三库组合出可执行路径：',
+        methodCustomKnowledgeTitle: '目标与边界判断框架',
+        methodCustomKnowledgeCopy: '先把任务拆成目标、输入、约束、成功标准四项，避免 AI 只生成看似完整但无法落地的答案。',
+        methodCustomKnowledgeReason: '知识层负责把问题说清楚，让后续工具路径有明确判断标准。',
+        methodCustomKnowledgeImproved: '为这个问题写出目标用户、输入来源、不可触碰边界、验收指标和人工复核点，再交给 AI 执行。',
+        methodCustomToolTitle: '三步执行工作流',
+        methodCustomToolCopy: '用“信息整理 -> 方案生成 -> 人工复核”的工作流，把输入转成可复制、可修改、可追踪的结果。',
+        methodCustomToolReason: '工具层负责把想法变成可重复执行的流程，而不是一次性的 Prompt。',
+        methodCustomToolImproved: '建立一个固定模板：收集原始材料，生成结构化初稿，输出检查清单，最后沉淀为团队 SOP。',
+        methodCustomCaseTitle: '小范围验证案例',
+        methodCustomCaseCopy: '先选择一个真实场景试运行，记录节省时间、返工次数和结果采用率，再决定是否扩大使用。',
+        methodCustomCaseReason: '案例层用真实反馈判断方法是否值得复用。',
+        methodCustomCaseImproved: '用 3 到 5 个真实样本做 A/B 验证，比较人工处理和 AI 辅助后的时间、质量和复用率。',
         missionKicker: 'VISION & MISSION',
         missionTitle: '让每一次 AI 实践，都成为可验证、可复用、可共创的公共知识资产。',
         missionCopy: 'AI 正在把知识生产从少数人的经验，推向人人都能参与验证和改进的现场。我们希望把个人、团队和行业中的真实实践沉淀下来，让后来者不必从零开始。',
@@ -2935,6 +2947,18 @@
         methodTrust: 'Trust',
         methodUsefulCount: 'useful',
         methodCustomPrefix: 'For your question, first define the goal, boundaries, and proof of success, then combine the three vaults into an executable path:',
+        methodCustomKnowledgeTitle: 'Goal and Boundary Frame',
+        methodCustomKnowledgeCopy: 'Break the task into goal, input, constraints, and success criteria so AI does not produce polished but unusable output.',
+        methodCustomKnowledgeReason: 'The knowledge layer clarifies the problem before any workflow is executed.',
+        methodCustomKnowledgeImproved: 'Write the target user, input source, hard boundaries, acceptance metrics, and human review points before sending the task to AI.',
+        methodCustomToolTitle: 'Three-Step Execution Workflow',
+        methodCustomToolCopy: 'Use an intake -> generation -> review workflow to turn input into output that can be copied, edited, and tracked.',
+        methodCustomToolReason: 'The tool layer turns the idea into a repeatable process, not a one-off prompt.',
+        methodCustomToolImproved: 'Create a fixed template: collect source material, generate a structured draft, output a review checklist, then save it as team SOP.',
+        methodCustomCaseTitle: 'Small-Scope Validation Case',
+        methodCustomCaseCopy: 'Run it in one real scenario first, then track time saved, rework, and adoption before expanding.',
+        methodCustomCaseReason: 'The case layer uses real feedback to decide whether the method is reusable.',
+        methodCustomCaseImproved: 'Test 3 to 5 real samples and compare manual versus AI-assisted time, quality, and reuse rate.',
         missionKicker: 'VISION & MISSION',
         missionTitle: 'Turn every AI practice into a verifiable, reusable, co-created public knowledge asset.',
         missionCopy: 'AI is moving knowledge from isolated expertise into field-tested practice that anyone can validate and improve. We preserve real experience from individuals, teams, and industries so others do not have to restart from zero.',
@@ -3571,10 +3595,34 @@
     function getMethodPayload() {
       const base = methodCatalog[currentLanguage][activeMethodScenario] || methodCatalog[currentLanguage].marketing;
       const query = methodQuery.value.trim();
+      if (!query) return base;
+
+      const dict = translations[currentLanguage];
       return {
         ...base,
-        query: query || base.query,
-        synthesis: query ? `${translations[currentLanguage].methodCustomPrefix} ${query}` : base.synthesis
+        query,
+        synthesis: `${dict.methodCustomPrefix} ${query}`,
+        knowledge: {
+          title: dict.methodCustomKnowledgeTitle,
+          copy: dict.methodCustomKnowledgeCopy,
+          reason: dict.methodCustomKnowledgeReason,
+          improved: dict.methodCustomKnowledgeImproved,
+          confidence: Math.max(82, base.knowledge.confidence - 3)
+        },
+        tool: {
+          title: dict.methodCustomToolTitle,
+          copy: dict.methodCustomToolCopy,
+          reason: dict.methodCustomToolReason,
+          improved: dict.methodCustomToolImproved,
+          confidence: Math.max(78, base.tool.confidence - 2)
+        },
+        case: {
+          title: dict.methodCustomCaseTitle,
+          copy: dict.methodCustomCaseCopy,
+          reason: dict.methodCustomCaseReason,
+          improved: dict.methodCustomCaseImproved,
+          confidence: Math.max(74, base.case.confidence - 1)
+        }
       };
     }
 
