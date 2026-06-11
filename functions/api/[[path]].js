@@ -7,10 +7,6 @@ const RATE_LIMIT_MAX = 60;
 const RATE_LIMIT_WINDOW = 60000;
 const rateLimitStore = new Map();
 
-// Input validation helpers
-const MAX_QUERY_LENGTH = 200;
-const MAX_PAYLOAD_SIZE = 50000;
-
 const FALLBACK_NODES = [
   {
     id: 'demo-knowledge-localization-framework',
@@ -132,7 +128,7 @@ export async function onRequest(context) {
 
     if (route.startsWith('vaults/') && request.method === 'GET') {
       const nodeId = route.replace('vaults/', '');
-      return jsonResponse(await handleVaultNodeDetail(nodeId, context.env, context.request));
+      return jsonResponse(await handleVaultNodeDetail(nodeId, context.env));
     }
 
     if (route === 'leaderboard' && request.method === 'GET') {
@@ -283,7 +279,7 @@ async function handleCommunitySignals(request, env) {
   return buildSignalResponse(event, 'fallback', false);
 }
 
-async function handleVaultNodeDetail(nodeId, env, request) {
+async function handleVaultNodeDetail(nodeId, env) {
   if (!nodeId || nodeId.length < 3) {
     return { ok: false, error: 'invalid_id', message: 'Node ID must be at least 3 characters.', generatedAt: new Date().toISOString() };
   }
@@ -326,7 +322,7 @@ async function handleLeaderboard(request, env) {
   try {
     const rows = await supabaseFetch(env, '/rest/v1/user_leaderboard?select=*&order=reputation_score.desc&limit=' + limit);
     return { ok: true, source: 'supabase', leaderboard: Array.isArray(rows) ? rows : [], generatedAt: new Date().toISOString() };
-  } catch (error) {
+  } catch {
     // Try querying user_profiles directly
     try {
       const rows = await supabaseFetch(env, '/rest/v1/user_profiles?select=*&order=reputation_score.desc&limit=' + limit);
@@ -740,7 +736,8 @@ function jsonResponse(payload, status = 200, extraHeaders = {}) {
     headers: {
       ...corsHeaders(),
       'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store'
+      'Cache-Control': 'no-store',
+      ...extraHeaders
     }
   });
 }
