@@ -22,31 +22,28 @@ Thank you for your interest in contributing! We welcome contributions from devel
 
 - 2-space indentation (see .editorconfig)
 - TypeScript for all .ts/.tsx files
-- ESLint config enforced via 
-pm run lint
-- Follow existing patterns ? check lib/ and components/ for reference
+- ESLint config enforced via `npm run lint`
+- Follow existing patterns; check `lib/` and `components/` for reference
 
 ### Commit Messages
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):
 
-- eat: new feature
-- ix: bug fix
+- `feat`: new feature
+- `fix`: bug fix
 - docs: documentation only
-- 
-efactor: code change that neither fixes a bug nor adds a feature
+- `refactor`: code change that neither fixes a bug nor adds a feature
 - chore: maintenance tasks
 
-Example: eat: add leaderboard endpoint
+Example: `feat: add leaderboard endpoint`
 
 ### Pull Request Process
 
 1. Update CHANGELOG.md with your changes under [Unreleased]
-2. Ensure 
-pm run lint passes with zero warnings
+2. Ensure `npm run lint` passes with zero warnings
 3. If adding a feature, mention which vault (knowledge/tool/case) it affects
 4. Link any related issues
-5. Describe your changes clearly ? what and why
+5. Describe your changes clearly: what changed and why
 
 ### Adding a Knowledge Node
 
@@ -59,18 +56,18 @@ Seed the community with quality content:
 
 ### File Structure Reference
 
-`
+```text
 .
-??? functions/api/          # Cloudflare Pages Functions backend
-??? lib/                    # Shared TypeScript libraries
-??? types/                  # TypeScript type definitions
-??? components/             # React components (future)
-??? supabase/migrations/    # Database migrations (run in order)
-??? assets/                 # Static assets (CSS, images)
-??? data/                   # Seed data (genesis nodes)
-??? *.html                  # SPA pages
-`
+|-- functions/api/          # Cloudflare Pages Functions backend
+|-- lib/                    # Shared TypeScript libraries
+|-- types/                  # TypeScript type definitions
+|-- components/             # React components
+|-- supabase/migrations/    # Database migrations, run in order
+|-- assets/                 # Static assets: CSS, images
+|-- data/                   # Seed data: genesis nodes
+`-- *.html                  # Static pages
+```
 
 ## Questions?
 
-Open an issue or start a discussion. We\'re happy to help!
+Open an issue or start a discussion. We're happy to help!

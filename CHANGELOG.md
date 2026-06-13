@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Rate limiting to API (60 req/min/IP, Cloudflare-aware)
-- GET /api/vaults/:id ? single node detail endpoint
-- GET /api/leaderboard ? user ranking endpoint
+- GET /api/vaults/:id - single node detail endpoint
+- GET /api/leaderboard - user ranking endpoint
 - X-RateLimit-* headers on all responses
 - Input validation for community-signals body
 - .env.example template
@@ -23,7 +23,7 @@ All notable changes to this project will be documented in this file.
 - WebSocket for real-time community signals
 - CI/CD pipeline beyond GitHub Pages deploy
 
-## [1.0.0] ? 2026-06-10
+## [1.0.0] - 2026-06-10
 
 ### Added
 - Three-vault architecture (knowledge, tool, case)
@@ -37,17 +37,17 @@ All notable changes to this project will be documented in this file.
 - Bilingual UI (zh/en)
 - GitHub Pages deploy workflow
 
-## [0.9.0] ? 2024
+## [0.9.0] - 2024
 
 - Knowledge node CRUD, validation workflow
 - Fork and merge system with voting
 - Comments, subscriptions, evolution history
 
-## [0.5.0] ? 2024
+## [0.5.0] - 2024
 
 - Evolution tree visualization
 - Scoring model (Hacker News gravity variant)
 
-## [0.1.0] ? 2024
+## [0.1.0] - 2024
 
 - Concept validation and first interactive demo
