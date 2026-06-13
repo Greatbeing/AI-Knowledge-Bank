@@ -6,13 +6,13 @@
 
 <p align="center">
   <a href="https://aiknowledgebank.pages.dev"><strong>Cloudflare Live</strong></a>
-  ·
+  |
   <a href="https://ai-knowledge-bank.pages.dev">Backup Site</a>
-  ·
+  |
   <a href="https://greatbeing.github.io/AI-Knowledge-Bank/">GitHub Pages</a>
-  ·
+  |
   <a href="./WORKFLOW_GUIDE.md">Workflow Guide</a>
-  ·
+  |
   <a href="./CONTRIBUTING.md">Contributing</a>
 </p>
 
@@ -33,9 +33,9 @@
 
 ## Project Vision / 项目愿景
 
-**EN** · AI Knowledge Bank is a three-vault knowledge evolution system. It helps people turn scattered AI practices into reusable standards through personalized AI dispatch, branching, validation, discussion, voting, and emergence.
+**EN** | AI Knowledge Bank is a three-vault knowledge evolution system. It helps people turn scattered AI practices into reusable standards through personalized AI dispatch, branching, validation, discussion, voting, and emergence.
 
-**中文** · AI Knowledge Bank 不是静态课程站，也不是普通 Prompt 仓库。它以知识库、工具库、案例库为骨架，把知识看作一个持续演化的网络：用户贡献实践经验，AI 跨库调度，社区在真实场景中验证，高价值分支再合并为新的公共标准。
+**中文** | AI Knowledge Bank 不是静态课程站，也不是普通 Prompt 仓库。它以知识库、工具库、案例库为骨架，把知识看作一个持续演化的网络：用户贡献实践经验，AI 跨库调度，社区在真实场景中验证，高价值分支再合并为新的公共标准。
 
 ## Three Vaults + Two Engines / 三库两引擎
 
@@ -51,7 +51,7 @@
 
 | Design layer | English | 中文 |
 | --- | --- | --- |
-| Network atmosphere | Dynamic particle grid inspired by connected knowledge nodes | 以动态粒子网格表达知识节点之间的连接 |
+| Network atmosphere | Dynamic particle grid inspired by connected knowledge nodes | 用动态粒子网络表达知识节点之间的连接 |
 | Liquid glass | Translucent navigation, metric panels, cards, and actions | 导航、数据面板和操作按钮采用液态玻璃质感 |
 | Bilingual interface | Runtime Chinese and English language switching | 支持中英文运行时切换 |
 | Dispatch console | Cross-vault scenario demo with routed knowledge, tool, and case results | 跨三库场景调度演示，返回知识、工具和案例结果 |
@@ -160,8 +160,10 @@ Cloudflare Pages 通过 `functions/api/[[path]].js` 提供真实后端接口。G
 | --- | --- |
 | `GET /api/health` | Backend health, runtime, Supabase configuration state |
 | `GET /api/vaults` | Three-vault grouped node data and stats |
+| `GET /api/vaults/:id` | Single node detail endpoint |
 | `GET /api/search?q=&locale=&limit=` | Cross-Vault RAG search contract returning knowledge, tools, and cases |
 | `POST /api/community-signals` | Community validation, usage, fork, merge, comment, and dispute signals |
+| `GET /api/leaderboard` | User ranking endpoint |
 
 Related docs / 相关文档：
 
@@ -175,15 +177,15 @@ Related docs / 相关文档：
 
 ```text
 .
-├── index.html                 # Main experience and particle network UI
-├── assets/readme/             # Repository homepage visual assets
-├── components/                # React components and visual modules
-├── functions/api/             # Cloudflare Pages Functions backend API
-├── lib/                       # Auth, workflow, and shared utilities
-├── supabase/migrations/       # Database schema, policies, triggers, views
-├── types/                     # TypeScript definitions
-├── .github/workflows/         # GitHub Pages deployment workflow
-└── dist/                      # Production build output
+|-- index.html                 # Main experience and particle network UI
+|-- assets/readme/             # Repository homepage visual assets
+|-- components/                # React components and visual modules
+|-- functions/api/             # Cloudflare Pages Functions backend API
+|-- lib/                       # Auth, workflow, and shared utilities
+|-- supabase/migrations/       # Database schema, policies, triggers, views
+|-- types/                     # TypeScript definitions
+|-- .github/workflows/         # GitHub Pages deployment workflow
+`-- dist/                      # Production build output
 ```
 
 ## Roadmap / 路线图
@@ -222,3 +224,4 @@ This project is released under the [MIT License](./LICENSE).
   <span>Build, validate, and evolve knowledge for the AI era.</span><br />
   <span>为 AI 时代构建、验证并演化知识。</span>
 </p>
+
