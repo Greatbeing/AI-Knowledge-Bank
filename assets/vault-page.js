@@ -25,6 +25,20 @@ const dictionaries = {
     resultUnavailable: '内容服务暂不可用',
     resultEmpty: '没有可展示的节点',
     resultNoMatch: '没有符合筛选条件的节点',
+    dispatchKicker: 'CROSS-VAULT DISPATCH',
+    dispatchTitle: '用一个场景调度知识、工具和案例',
+    dispatchCopy: '输入你的目标或问题，系统会跨三库组合认知解释、执行路径和案例证据。',
+    dispatchPlaceholder: '例如：跨境营销团队要优化 AI 本地化 SOP',
+    dispatchRun: '运行调度',
+    dispatchRunning: '正在跨三库检索与组合...',
+    dispatchReady: '准备调度三库内容',
+    dispatchFallback: 'API 暂不可用，已显示本地演示路径',
+    dispatchNoResults: '没有匹配到跨库结果，已显示演示路径',
+    dispatchKnowledge: '知识解释',
+    dispatchTools: '工具路径',
+    dispatchCases: '案例证据',
+    dispatchSynthesis: '综合建议',
+    dispatchSource: '来源',
     detailButton: '查看详情',
     detailSummary: '节点摘要',
     detailReason: '推荐理由',
@@ -100,6 +114,20 @@ const dictionaries = {
     resultUnavailable: 'Content service is unavailable',
     resultEmpty: 'No nodes are available',
     resultNoMatch: 'No nodes match the filters',
+    dispatchKicker: 'CROSS-VAULT DISPATCH',
+    dispatchTitle: 'Dispatch one scenario across knowledge, tools, and cases',
+    dispatchCopy: 'Enter a goal or question to combine cognitive framing, execution route, and case evidence.',
+    dispatchPlaceholder: 'Example: improve an AI localization SOP for a cross-border marketing team',
+    dispatchRun: 'Run Dispatch',
+    dispatchRunning: 'Searching and composing across the three vaults...',
+    dispatchReady: 'Ready to dispatch across the three vaults',
+    dispatchFallback: 'API unavailable; showing a local demo route',
+    dispatchNoResults: 'No matching cross-vault result; showing a demo route',
+    dispatchKnowledge: 'Knowledge Frame',
+    dispatchTools: 'Tool Route',
+    dispatchCases: 'Case Evidence',
+    dispatchSynthesis: 'Synthesis',
+    dispatchSource: 'Source',
     detailButton: 'View details',
     detailSummary: 'Node summary',
     detailReason: 'Recommendation reason',
@@ -214,12 +242,67 @@ const communitySignals = {
   ]
 };
 
+const dispatchLayers = ['knowledge', 'tools', 'cases'];
+const dispatchLabelKeys = {
+  knowledge: 'dispatchKnowledge',
+  tools: 'dispatchTools',
+  cases: 'dispatchCases'
+};
+const dispatchFallbackCatalog = {
+  zh: {
+    query: '跨境营销团队要优化 AI 本地化 SOP',
+    synthesis: '先用知识库定义本地化判断框架，再选择工具库里的评审 Agent 链，最后用案例库的 Before/After 证据验证 SOP 是否可迁移。',
+    results: {
+      knowledge: [{
+        title: '本地化判断框架',
+        summary: '拆分语言、文化、渠道和合规四类变量，先判断任务边界，再决定 AI 介入方式。',
+        confidence: 91
+      }],
+      tools: [{
+        title: '翻译评审 Agent 链',
+        summary: '生成、校验、风格统一、风险标注四步联动，让人工审核集中在高风险内容。',
+        confidence: 86
+      }],
+      cases: [{
+        title: '拉美素材复用案例',
+        summary: '复用 37 条广告素材，并用点击率和人工复审记录验证本地化 SOP 的有效性。',
+        confidence: 83
+      }]
+    }
+  },
+  en: {
+    query: 'Improve an AI localization SOP for a cross-border marketing team',
+    synthesis: 'Start with a localization decision frame, select an agent review chain, then verify transferability with before/after case evidence.',
+    results: {
+      knowledge: [{
+        title: 'Localization Decision Frame',
+        summary: 'Separate language, culture, channel, and compliance variables before deciding where AI should assist.',
+        confidence: 91
+      }],
+      tools: [{
+        title: 'Translation Review Agent Chain',
+        summary: 'Connect generation, validation, style alignment, and risk tagging so human review focuses on high-risk content.',
+        confidence: 86
+      }],
+      cases: [{
+        title: 'LATAM Creative Reuse Case',
+        summary: 'Reuse 37 ad creatives and validate the localization SOP with click-through data and human review records.',
+        confidence: 83
+      }]
+    }
+  }
+};
+
 let currentLanguage = ['zh', 'en'].includes(localStorage.getItem('language'))
   ? localStorage.getItem('language')
   : 'zh';
 let latestNodes = [];
 let latestSource = 'fallback';
 let loadState = 'loading';
+let latestDispatchPayload = null;
+let latestDispatchSource = 'fallback';
+let latestDispatchQuery = '';
+let dispatchHasRun = false;
 
 const languageToggle = document.getElementById('language-toggle');
 const nodeGrid = document.getElementById('node-grid');
@@ -232,6 +315,11 @@ const detailContent = document.getElementById('detail-content');
 const validationResult = document.getElementById('validation-result');
 const statusLine = document.getElementById('status-line');
 const runValidationButton = document.getElementById('run-validation');
+const dispatchForm = document.getElementById('dispatch-form');
+const dispatchQuery = document.getElementById('dispatch-query');
+const dispatchRunButton = document.getElementById('dispatch-run');
+const dispatchStatus = document.getElementById('dispatch-status');
+const dispatchResults = document.getElementById('dispatch-results');
 
 function resolveApiBase() {
   if (window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:') {
@@ -279,12 +367,17 @@ function applyLanguage(lang) {
   });
 
   if (searchInput) searchInput.placeholder = dict.searchPlaceholder;
+  if (dispatchQuery) {
+    dispatchQuery.placeholder = dict.dispatchPlaceholder;
+    if (!dispatchQuery.value.trim()) dispatchQuery.value = latestDispatchQuery || getDefaultDispatchQuery();
+  }
   if (languageToggle) languageToggle.textContent = dict.toggle;
   if (statusLine) statusLine.textContent = dict.validationReady;
 
   renderInsights();
   renderCommunitySignals();
   renderNodes(latestNodes);
+  renderCurrentDispatch();
 }
 
 function renderInsights() {
@@ -439,6 +532,115 @@ function updateResultStatus(shown, total) {
   resultStatus.textContent = currentLanguage === 'zh'
     ? `显示 ${shown}/${total} 个节点 · ${dict.liveSource}: ${sourceName}`
     : `Showing ${shown}/${total} nodes · ${dict.liveSource}: ${sourceName}`;
+}
+
+function getDefaultDispatchQuery() {
+  return dispatchFallbackCatalog[currentLanguage].query;
+}
+
+function buildFallbackDispatch(query) {
+  const fallback = dispatchFallbackCatalog[currentLanguage];
+  return {
+    ok: true,
+    query: query || fallback.query,
+    source: 'fallback',
+    results: fallback.results,
+    synthesis: fallback.synthesis
+  };
+}
+
+function hasDispatchResults(payload) {
+  return dispatchLayers.some((layer) => {
+    return Array.isArray(payload?.results?.[layer]) && payload.results[layer].length > 0;
+  });
+}
+
+function renderCurrentDispatch() {
+  if (!dispatchResults) return;
+
+  const query = dispatchQuery?.value.trim() || latestDispatchQuery || getDefaultDispatchQuery();
+  if (!latestDispatchPayload || latestDispatchSource === 'fallback') {
+    renderDispatchPayload(buildFallbackDispatch(query), 'fallback');
+    if (!dispatchHasRun && dispatchStatus) {
+      dispatchStatus.textContent = dictionaries[currentLanguage].dispatchReady;
+    }
+    return;
+  }
+
+  renderDispatchPayload(latestDispatchPayload, latestDispatchSource);
+}
+
+function renderDispatchPayload(payload, source = payload?.source || 'fallback') {
+  if (!dispatchResults) return;
+
+  latestDispatchPayload = payload;
+  latestDispatchSource = source;
+  latestDispatchQuery = payload?.query || latestDispatchQuery || getDefaultDispatchQuery();
+
+  dispatchLayers.forEach((layer) => {
+    renderDispatchResult(layer, payload?.results?.[layer]?.[0], source);
+  });
+
+  if (dispatchStatus) {
+    const synthesis = payload?.synthesis || dispatchFallbackCatalog[currentLanguage].synthesis;
+    dispatchStatus.textContent = `${dictionaries[currentLanguage].dispatchSynthesis}: ${synthesis}`;
+  }
+}
+
+function renderDispatchResult(layer, item, source) {
+  const card = dispatchResults?.querySelector(`[data-dispatch-layer="${layer}"]`);
+  if (!card) return;
+
+  const dict = dictionaries[currentLanguage];
+  const sourceName = source === 'supabase' ? dict.sourceSupabase : dict.sourceFallback;
+  const confidence = Math.max(0, Number(item?.confidence || 0));
+
+  const label = document.createElement('span');
+  label.className = 'card-label';
+  label.textContent = dict[dispatchLabelKeys[layer]];
+
+  const title = document.createElement('h3');
+  title.textContent = item?.title || dict.dispatchNoResults;
+
+  const summary = document.createElement('p');
+  summary.textContent = item?.summary || item?.recommendation_reason || dict.dispatchNoResults;
+
+  const meta = document.createElement('div');
+  meta.className = 'dispatch-result-meta';
+  meta.append(createTag(`${dict.dispatchSource}: ${sourceName}`));
+  if (confidence) meta.append(createTag(`${dict.trust} ${confidence}%`));
+
+  card.replaceChildren(label, title, summary, meta);
+}
+
+async function runCrossVaultDispatch(query) {
+  if (!dispatchResults) return;
+
+  const dict = dictionaries[currentLanguage];
+  const nextQuery = (query || '').trim() || getDefaultDispatchQuery();
+  dispatchHasRun = true;
+  latestDispatchQuery = nextQuery;
+  if (dispatchQuery) dispatchQuery.value = nextQuery;
+  if (dispatchRunButton) dispatchRunButton.disabled = true;
+  if (dispatchStatus) dispatchStatus.textContent = dict.dispatchRunning;
+
+  try {
+    const payload = await fetchApi(`/search?q=${encodeURIComponent(nextQuery)}&locale=${currentLanguage}&limit=1`);
+    if (!payload?.ok || !hasDispatchResults(payload)) {
+      const fallback = buildFallbackDispatch(nextQuery);
+      renderDispatchPayload(fallback, 'fallback');
+      if (dispatchStatus) dispatchStatus.textContent = `${dict.dispatchNoResults}: ${fallback.synthesis}`;
+      return;
+    }
+
+    renderDispatchPayload(payload, payload.source || 'fallback');
+  } catch {
+    const fallback = buildFallbackDispatch(nextQuery);
+    renderDispatchPayload(fallback, 'fallback');
+    if (dispatchStatus) dispatchStatus.textContent = `${dict.dispatchFallback}: ${fallback.synthesis}`;
+  } finally {
+    if (dispatchRunButton) dispatchRunButton.disabled = false;
+  }
 }
 
 function createNodeCard(node) {
@@ -795,6 +997,11 @@ function initParticles() {
   resizeCanvas();
   drawNetwork();
 }
+
+dispatchForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  runCrossVaultDispatch(dispatchQuery?.value || '');
+});
 
 languageToggle?.addEventListener('click', () => {
   applyLanguage(currentLanguage === 'zh' ? 'en' : 'zh');

@@ -60,6 +60,23 @@
           </div>
           <p class="section-copy" data-page-i18n="sectionCopy">这些案例节点为 RAG 调度提供证据层。</p>
         </div>
+        <section class="dispatch-panel" aria-labelledby="dispatch-title">
+          <div class="dispatch-copy">
+            <span class="panel-kicker" data-i18n="dispatchKicker">Cross-Vault Dispatch</span>
+            <h2 id="dispatch-title" data-i18n="dispatchTitle">用一个场景调度知识、工具和案例</h2>
+            <p data-i18n="dispatchCopy">输入你的目标或问题，系统会跨三库组合认知解释、执行路径和案例证据。</p>
+          </div>
+          <form id="dispatch-form" class="dispatch-form">
+            <input id="dispatch-query" class="dispatch-input" type="search" autocomplete="off" data-i18n-placeholder="dispatchPlaceholder" placeholder="例如：跨境营销团队要优化 AI 本地化 SOP" />
+            <button id="dispatch-run" class="dispatch-button" type="submit" data-i18n="dispatchRun">运行调度</button>
+          </form>
+          <p id="dispatch-status" class="dispatch-status" aria-live="polite" data-i18n="dispatchReady">准备调度三库内容</p>
+          <div id="dispatch-results" class="dispatch-results" aria-live="polite">
+            <article class="dispatch-result" data-dispatch-layer="knowledge"></article>
+            <article class="dispatch-result" data-dispatch-layer="tools"></article>
+            <article class="dispatch-result" data-dispatch-layer="cases"></article>
+          </div>
+        </section>
         <div class="toolbar">
           <input id="page-search" class="search-input" type="search" placeholder="筛选当前页面内容" />
           <select id="source-filter" class="filter-select" aria-label="Filter by source">
