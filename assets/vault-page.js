@@ -17,8 +17,27 @@ const dictionaries = {
     loading: '正在读取真实内容...',
     empty: '暂时没有可展示的内容',
     searchPlaceholder: '筛选当前页面内容',
+    sourceAll: '全部来源',
+    trustAll: '全部可信度',
     liveSource: '实时数据',
     trust: '可信度',
+    resultLoading: '正在加载内容',
+    resultUnavailable: '内容服务暂不可用',
+    resultEmpty: '没有可展示的节点',
+    resultNoMatch: '没有符合筛选条件的节点',
+    detailButton: '查看详情',
+    detailSummary: '节点摘要',
+    detailReason: '推荐理由',
+    detailSources: '来源引用',
+    detailScenarios: '适用场景',
+    detailMetadata: '节点信息',
+    validationResultTitle: '验证结果',
+    validationModePersisted: '已写入后端',
+    validationModeQueued: '演示队列',
+    validationModeLocal: '本地演示',
+    validationSignal: '信号类型',
+    validationImpact: '影响权重',
+    validationConfidence: '置信度',
     nodeCount: '节点',
     signalCount: '信号',
     routeCount: '路径',
@@ -73,8 +92,27 @@ const dictionaries = {
     loading: 'Loading real content...',
     empty: 'No content is available yet',
     searchPlaceholder: 'Filter this page',
+    sourceAll: 'All sources',
+    trustAll: 'All trust levels',
     liveSource: 'Live data',
     trust: 'Trust',
+    resultLoading: 'Loading content',
+    resultUnavailable: 'Content service is unavailable',
+    resultEmpty: 'No nodes are available',
+    resultNoMatch: 'No nodes match the filters',
+    detailButton: 'View details',
+    detailSummary: 'Node summary',
+    detailReason: 'Recommendation reason',
+    detailSources: 'Source references',
+    detailScenarios: 'Scenarios',
+    detailMetadata: 'Node metadata',
+    validationResultTitle: 'Validation Result',
+    validationModePersisted: 'Persisted to backend',
+    validationModeQueued: 'Demo queue',
+    validationModeLocal: 'Local demo',
+    validationSignal: 'Signal type',
+    validationImpact: 'Impact weight',
+    validationConfidence: 'Confidence',
     nodeCount: 'Nodes',
     signalCount: 'Signals',
     routeCount: 'Routes',
@@ -181,10 +219,17 @@ let currentLanguage = ['zh', 'en'].includes(localStorage.getItem('language'))
   : 'zh';
 let latestNodes = [];
 let latestSource = 'fallback';
+let loadState = 'loading';
 
 const languageToggle = document.getElementById('language-toggle');
 const nodeGrid = document.getElementById('node-grid');
 const searchInput = document.getElementById('page-search');
+const sourceFilter = document.getElementById('source-filter');
+const trustFilter = document.getElementById('trust-filter');
+const resultStatus = document.getElementById('result-status');
+const detailPanel = document.getElementById('detail-panel');
+const detailContent = document.getElementById('detail-content');
+const validationResult = document.getElementById('validation-result');
 const statusLine = document.getElementById('status-line');
 const runValidationButton = document.getElementById('run-validation');
 
@@ -294,12 +339,15 @@ function updateMetrics(stats = {}) {
 }
 
 async function loadPageData() {
+  loadState = 'loading';
   if (nodeGrid) {
     nodeGrid.replaceChildren(createEmptyCard(dictionaries[currentLanguage].loading));
   }
+  updateResultStatus(0, 0);
 
   try {
     const data = await fetchApi(`/vaults?locale=${currentLanguage}`);
+    loadState = 'ready';
     latestSource = data.source || 'fallback';
 
     if (pageType === 'community') {
@@ -319,6 +367,7 @@ async function loadPageData() {
     updateMetrics(data.stats || {});
     renderNodes(latestNodes);
   } catch {
+    loadState = 'unavailable';
     latestNodes = [];
     updateMetrics();
     renderNodes([]);
@@ -328,20 +377,68 @@ async function loadPageData() {
 function renderNodes(nodes) {
   if (!nodeGrid) return;
   const query = (searchInput?.value || '').trim().toLowerCase();
+  const selectedSource = sourceFilter?.value || 'all';
+  const minimumTrust = Number(trustFilter?.value || 0);
   const filtered = nodes.filter((node) => {
-    if (!query) return true;
-    return [node.title, node.summary, node.recommendation_reason, ...(node.scenario_tags || [])]
-      .join(' ')
-      .toLowerCase()
-      .includes(query);
+    const matchesSource = selectedSource === 'all' || latestSource === selectedSource;
+    const matchesTrust = Number(node.confidence || 0) >= minimumTrust;
+    const matchesQuery = !query || collectNodeText(node).includes(query);
+    return matchesSource && matchesTrust && matchesQuery;
   });
 
   if (!filtered.length) {
     nodeGrid.replaceChildren(createEmptyCard(dictionaries[currentLanguage].empty));
+    updateResultStatus(0, nodes.length);
     return;
   }
 
   nodeGrid.replaceChildren(...filtered.map(createNodeCard));
+  updateResultStatus(filtered.length, nodes.length);
+}
+
+function collectNodeText(node) {
+  return [
+    node.title,
+    node.summary,
+    node.recommendation_reason,
+    node.vault_type,
+    ...normalizeList(node.source_refs),
+    ...normalizeList(node.scenario_tags)
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+}
+
+function updateResultStatus(shown, total) {
+  if (!resultStatus) return;
+
+  const dict = dictionaries[currentLanguage];
+  const sourceName = latestSource === 'supabase' ? dict.sourceSupabase : dict.sourceFallback;
+
+  if (loadState === 'loading') {
+    resultStatus.textContent = dict.resultLoading;
+    return;
+  }
+
+  if (loadState === 'unavailable') {
+    resultStatus.textContent = dict.resultUnavailable;
+    return;
+  }
+
+  if (!total) {
+    resultStatus.textContent = dict.resultEmpty;
+    return;
+  }
+
+  if (!shown) {
+    resultStatus.textContent = `${dict.resultNoMatch} · ${dict.liveSource}: ${sourceName}`;
+    return;
+  }
+
+  resultStatus.textContent = currentLanguage === 'zh'
+    ? `显示 ${shown}/${total} 个节点 · ${dict.liveSource}: ${sourceName}`
+    : `Showing ${shown}/${total} nodes · ${dict.liveSource}: ${sourceName}`;
 }
 
 function createNodeCard(node) {
@@ -377,9 +474,19 @@ function createNodeCard(node) {
   tagRow.append(createTag(`${dict.liveSource}: ${latestSource === 'supabase' ? dict.sourceSupabase : dict.sourceFallback}`));
   (node.scenario_tags || []).slice(0, 3).forEach((tag) => tagRow.append(createTag(tag)));
 
+  const actions = document.createElement('div');
+  actions.className = 'card-actions';
+
+  const detailButton = document.createElement('button');
+  detailButton.className = 'detail-button';
+  detailButton.type = 'button';
+  detailButton.textContent = dict.detailButton;
+  detailButton.addEventListener('click', () => openDetail(node));
+  actions.append(detailButton);
+
   article.append(top, title, summary);
   if (reason.textContent && reason.textContent !== summary.textContent) article.append(reason);
-  article.append(tagRow);
+  article.append(tagRow, actions);
   return article;
 }
 
@@ -388,6 +495,107 @@ function createTag(text) {
   tag.className = 'tag';
   tag.textContent = text;
   return tag;
+}
+
+function normalizeList(value) {
+  if (Array.isArray(value)) return value.map((item) => String(item).trim()).filter(Boolean);
+  if (typeof value !== 'string' || !value.trim()) return [];
+
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed.map((item) => String(item).trim()).filter(Boolean);
+  } catch {
+    // Keep plain strings usable below.
+  }
+
+  return value.split(/[,，]/).map((item) => item.trim()).filter(Boolean);
+}
+
+function createDetailSection(titleText, content) {
+  const section = document.createElement('section');
+  section.className = 'detail-section';
+
+  const title = document.createElement('h3');
+  title.textContent = titleText;
+  section.append(title);
+
+  const listItems = Array.isArray(content) ? content.filter(Boolean) : [];
+  if (listItems.length) {
+    const list = document.createElement('ul');
+    listItems.forEach((item) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = item;
+      list.append(listItem);
+    });
+    section.append(list);
+    return section;
+  }
+
+  const copy = document.createElement('p');
+  copy.textContent = content || '-';
+  section.append(copy);
+  return section;
+}
+
+function openDetail(node) {
+  if (!detailPanel || !detailContent) return;
+
+  const dict = dictionaries[currentLanguage];
+  const sourceRefs = normalizeList(node.source_refs);
+  const scenarioTags = normalizeList(node.scenario_tags);
+  const sourceName = latestSource === 'supabase' ? dict.sourceSupabase : dict.sourceFallback;
+  const confidence = `${dict.trust} ${Math.max(0, Number(node.confidence || 0))}%`;
+
+  const header = document.createElement('header');
+  header.className = 'detail-header';
+
+  const label = document.createElement('span');
+  label.className = 'card-label';
+  label.textContent = vaultLabel(node.vault_type);
+
+  const title = document.createElement('h2');
+  title.id = 'detail-title';
+  title.textContent = node.title || vaultLabel(node.vault_type);
+
+  const meta = document.createElement('div');
+  meta.className = 'detail-meta';
+  meta.append(createTag(`${dict.liveSource}: ${sourceName}`), createTag(confidence));
+  if (node.created_at) {
+    meta.append(createTag(new Date(node.created_at).toLocaleDateString(currentLanguage === 'zh' ? 'zh-CN' : 'en-US')));
+  }
+
+  header.append(label, title, meta);
+
+  const tagGroup = document.createElement('div');
+  tagGroup.className = 'detail-tags';
+  scenarioTags.forEach((tag) => tagGroup.append(createTag(tag)));
+
+  const metadata = [
+    `ID: ${node.id || '-'}`,
+    `${dict.liveSource}: ${sourceName}`,
+    confidence
+  ];
+
+  detailContent.replaceChildren(
+    header,
+    createDetailSection(dict.detailSummary, node.summary || ''),
+    createDetailSection(dict.detailReason, node.recommendation_reason || ''),
+    createDetailSection(dict.detailSources, sourceRefs.length ? sourceRefs : ['AI Knowledge Bank']),
+    tagGroup,
+    createDetailSection(dict.detailMetadata, metadata)
+  );
+
+  detailPanel.classList.add('is-open');
+  detailPanel.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('detail-open');
+  detailPanel.querySelector('.detail-close')?.focus();
+}
+
+function closeDetail() {
+  if (!detailPanel) return;
+  detailPanel.classList.remove('is-open');
+  detailPanel.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('detail-open');
 }
 
 function createEmptyCard(text) {
@@ -410,6 +618,7 @@ async function submitCommunityValidation() {
   runValidationButton.disabled = true;
   statusLine.classList.remove('is-hot');
   statusLine.textContent = dictionaries[currentLanguage].validationRunning;
+  if (validationResult) validationResult.replaceChildren();
 
   try {
     const result = await fetchApi('/community-signals', {
@@ -430,14 +639,63 @@ async function submitCommunityValidation() {
     statusLine.textContent = result.persisted
       ? dictionaries[currentLanguage].validationPersisted
       : dictionaries[currentLanguage].validationQueued;
+    renderValidationResult(result);
   } catch {
     statusLine.textContent = dictionaries[currentLanguage].validationFailed;
+    renderValidationResult({
+      ok: true,
+      persisted: false,
+      source: 'fallback',
+      signal: {
+        signal_type: 'validated',
+        impact_delta: 12,
+        confidence: 0.86,
+        weighted_impact: 10.32
+      }
+    });
   } finally {
     statusLine.classList.add('is-hot');
     window.setTimeout(() => {
       runValidationButton.disabled = false;
     }, 900);
   }
+}
+
+function renderValidationResult(result) {
+  if (!validationResult) return;
+
+  const dict = dictionaries[currentLanguage];
+  const signal = result?.signal || {};
+  const mode = result?.persisted
+    ? dict.validationModePersisted
+    : result?.source === 'fallback'
+      ? dict.validationModeLocal
+      : dict.validationModeQueued;
+
+  const title = document.createElement('h4');
+  title.textContent = dict.validationResultTitle;
+
+  const rows = document.createElement('dl');
+  rows.append(
+    createValidationRow(dict.liveSource, mode),
+    createValidationRow(dict.validationSignal, signal.signal_type || 'validated'),
+    createValidationRow(dict.validationImpact, String(signal.weighted_impact ?? signal.impact_delta ?? 0)),
+    createValidationRow(dict.validationConfidence, `${Math.round(Number(signal.confidence || 0) * 100)}%`)
+  );
+
+  validationResult.replaceChildren(title, rows);
+}
+
+function createValidationRow(labelText, valueText) {
+  const term = document.createElement('dt');
+  term.textContent = labelText;
+
+  const value = document.createElement('dd');
+  value.textContent = valueText;
+
+  const fragment = document.createDocumentFragment();
+  fragment.append(term, value);
+  return fragment;
 }
 
 function initParticles() {
@@ -544,7 +802,15 @@ languageToggle?.addEventListener('click', () => {
 });
 
 searchInput?.addEventListener('input', () => renderNodes(latestNodes));
+sourceFilter?.addEventListener('change', () => renderNodes(latestNodes));
+trustFilter?.addEventListener('change', () => renderNodes(latestNodes));
 runValidationButton?.addEventListener('click', submitCommunityValidation);
+document.querySelectorAll('[data-detail-close]').forEach((element) => {
+  element.addEventListener('click', closeDetail);
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeDetail();
+});
 
 document.querySelectorAll('[data-nav]').forEach((link) => {
   link.classList.toggle('is-active', link.dataset.nav === pageType);

@@ -62,6 +62,18 @@
         </div>
         <div class="toolbar">
           <input id="page-search" class="search-input" type="search" placeholder="筛选当前页面内容" />
+          <select id="source-filter" class="filter-select" aria-label="Filter by source">
+            <option value="all" data-i18n="sourceAll">全部来源</option>
+            <option value="supabase">Supabase</option>
+            <option value="fallback">Demo</option>
+          </select>
+          <select id="trust-filter" class="filter-select" aria-label="Filter by minimum trust">
+            <option value="0" data-i18n="trustAll">全部可信度</option>
+            <option value="70">70%+</option>
+            <option value="80">80%+</option>
+            <option value="90">90%+</option>
+          </select>
+          <span id="result-status" class="result-status" role="status" aria-live="polite">正在加载</span>
         </div>
         <div id="node-grid" class="node-grid" aria-live="polite"></div>
       </div>
@@ -92,6 +104,14 @@
   <footer class="footer">
     <div class="shell" data-i18n="footer">AI Knowledge Bank：AI 时代的公共知识银行。</div>
   </footer>
+
+  <div id="detail-panel" class="detail-panel" aria-hidden="true">
+    <div class="detail-backdrop" data-detail-close></div>
+    <article class="detail-dialog" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+      <button class="detail-close" type="button" data-detail-close aria-label="Close detail">&times;</button>
+      <div id="detail-content"></div>
+    </article>
+  </div>
 
   <script type="module" src="./assets/vault-page.js"></script>
 </body>
