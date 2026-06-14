@@ -41,3 +41,6 @@ supabase/config.toml.local
 
 # Cloudflare
 .pages/
+
+.dev.vars*
+!.dev.vars.example
