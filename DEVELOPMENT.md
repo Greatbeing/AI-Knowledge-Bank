@@ -1,140 +1,89 @@
-# AI Knowledge Bank - Development Progress
+# AI Knowledge Bank Development Status
 
-## ✅ Completed Optimizations (v1.1)
+This file tracks the current engineering state of the repository. For product vision and user-facing setup, start with `README.md`.
 
-### 1. TypeScript Configuration
-- **Added `tsconfig.json`** with proper path alias resolution (`@/*`)
-- Configured strict mode, ES2020 target, and React JSX support
-- Set up module resolution for bundler-based workflows
+## Current Phase
 
-### 2. Package Management
-- **Created `package.json`** with all required dependencies:
-  - React 18 + Framer Motion for animations
-  - Lucide React for icons
-  - Tailwind CSS + clsx + tailwind-merge for styling
-  - Supabase JS client for backend integration
-  - Full dev toolchain: Vite, TypeScript, ESLint, PostCSS
+AI Knowledge Bank is in the V1.0 Beta track. The current surface includes:
 
-### 3. Database Security (RLS)
-- **Added Row Level Security policies** to Supabase migration:
-  - Nodes: Public read, authenticated write
-  - User Profiles: Users can only update their own
-  - Interactions: Public read, authenticated create
-  - All tables properly secured with RLS enabled
+- Static Vite pages for the homepage, dedicated vault pages, and dashboard entry points.
+- Cloudflare Pages Functions under `functions/api/[[path]].js`.
+- Supabase migrations for CAS scoring, users, workflow, and Cross-Vault RAG.
+- Three dedicated vault pages with filtering, detail panels, community validation, and Cross-Vault Dispatch.
+- A text health gate to prevent mojibake regressions in public docs and runtime source.
 
-### 4. Performance Optimization
-- **Improved Canvas particle animation** for high-DPI screens:
-  - Dynamic particle density based on device pixel ratio
-  - Reduced particle count on 4K/Retina displays (25000 vs 15000 divisor)
-  - Maintains visual quality while improving FPS
+## Verification Commands
 
-### 5. Accessibility (a11y) Improvements
-- **Added ARIA attributes** to interactive elements:
-  - `aria-label` on validation button
-  - `aria-hidden="true"` on decorative SVG icons
-  - `role="status"` and `aria-live="polite"` on status messages
-  - Better screen reader support
-
-### 6. Type Safety
-- **Created `types/index.ts`** with comprehensive interfaces:
-  - Node, UserProfile, Interaction entities
-  - EvolutionTreeNode for recursive tree queries
-  - ValidationPayload and ForkPayload for actions
-  - ClassValue type for utility functions
-
-### 7. Utility Functions
-- **Enhanced `lib/utils.ts`** with CAS-specific helpers:
-  - `calculateTimeDecay()` - Time decay factor calculation
-  - `checkEmergence()` - Emergence threshold detection
-  - `formatWeight()` - Weight display with color coding
-  - `validateSupabaseConfig()` - Environment validation
-
-### 8. Documentation Consistency
-- **Standardized SQL migration comments** to English:
-  - Section headers now in English for international contributors
-  - Maintained Chinese descriptions in comments for context
-  - Improved overall code readability
-
----
-
-## 📋 Next Steps (Backlog)
-
-### High Priority
-1. **Error Handling**: Add try-catch blocks in validation flow
-2. **Loading States**: Show spinner during async operations
-3. **Mobile Responsiveness**: Optimize tree view for small screens
-4. **Unit Tests**: Add tests for CAS weight algorithm
-
-### Medium Priority
-5. **Real-time Updates**: Implement Supabase Realtime subscriptions
-6. **Authentication UI**: Add login/signup modal
-7. **Node Editor**: Create form for forking/editing nodes
-8. **Analytics Dashboard**: Visualize weight evolution over time
-
-### Future Enhancements
-9. **GraphQL API**: Add GraphQL layer for complex queries
-10. **WebSocket Sync**: Real-time collaboration features
-11. **Export/Import**: Backup and share knowledge trees
-12. **Multi-language**: i18n support for global community
-
----
-
-## 🏗️ Architecture Overview
-
-```
-AI Knowledge Bank
-├── Frontend (Vanilla HTML + React-ready)
-│   ├── index.html (Landing page + Demo)
-│   ├── components/ (React components)
-│   │   └── EvolutionTree.tsx
-│   ├── lib/ (Utilities)
-│   │   └── utils.ts
-│   └── types/ (TypeScript definitions)
-│       └── index.ts
-│
-├── Backend (Supabase)
-│   └── migrations/
-│       └── 001_cas_emergence_algorithm.sql
-│           ├── Tables: nodes, user_profiles, interactions
-│           ├── Functions: calculate_emergence_weight(), fork_node()
-│           ├── Triggers: Auto-weight recalc, emergence detection
-│           ├── Views: evolution_tree (recursive CTE)
-│           └── RLS Policies: Secure access control
-│
-└── Data
-    └── genesis_nodes.md (Initial knowledge seeds)
-```
-
----
-
-## 🎯 Quality Metrics
-
-| Metric | Before | After | Target |
-|--------|--------|-------|--------|
-| TypeScript Coverage | 0% | 60% | 90% |
-| Accessibility Score | 65 | 85 | 95+ |
-| Lighthouse Performance | 78 | 88 | 95+ |
-| RLS Policy Coverage | 0% | 100% | 100% |
-| Test Coverage | 0% | 0% | 80% |
-
----
-
-## 🚀 Quick Start
+Run these before committing user-facing or runtime changes:
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Run linter
+npm run check:text
 npm run lint
+npm run build
 ```
 
----
+Use `npm run preview` after `npm run build` when visual inspection is needed.
 
-*Last updated: 2024-06-02*
+## Text Health
+
+`npm run check:text` runs `scripts/check-text-health.mjs`. It scans public documentation and runtime source files for common mojibake signatures while skipping generated and historical folders:
+
+- `.git`
+- `.vite`
+- `dist`
+- `docs/superpowers`
+- `node_modules`
+
+The check script itself is skipped because it contains the mojibake signatures it searches for. The `docs/superpowers` folder is skipped because historical implementation plans intentionally mention old mojibake regex examples.
+
+## Architecture Snapshot
+
+```text
+AI Knowledge Bank
+|-- index.html                 # Main public experience
+|-- knowledge.html             # Knowledge Vault page
+|-- tools.html                 # Tools Vault page
+|-- cases.html                 # Cases Vault page
+|-- community.html             # Community validation page
+|-- assets/                    # Shared CSS, JS, and visual assets
+|-- functions/api/             # Cloudflare Pages Functions backend
+|-- lib/                       # TypeScript utilities and workflow code
+|-- components/                # React-ready components
+|-- supabase/migrations/       # Database schema and workflow migrations
+|-- types/                     # Shared TypeScript definitions
+|-- scripts/                   # Local verification utilities
+`-- docs/superpowers/          # Agentic design and implementation records
+```
+
+## Recent Completed Work
+
+- Phase 1: repaired quality foundation, Chinese copy, contributor text, and core verification.
+- Phase 2: improved dedicated vault pages with readable fallbacks, filtering, node details, and community signals.
+- Phase 3: added Cross-Vault Dispatch panels to all dedicated vault pages.
+- Phase 4: added text health verification and documented the guardrail.
+
+## Backlog
+
+High priority:
+
+- Add focused API contract tests for `/api/search`, `/api/vaults`, and `/api/community-signals`.
+- Add a contribution flow for submitting knowledge, tool, and case candidates.
+- Add UI smoke checks for the dedicated vault pages.
+
+Medium priority:
+
+- Add a lightweight analytics dashboard for evolution signals.
+- Improve Supabase Realtime integration for community signals.
+- Add authenticated authoring flows when credentials are available.
+
+Future:
+
+- Add semantic pgvector search to improve Cross-Vault RAG retrieval quality.
+- Add AI-assisted node extraction and SOP generation.
+- Add governance workflows for disputes, merges, and community standards.
+
+## Commit Expectations
+
+- Keep commits scoped to one phase or one bugfix.
+- Run `npm run check:text`, `npm run lint`, and `npm run build` before pushing.
+- Update `CHANGELOG.md` under `[Unreleased]` when adding visible behavior, scripts, docs, or deployment changes.

@@ -68,6 +68,7 @@
 2. **构建项目**
    ```bash
    npm install
+   npm run check:text
    npm run lint
    npm run build
    ```
@@ -206,6 +207,7 @@ VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 - [ ] 数据库迁移脚本已执行
 - [ ] OAuth 提供商已配置
 - [ ] 代码已推送到 GitHub
+- [ ] `npm run check:text` 通过
 - [ ] Cloudflare Pages 部署成功
 - [ ] GitHub Pages 静态镜像部署成功
 - [ ] 环境变量已配置

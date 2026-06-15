@@ -107,7 +107,7 @@ The system borrows collaboration ideas from Git, but applies them to human skill
 | Data layer | Supabase, PostgreSQL, Row Level Security |
 | Workflow logic | TypeScript service, SQL triggers, optimized views |
 | Deployment | Cloudflare Pages, GitHub Pages, Vercel |
-| Quality | ESLint 9 flat config, TypeScript build checks |
+| Quality | Text health checks, ESLint 9 flat config, TypeScript build checks |
 
 ## Quick Start / 快速开始
 
@@ -119,6 +119,7 @@ npm run dev
 Build and verify / 构建与验证：
 
 ```bash
+npm run check:text
 npm run lint
 npm run build
 npm run preview

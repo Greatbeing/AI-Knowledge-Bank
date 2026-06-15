@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Text health check script (`npm run check:text`) to catch mojibake regressions
 - Rate limiting to API (60 req/min/IP, Cloudflare-aware)
 - GET /api/vaults/:id - single node detail endpoint
 - GET /api/leaderboard - user ranking endpoint
