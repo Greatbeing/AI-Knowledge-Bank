@@ -358,6 +358,14 @@ export type Database = {
           source_refs: Json | null;
         }>;
       };
+      vote_on_merge_proposal: {
+        Args: {
+          p_proposal_id: string;
+          p_vote: string;
+          p_voter_id: string;
+        };
+        Returns: Json;
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

@@ -560,40 +560,23 @@ export async function voteOnMergeProposal(
   user: User
 ): Promise<ValidationResult> {
   try {
-    const { data: proposal, error: fetchError } = await supabase
-      .from('merge_proposals')
-      .select('votes_for, votes_against, voters')
-      .eq('id', proposalId)
-      .single();
-
-    if (fetchError) throw fetchError;
-
-    // 检查是否已投票
-    if (proposal.voters?.includes(user.id)) {
-      return {
-        success: false,
-        message: 'Already voted on this proposal'
-      };
-    }
-
-    const updateData: any = {
-      voters: [...(proposal.voters || []), user.id]
-    };
-
-    if (vote === 'for') {
-      updateData.votes_for = proposal.votes_for + 1;
-    } else {
-      updateData.votes_against = proposal.votes_against + 1;
-    }
-
+    // 使用原子 RPC 函数投票，消除先读后写的竞态条件
     const { data, error } = await supabase
-      .from('merge_proposals')
-      .update(updateData)
-      .eq('id', proposalId)
-      .select()
-      .single();
+      .rpc('vote_on_merge_proposal', {
+        p_proposal_id: proposalId,
+        p_vote: vote,
+        p_voter_id: user.id
+      });
 
     if (error) throw error;
+
+    const result = data as unknown as { success?: boolean; message?: string };
+    if (!result?.success) {
+      return {
+        success: false,
+        message: result?.message || 'Failed to record vote'
+      };
+    }
 
     await logActivity('merge_voted', { 
       proposal_id: proposalId, 
