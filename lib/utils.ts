@@ -49,10 +49,17 @@ export function formatWeight(weight: number): { value: string; colorClass: strin
  * @returns Whether environment variables are properly set
  */
 export function validateSupabaseConfig(): boolean {
+  if (typeof window !== 'undefined') {
+    return !!(
+      (window as any).__ENV?.SUPABASE_URL ||
+      import.meta.env.VITE_SUPABASE_URL
+    ) && !!(
+      (window as any).__ENV?.SUPABASE_ANON_KEY ||
+      import.meta.env.VITE_SUPABASE_ANON_KEY
+    );
+  }
   return !!(
-    typeof process !== 'undefined' &&
-    process.env &&
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    import.meta.env.VITE_SUPABASE_URL &&
+    import.meta.env.VITE_SUPABASE_ANON_KEY
   );
 }

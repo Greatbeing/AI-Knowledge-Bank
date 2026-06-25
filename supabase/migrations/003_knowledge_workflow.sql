@@ -370,9 +370,18 @@ BEGIN
         SET validation_count = validation_count + 1,
             validated_at = NOW()
         WHERE id = NEW.node_id;
+    ELSIF TG_OP = 'UPDATE' AND OLD.status != 'approved' AND NEW.status = 'approved' THEN
+        UPDATE knowledge_nodes 
+        SET validation_count = validation_count + 1,
+            validated_at = NOW()
+        WHERE id = NEW.node_id;
+    ELSIF TG_OP = 'UPDATE' AND OLD.status = 'approved' AND NEW.status != 'approved' THEN
+        UPDATE knowledge_nodes 
+        SET validation_count = GREATEST(validation_count - 1, 0)
+        WHERE id = NEW.node_id;
     ELSIF TG_OP = 'DELETE' AND OLD.status = 'approved' THEN
         UPDATE knowledge_nodes 
-        SET validation_count = GREATEst(validation_count - 1, 0)
+        SET validation_count = GREATEST(validation_count - 1, 0)
         WHERE id = OLD.node_id;
     END IF;
     RETURN COALESCE(NEW, OLD);
@@ -381,7 +390,7 @@ $$ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS trg_update_validation_count ON validation_requests;
 CREATE TRIGGER trg_update_validation_count
-    AFTER INSERT OR DELETE ON validation_requests
+    AFTER INSERT OR UPDATE OR DELETE ON validation_requests
     FOR EACH ROW
     EXECUTE FUNCTION update_validation_count();
 
@@ -437,7 +446,7 @@ CREATE POLICY "Validators can update node status"
     USING (
         EXISTS (
             SELECT 1 FROM user_profiles 
-            WHERE id = auth.uid() AND role IN ('validator', 'admin')
+            WHERE user_id = auth.uid() AND role IN ('validator', 'admin')
         )
     );
 
@@ -456,7 +465,7 @@ CREATE POLICY "Reviewers can update validation requests"
         auth.uid() = reviewer_id OR 
         EXISTS (
             SELECT 1 FROM user_profiles 
-            WHERE id = auth.uid() AND role IN ('validator', 'admin')
+            WHERE user_id = auth.uid() AND role IN ('validator', 'admin')
         )
     );
 
@@ -484,7 +493,7 @@ CREATE POLICY "Approvers can update merge proposals"
         auth.uid() = approver_id OR
         EXISTS (
             SELECT 1 FROM user_profiles 
-            WHERE id = auth.uid() AND role IN ('validator', 'admin')
+            WHERE user_id = auth.uid() AND role IN ('validator', 'admin')
         )
     );
 
@@ -534,7 +543,7 @@ SELECT
     up.avatar_url as author_avatar,
     (kn.validation_count * 10 + kn.fork_count * 5 + kn.merge_count * 15) as hotness_score
 FROM knowledge_nodes kn
-LEFT JOIN user_profiles up ON kn.author_id = up.id
+LEFT JOIN user_profiles up ON kn.author_id = up.user_id
 WHERE kn.status IN ('validated', 'merged')
 ORDER BY hotness_score DESC, kn.created_at DESC;
 
@@ -550,7 +559,7 @@ SELECT
     MAX(vr.created_at) as latest_request
 FROM knowledge_nodes kn
 LEFT JOIN validation_requests vr ON kn.id = vr.node_id AND vr.status = 'pending'
-LEFT JOIN user_profiles up ON kn.author_id = up.id
+LEFT JOIN user_profiles up ON kn.author_id = up.user_id
 WHERE kn.status = 'pending'
 GROUP BY kn.id, kn.title, kn.summary, kn.author_id, up.display_name
 ORDER BY latest_request DESC;
@@ -559,6 +568,7 @@ ORDER BY latest_request DESC;
 CREATE OR REPLACE VIEW active_contributors AS
 SELECT 
     up.id,
+    up.user_id,
     up.display_name,
     up.avatar_url,
     up.reputation_score,
@@ -568,11 +578,11 @@ SELECT
     SUM(kn.validation_count) as total_validations_received,
     SUM(kn.fork_count) as total_forks_received
 FROM user_profiles up
-LEFT JOIN knowledge_nodes kn ON up.id = kn.author_id
-LEFT JOIN validation_requests vr ON up.id = vr.reviewer_id
-LEFT JOIN node_forks nf ON up.id = nf.forked_by
+LEFT JOIN knowledge_nodes kn ON up.user_id = kn.author_id
+LEFT JOIN validation_requests vr ON up.user_id = vr.reviewer_id
+LEFT JOIN node_forks nf ON up.user_id = nf.forked_by
 WHERE up.is_active = true
-GROUP BY up.id, up.display_name, up.avatar_url, up.reputation_score
+GROUP BY up.id, up.user_id, up.display_name, up.avatar_url, up.reputation_score
 ORDER BY reputation_score DESC;
 
 -- 知识图谱连接视图

@@ -33,6 +33,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Check text health
+        run: npm run check:text
+
+      - name: Test
+        run: npm run test
+
       - name: Build
         run: npm run build
 

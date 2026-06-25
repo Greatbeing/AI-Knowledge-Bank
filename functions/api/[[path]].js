@@ -92,7 +92,7 @@ export async function onRequest(context) {
   const { request } = context;
 
   if (request.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders() });
+    return new Response(null, { status: 204, headers: corsHeaders(request) });
   }
 
   const rateLimitEntry = checkRateLimit(getClientIp(request));
@@ -104,49 +104,49 @@ export async function onRequest(context) {
       error: 'rate_limited',
       message: 'Too many requests. Please retry after a moment.',
       retryAfter: Math.ceil((rateLimitEntry.windowStart + RATE_LIMIT_WINDOW - Date.now()) / 1000)
-    }, 429, rateHeaders);
+    }, 429, rateHeaders, request);
   }
 
   try {
     const route = getRoute(context);
 
     if (route === 'health' && request.method === 'GET') {
-      return jsonResponse(handleHealth(context.env));
+      return jsonResponse(handleHealth(context.env), 200, {}, request);
     }
 
     if (route === 'vaults' && request.method === 'GET') {
-      return jsonResponse(await handleVaults(request, context.env));
+      return jsonResponse(await handleVaults(request, context.env), 200, {}, request);
     }
 
     if (route === 'search' && request.method === 'GET') {
-      return jsonResponse(await handleSearch(request, context.env));
+      return jsonResponse(await handleSearch(request, context.env), 200, {}, request);
     }
 
     if (route === 'community-signals' && request.method === 'POST') {
-      return jsonResponse(await handleCommunitySignals(request, context.env), 201);
+      return jsonResponse(await handleCommunitySignals(request, context.env), 201, {}, request);
     }
 
     if (route.startsWith('vaults/') && request.method === 'GET') {
       const nodeId = route.replace('vaults/', '');
-      return jsonResponse(await handleVaultNodeDetail(nodeId, context.env));
+      return jsonResponse(await handleVaultNodeDetail(nodeId, context.env), 200, {}, request);
     }
 
     if (route === 'leaderboard' && request.method === 'GET') {
-      return jsonResponse(await handleLeaderboard(request, context.env));
+      return jsonResponse(await handleLeaderboard(request, context.env), 200, {}, request);
     }
 
     return jsonResponse({
       ok: false,
       error: 'not_found',
       message: 'Unknown AI Knowledge Bank API route.'
-    }, 404);
+    }, 404, {}, request);
   } catch (error) {
     const status = Number.isInteger(error.status) ? error.status : 500;
     return jsonResponse({
       ok: false,
       error: status === 500 ? 'internal_error' : 'request_error',
       message: error.message || 'Unexpected API error.'
-    }, status, rateHeaders);
+    }, status, rateHeaders, request);
   }
 }
 
@@ -730,11 +730,11 @@ function httpError(status, message) {
   return error;
 }
 
-function jsonResponse(payload, status = 200, extraHeaders = {}) {
+function jsonResponse(payload, status = 200, extraHeaders = {}, request = null) {
   return new Response(JSON.stringify(payload), {
     status,
     headers: {
-      ...corsHeaders(),
+      ...corsHeaders(request),
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
       ...extraHeaders
@@ -775,11 +775,22 @@ function getClientIp(request) {
   return 'unknown';
 }
 
-function corsHeaders() {
+const ALLOWED_ORIGINS = new Set([
+  'https://aiknowledgebank.pages.dev',
+  'https://ai-knowledge-bank.pages.dev',
+  'https://greatbeing.github.io',
+  'http://localhost:5173',
+  'http://localhost:4173'
+]);
+
+function corsHeaders(request) {
+  const origin = request?.headers?.get('Origin') || '';
+  const allowedOrigin = ALLOWED_ORIGINS.has(origin) ? origin : ALLOWED_ORIGINS.values().next().value;
   return {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-    'Access-Control-Max-Age': '86400'
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin'
   };
 }

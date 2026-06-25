@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="zh-CN" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -358,11 +358,25 @@
     </main>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+        // Load Supabase client: CDN primary with local dependency fallback
+        let createClient;
+        try {
+            const supabaseModule = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+            createClient = supabaseModule.createClient;
+        } catch (cdnError) {
+            console.error('Failed to load Supabase from CDN, trying local dependency...', cdnError);
+            try {
+                const supabaseModule = await import('@supabase/supabase-js');
+                createClient = supabaseModule.createClient;
+            } catch (localError) {
+                console.error('Failed to load Supabase library from both CDN and local. Dashboard cannot function.', localError);
+                throw localError;
+            }
+        }
 
-        // Initialize Supabase client
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Replace with actual URL
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with actual key
+        // Initialize Supabase client - read credentials from runtime env (window.__ENV__) or build-time env (import.meta.env)
+        const SUPABASE_URL = window.__ENV?.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL;
+        const SUPABASE_ANON_KEY = window.__ENV?.SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
         
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -425,10 +439,15 @@
                 document.getElementById('stat-merges').textContent = profile.total_merges;
                 document.getElementById('stat-badges').textContent = (profile.badges || []).length;
 
-                // Set avatar
+                // Set avatar - use safe DOM API to prevent XSS
                 const avatarEl = document.getElementById('user-avatar');
                 if (profile.avatar_url) {
-                    avatarEl.innerHTML = `<img src="${profile.avatar_url}" class="w-full h-full rounded-full object-cover">`;
+                    avatarEl.textContent = '';
+                    const img = document.createElement('img');
+                    img.src = profile.avatar_url;
+                    img.className = 'w-full h-full rounded-full object-cover';
+                    img.alt = profile.username || 'User avatar';
+                    avatarEl.appendChild(img);
                 } else {
                     avatarEl.textContent = (profile.username || 'U')[0].toUpperCase();
                 }
@@ -463,13 +482,28 @@
                 return;
             }
 
-            badgesGrid.innerHTML = userBadges.map(ub => `
-                <div class="glass rounded-lg p-4 text-center hover:bg-white/5 transition-all">
-                    <div class="text-3xl mb-2">${ub.badges?.icon || '🏅'}</div>
-                    <div class="text-xs font-medium text-white">${ub.badges?.name || 'Badge'}</div>
-                    <div class="text-[10px] text-gray-500 mt-1">${new Date(ub.awarded_at).toLocaleDateString()}</div>
-                </div>
-            `).join('');
+            badgesGrid.textContent = '';
+            userBadges.forEach(ub => {
+                const badgeDiv = document.createElement('div');
+                badgeDiv.className = 'glass rounded-lg p-4 text-center hover:bg-white/5 transition-all';
+
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'text-3xl mb-2';
+                iconDiv.textContent = ub.badges?.icon || '🏅';
+                badgeDiv.appendChild(iconDiv);
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'text-xs font-medium text-white';
+                nameDiv.textContent = ub.badges?.name || 'Badge';
+                badgeDiv.appendChild(nameDiv);
+
+                const dateDiv = document.createElement('div');
+                dateDiv.className = 'text-[10px] text-gray-500 mt-1';
+                dateDiv.textContent = new Date(ub.awarded_at).toLocaleDateString();
+                badgeDiv.appendChild(dateDiv);
+
+                badgesGrid.appendChild(badgeDiv);
+            });
         }
 
         async function loadNotifications(userId) {
@@ -492,17 +526,44 @@
                 return;
             }
 
-            notificationsList.innerHTML = notifications.map(notif => `
-                <div class="flex items-start gap-3 p-3 rounded-lg ${!notif.is_read ? 'bg-primary/10 border border-primary/20' : 'hover:bg-white/5'} transition-all">
-                    <div class="text-xl">${notif.type === 'badge' ? '🏆' : notif.type === 'merge' ? '✨' : '📢'}</div>
-                    <div class="flex-1 min-w-0">
-                        <div class="text-sm font-medium text-white">${notif.title}</div>
-                        <div class="text-xs text-gray-400 mt-1">${notif.message}</div>
-                        <div class="text-[10px] text-gray-600 mt-2">${new Date(notif.created_at).toLocaleString()}</div>
-                    </div>
-                    ${!notif.is_read ? '<div class="w-2 h-2 rounded-full bg-primary"></div>' : ''}
-                </div>
-            `).join('');
+            notificationsList.textContent = '';
+            notifications.forEach(notif => {
+                const notifDiv = document.createElement('div');
+                notifDiv.className = `flex items-start gap-3 p-3 rounded-lg ${!notif.is_read ? 'bg-primary/10 border border-primary/20' : 'hover:bg-white/5'} transition-all`;
+
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'text-xl';
+                iconDiv.textContent = notif.type === 'badge' ? '🏆' : notif.type === 'merge' ? '✨' : '📢';
+                notifDiv.appendChild(iconDiv);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'flex-1 min-w-0';
+
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'text-sm font-medium text-white';
+                titleDiv.textContent = notif.title;
+                contentDiv.appendChild(titleDiv);
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'text-xs text-gray-400 mt-1';
+                messageDiv.textContent = notif.message;
+                contentDiv.appendChild(messageDiv);
+
+                const dateDiv = document.createElement('div');
+                dateDiv.className = 'text-[10px] text-gray-600 mt-2';
+                dateDiv.textContent = new Date(notif.created_at).toLocaleString();
+                contentDiv.appendChild(dateDiv);
+
+                notifDiv.appendChild(contentDiv);
+
+                if (!notif.is_read) {
+                    const dotDiv = document.createElement('div');
+                    dotDiv.className = 'w-2 h-2 rounded-full bg-primary';
+                    notifDiv.appendChild(dotDiv);
+                }
+
+                notificationsList.appendChild(notifDiv);
+            });
         }
 
         // Event Listeners

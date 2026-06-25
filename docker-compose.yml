@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Supabase 本地开发环境（使用 Supabase CLI 的本地模拟）
+  # 使用前需安装 Supabase CLI: https://supabase.com/docs/guides/cli
+  #
+  # 启动方式:
+  #   supabase start
+  #
+  # 本文件提供可选的 Docker 辅助服务
+
+  # 本地开发服务器（可选）
+  dev-server:
+    image: node:20-alpine
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    environment:
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-http://localhost:54321}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-placeholder}
+    profiles:
+      - dev
+
+  # 文本健康检查（可选）
+  text-check:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run check:text"
+    profiles:
+      - check

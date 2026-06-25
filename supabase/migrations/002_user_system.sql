@@ -11,11 +11,15 @@ ALTER TABLE user_profiles
 ADD COLUMN IF NOT EXISTS email TEXT,
 ADD COLUMN IF NOT EXISTS avatar_url TEXT,
 ADD COLUMN IF NOT EXISTS bio TEXT,
+ADD COLUMN IF NOT EXISTS display_name TEXT,
+ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'member' CHECK (role IN ('member', 'validator', 'admin')),
+ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true,
 ADD COLUMN IF NOT EXISTS total_validations INT DEFAULT 0,
 ADD COLUMN IF NOT EXISTS total_forks INT DEFAULT 0,
 ADD COLUMN IF NOT EXISTS total_merges INT DEFAULT 0,
 ADD COLUMN IF NOT EXISTS badges TEXT[] DEFAULT '{}',
-ADD COLUMN IF NOT EXISTS last_active_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
+ADD COLUMN IF NOT EXISTS last_active_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 
 -- 创建索引
 CREATE INDEX IF NOT EXISTS idx_user_profiles_email ON user_profiles(email);
@@ -70,7 +74,7 @@ CREATE INDEX IF NOT EXISTS idx_user_badges_badge ON user_badges(badge_id);
 
 -- 插入初始徽章数据
 INSERT INTO badges (name, description, icon, category, criteria) VALUES
-(' Pioneer', 'First knowledge node creator', '🚀', 'contributor', '{"action": "create_node", "count": 1}'),
+('Pioneer', 'First knowledge node creator', '🚀', 'contributor', '{"action": "create_node", "count": 1}'),
 ('Validator', 'Validated 10+ nodes successfully', '✅', 'validator', '{"action": "validate", "count": 10}'),
 ('Expert', 'Reputation score reached 100+', '🎓', 'expert', '{"reputation_threshold": 100}'),
 ('Emergence Master', 'Had a branch merged as new mainline', '✨', 'special', '{"emergence_count": 1}'),
@@ -130,14 +134,12 @@ CREATE POLICY "Users can insert their own profile" ON user_profiles
     FOR INSERT 
     WITH CHECK (user_id = auth.uid());
 
--- 新增：允许更新 last_active_at
+-- 新增：允许更新 last_active_at（移除 WITH CHECK 中对 OLD 的非法引用）
+DROP POLICY IF EXISTS "Users can update their own activity" ON user_profiles;
 CREATE POLICY "Users can update their own activity" ON user_profiles
     FOR UPDATE 
     USING (user_id = auth.uid())
-    WITH CHECK (
-        user_id = auth.uid() AND 
-        (last_active_at IS DISTINCT FROM OLD.last_active_at)
-    );
+    WITH CHECK (user_id = auth.uid());
 
 -- User Sessions: 严格限制访问
 ALTER TABLE user_sessions ENABLE ROW LEVEL SECURITY;
@@ -330,12 +332,11 @@ SELECT
     up.total_merges,
     up.badges,
     up.last_active_at,
-    COUNT(DISTINCT n.id) as nodes_created,
+    COUNT(DISTINCT kn.id) as nodes_created,
     RANK() OVER (ORDER BY up.reputation_score DESC) as reputation_rank,
     RANK() OVER (ORDER BY up.total_validations DESC) as validator_rank
 FROM user_profiles up
-LEFT JOIN nodes n ON n.parent_id IS NOT NULL 
-    AND EXISTS (SELECT 1 FROM interactions i WHERE i.node_id = n.id AND i.user_id = up.user_id AND i.action_type = 'fork')
+LEFT JOIN knowledge_nodes kn ON kn.author_id = up.user_id AND kn.parent_id IS NOT NULL
 GROUP BY up.id, up.user_id, up.username, up.avatar_url, up.reputation_score, 
          up.total_validations, up.total_forks, up.total_merges, up.badges, up.last_active_at
 ORDER BY up.reputation_score DESC;

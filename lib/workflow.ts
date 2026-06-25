@@ -1061,15 +1061,17 @@ export async function updateNodeCASMetrics(
 async function getUserProfile(userId: string): Promise<any> {
   const { data } = await supabase
     .from('user_profiles')
-    .select('role')
-    .eq('id', userId)
+    .select('role, display_name, reputation_score')
+    .eq('user_id', userId)
     .single();
   return data;
 }
 
 async function createNotification(notificationData: any): Promise<void> {
+  const { content, ...rest } = notificationData;
   await supabase.from('notifications').insert({
-    ...notificationData,
+    ...rest,
+    message: content || rest.message || '',
     is_read: false,
     created_at: new Date().toISOString()
   });
@@ -1081,11 +1083,10 @@ async function logActivity(
 ): Promise<void> {
   const user = await supabase.auth.getUser();
   
-  await supabase.from('activity_logs').insert({
+  await supabase.from('activity_log').insert({
     user_id: user.data?.user?.id,
-    event_type: eventType,
+    action: eventType,
     metadata,
-    ip_address: '', // 需要服务端获取
     created_at: new Date().toISOString()
   });
 }

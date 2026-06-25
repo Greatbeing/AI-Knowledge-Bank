@@ -3,9 +3,9 @@
 export default {
   content: [
     "./*.html",
-    "./components/**/*.{js,ts}",
-    "./lib/**/*.{js,ts}",
-    "./assets/**/*.{js,ts}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./lib/**/*.{js,ts,jsx,tsx}",
+    "./assets/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: "class",
   theme: {
