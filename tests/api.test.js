@@ -1,75 +1,18 @@
 /**
  * tests/api.test.js
  *
- * Unit tests for the pure helper functions used in functions/api/[[path]].js.
- *
- * Because the functions in [[path]].js are not exported, the core logic is
- * replicated here verbatim from the source file so that behaviour can be
- * verified in isolation. If [[path]].js changes, these copies must be kept
- * in sync.
+ * Unit tests for the production helper functions used by the API handler.
  */
 
 import { describe, it, expect } from 'vitest';
-
-/* -------------------------------------------------------------------------- */
-/*  Pure functions copied verbatim from functions/api/[[path]].js             */
-/* -------------------------------------------------------------------------- */
-
-function clampNumber(value, min, max) {
-  if (!Number.isFinite(value)) return min;
-  return Math.min(max, Math.max(min, value));
-}
-
-function normalizeLocale(locale) {
-  if (locale === 'zh' || locale === 'en') return locale;
-  return 'bilingual';
-}
-
-function normalizeVaultType(vaultType, category = '', nodeType = '') {
-  if (vaultType === 'tool' || vaultType === 'case' || vaultType === 'knowledge') return vaultType;
-  if (nodeType === 'workflow') return 'tool';
-  if (nodeType === 'case_study' || nodeType === 'case') return 'case';
-  if (nodeType === 'prompt') return 'knowledge';
-
-  const categoryText = String(category || '').toLowerCase();
-  if (['tool', 'workflow', 'agent', 'sandbox'].some((term) => categoryText.includes(term))) return 'tool';
-  if (['case', 'study', 'sop', 'example'].some((term) => categoryText.includes(term))) return 'case';
-  return 'knowledge';
-}
-
-function filterNodes(nodes, query, locale) {
-  const normalized = query.trim().toLowerCase();
-  return nodes.filter((node) => {
-    const localeMatch = locale === 'bilingual' || node.language === 'bilingual' || node.language === locale;
-    if (!localeMatch) return false;
-    if (!normalized) return true;
-    const haystack = [
-      node.title,
-      node.summary,
-      node.recommendation_reason,
-      ...node.scenario_tags,
-      ...node.source_refs
-    ].join(' ').toLowerCase();
-    return normalized.split(/\s+/).some((term) => haystack.includes(term));
-  });
-}
-
-function defaultImpact(signalType) {
-  const impact = {
-    validated: 12,
-    used: 6,
-    forked: 8,
-    commented: 3,
-    merged: 24,
-    disputed: -10
-  };
-  return impact[signalType] || 1;
-}
-
-function sanitizeError(error) {
-  const message = error && error.message ? String(error.message) : 'Unknown backend warning.';
-  return message.slice(0, 220);
-}
+import {
+  clampNumber,
+  defaultImpact,
+  filterNodes,
+  normalizeLocale,
+  normalizeVaultType,
+  sanitizeError
+} from '../functions/api/[[path]].js';
 
 /* -------------------------------------------------------------------------- */
 /*  Test fixtures                                                             */

@@ -144,8 +144,8 @@ export async function onRequest(context) {
     const status = Number.isInteger(error.status) ? error.status : 500;
     return jsonResponse({
       ok: false,
-      error: status === 500 ? 'internal_error' : 'request_error',
-      message: error.message || 'Unexpected API error.'
+      error: error.code || (status === 500 ? 'internal_error' : 'request_error'),
+      message: Number.isInteger(error.status) ? error.message : 'Unexpected API error.'
     }, status, rateHeaders, request);
   }
 }
@@ -248,6 +248,11 @@ async function handleCommunitySignals(request, env) {
   const confidence = clampNumber(Number(body.confidence ?? 0.72), 0, 1);
   const impactDelta = clampNumber(Number(body.impact_delta ?? defaultImpact(signalType)), -20, 50);
   const nodeId = typeof body.node_id === 'string' && body.node_id.trim() ? body.node_id.trim() : null;
+
+  if (nodeId && !isUuid(nodeId)) {
+    throw httpError(400, 'node_id must be a valid UUID.', 'invalid_id');
+  }
+
   const event = {
     node_id: nodeId,
     signal_type: signalType,
@@ -258,25 +263,29 @@ async function handleCommunitySignals(request, env) {
     weight_snapshot: typeof body.weight_snapshot === 'object' && body.weight_snapshot !== null ? body.weight_snapshot : {}
   };
 
-  const supabase = getSupabaseConfig(env);
-  if (supabase && nodeId) {
-    try {
-      const rows = await supabaseFetch(env, '/rest/v1/community_evolution_signals?select=id,node_id,signal_type,impact_delta,confidence,evidence_url,metadata,created_at', {
-        method: 'POST',
-        prefer: 'return=representation',
-        body: event
-      });
-      const inserted = Array.isArray(rows) ? rows[0] : rows;
-      return buildSignalResponse(inserted || event, 'supabase', true);
-    } catch (error) {
-      return {
-        ...buildSignalResponse(event, 'fallback', false),
-        warning: sanitizeError(error)
-      };
-    }
+  if (!nodeId) {
+    return buildSignalResponse(event, 'fallback', false);
   }
 
-  return buildSignalResponse(event, 'fallback', false);
+  const token = getBearerToken(request);
+  if (!token) {
+    throw httpError(401, 'Sign in before submitting a community signal.', 'authentication_required');
+  }
+
+  const user = await verifySupabaseUser(env, token);
+  const userEvent = { ...event, user_id: user.id };
+  const rows = await supabaseUserFetch(
+    env,
+    '/rest/v1/community_evolution_signals?select=id,node_id,user_id,signal_type,impact_delta,confidence,evidence_url,metadata,created_at',
+    token,
+    {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: userEvent
+    }
+  );
+  const inserted = Array.isArray(rows) ? rows[0] : rows;
+  return buildSignalResponse(inserted || userEvent, 'supabase', true);
 }
 
 async function handleVaultNodeDetail(nodeId, env) {
@@ -368,6 +377,79 @@ async function supabaseFetch(env, path, options = {}) {
 
   if (response.status === 204) return null;
   return response.json();
+}
+
+function getUserScopedSupabaseConfig(env) {
+  const url = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
+  const anonKey = env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) {
+    throw httpError(503, 'Authenticated community writes are not configured.', 'service_unavailable');
+  }
+  return {
+    url: String(url).replace(/\/+$/, ''),
+    anonKey
+  };
+}
+
+function getBearerToken(request) {
+  const authorization = request.headers.get('Authorization') || '';
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  return match?.[1]?.trim() || null;
+}
+
+async function verifySupabaseUser(env, token) {
+  const supabase = getUserScopedSupabaseConfig(env);
+  const response = await fetch(`${supabase.url}/auth/v1/user`, {
+    method: 'GET',
+    headers: {
+      apikey: supabase.anonKey,
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (response.status === 401 || response.status === 403) {
+    throw httpError(401, 'Your session is invalid or expired.', 'authentication_required');
+  }
+  if (!response.ok) {
+    throw httpError(503, 'Authentication service is unavailable.', 'service_unavailable');
+  }
+
+  const user = await response.json();
+  if (!user || !isUuid(user.id)) {
+    throw httpError(401, 'Your session is invalid or expired.', 'authentication_required');
+  }
+  return user;
+}
+
+async function supabaseUserFetch(env, path, token, options = {}) {
+  const supabase = getUserScopedSupabaseConfig(env);
+  const headers = {
+    apikey: supabase.anonKey,
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  };
+  if (options.prefer) headers.Prefer = options.prefer;
+
+  let response;
+  try {
+    response = await fetch(`${supabase.url}${path}`, {
+      method: options.method || 'GET',
+      headers,
+      body: options.body ? JSON.stringify(options.body) : undefined
+    });
+  } catch {
+    throw httpError(502, 'Community signal storage is unavailable.', 'upstream_error');
+  }
+
+  if (!response.ok) {
+    throw httpError(502, 'Community signal storage is unavailable.', 'upstream_error');
+  }
+  if (response.status === 204) return null;
+  try {
+    return await response.json();
+  } catch {
+    throw httpError(502, 'Community signal storage is unavailable.', 'upstream_error');
+  }
 }
 
 async function fetchAvailableVaultNodes(env) {
@@ -570,7 +652,7 @@ function normalizeArray(value) {
   return value.split(/[,，]/).map(cleanText).filter(Boolean);
 }
 
-function normalizeVaultType(vaultType, category = '', nodeType = '') {
+export function normalizeVaultType(vaultType, category = '', nodeType = '') {
   if (vaultType === 'tool' || vaultType === 'case' || vaultType === 'knowledge') return vaultType;
   if (nodeType === 'workflow') return 'tool';
   if (nodeType === 'case_study' || nodeType === 'case') return 'case';
@@ -612,7 +694,7 @@ function parseContent(content) {
   }
 }
 
-function filterNodes(nodes, query, locale) {
+export function filterNodes(nodes, query, locale) {
   const normalized = query.trim().toLowerCase();
   return nodes.filter((node) => {
     const localeMatch = locale === 'bilingual' || node.language === 'bilingual' || node.language === locale;
@@ -691,7 +773,7 @@ async function parseJson(request) {
   }
 }
 
-function defaultImpact(signalType) {
+export function defaultImpact(signalType) {
   const impact = {
     validated: 12,
     used: 6,
@@ -703,12 +785,12 @@ function defaultImpact(signalType) {
   return impact[signalType] || 1;
 }
 
-function normalizeLocale(locale) {
+export function normalizeLocale(locale) {
   if (locale === 'zh' || locale === 'en') return locale;
   return 'bilingual';
 }
 
-function clampNumber(value, min, max) {
+export function clampNumber(value, min, max) {
   if (!Number.isFinite(value)) return min;
   return Math.min(max, Math.max(min, value));
 }
@@ -719,14 +801,19 @@ function sanitizeOptionalString(value) {
   return trimmed ? trimmed.slice(0, 500) : null;
 }
 
-function sanitizeError(error) {
+function isUuid(value) {
+  return /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(value);
+}
+
+export function sanitizeError(error) {
   const message = error && error.message ? String(error.message) : 'Unknown backend warning.';
   return message.slice(0, 220);
 }
 
-function httpError(status, message) {
+function httpError(status, message, code) {
   const error = new Error(message);
   error.status = status;
+  if (code) error.code = code;
   return error;
 }
 

@@ -1,3 +1,5 @@
+import { buildCommunitySignalRequest, fetchApi } from '../lib/shared/api.js';
+
 const pageType = document.body.dataset.page || 'knowledge';
 const vaultKeyByPage = {
   knowledge: 'knowledge',
@@ -91,6 +93,7 @@ const dictionaries = {
     validationPersisted: '验证信号已写入后端，节点演化权重已更新',
     validationQueued: '验证信号已进入演示队列',
     validationFailed: '后端暂不可用，已保留为本地演示状态',
+    validationAuthRequired: '请先在控制台登录，再提交真实社区验证。',
     panelTitleCommunity: '实时验证信号',
     panelCopyCommunity: '点击后会向现有 Cloudflare API 提交一次社区验证信号，用来模拟内容从个人经验进入公共演化循环。',
     footer: 'AI Knowledge Bank：AI 时代的公共知识银行。'
@@ -180,6 +183,7 @@ const dictionaries = {
     validationPersisted: 'Validation signal written to backend; node evolution weight updated',
     validationQueued: 'Validation signal entered the demo queue',
     validationFailed: 'Backend unavailable; kept as local demo state',
+    validationAuthRequired: 'Sign in from the dashboard before submitting a real community validation.',
     panelTitleCommunity: 'Live Validation Signal',
     panelCopyCommunity: 'This sends one community validation signal to the existing Cloudflare API and simulates how personal practice enters the shared evolution loop.',
     footer: 'AI Knowledge Bank: Where AI experience grows together.'
@@ -320,29 +324,6 @@ const dispatchQuery = document.getElementById('dispatch-query');
 const dispatchRunButton = document.getElementById('dispatch-run');
 const dispatchStatus = document.getElementById('dispatch-status');
 const dispatchResults = document.getElementById('dispatch-results');
-
-function resolveApiBase() {
-  if (window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:') {
-    return 'https://aiknowledgebank.pages.dev/api';
-  }
-
-  return `${window.location.origin}/api`;
-}
-
-const apiBase = resolveApiBase();
-
-async function fetchApi(path, options = {}) {
-  const headers = { ...(options.headers || {}) };
-  if (options.body) headers['Content-Type'] = 'application/json';
-
-  const response = await fetch(`${apiBase}${path}`, {
-    ...options,
-    headers
-  });
-
-  if (!response.ok) throw new Error(`API request failed with ${response.status}`);
-  return response.json();
-}
 
 function pageSuffix() {
   return pageType.charAt(0).toUpperCase() + pageType.slice(1);
@@ -823,10 +804,18 @@ async function submitCommunityValidation() {
   if (validationResult) validationResult.replaceChildren();
 
   try {
-    const result = await fetchApi('/community-signals', {
-      method: 'POST',
-      body: JSON.stringify({
-        node_id: latestNodes[0]?.id || null,
+    let accessToken = null;
+    if (latestSource === 'supabase' && latestNodes[0]) {
+      const { getCurrentUser } = await import('../lib/auth.ts');
+      const session = await getCurrentUser();
+      accessToken = session?.accessToken || null;
+    }
+
+    const signalRequest = buildCommunitySignalRequest({
+      source: latestSource,
+      node: latestNodes[0],
+      accessToken,
+      signal: {
         signal_type: 'validated',
         impact_delta: 12,
         confidence: 0.86,
@@ -835,14 +824,25 @@ async function submitCommunityValidation() {
           language: currentLanguage,
           source: 'community-page'
         }
-      })
+      }
     });
+
+    if (signalRequest.requiresAuthentication) {
+      statusLine.textContent = dictionaries[currentLanguage].validationAuthRequired;
+      return;
+    }
+
+    const result = await fetchApi('/community-signals', signalRequest.options);
 
     statusLine.textContent = result.persisted
       ? dictionaries[currentLanguage].validationPersisted
       : dictionaries[currentLanguage].validationQueued;
     renderValidationResult(result);
-  } catch {
+  } catch (error) {
+    if (error?.status === 401) {
+      statusLine.textContent = dictionaries[currentLanguage].validationAuthRequired;
+      return;
+    }
     statusLine.textContent = dictionaries[currentLanguage].validationFailed;
     renderValidationResult({
       ok: true,

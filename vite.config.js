@@ -12,7 +12,8 @@ export default defineConfig({
         knowledge: resolve(__dirname, 'knowledge.html'),
         tools: resolve(__dirname, 'tools.html'),
         cases: resolve(__dirname, 'cases.html'),
-        community: resolve(__dirname, 'community.html')
+        community: resolve(__dirname, 'community.html'),
+        dashboard: resolve(__dirname, 'dashboard.html')
       }
     }
   }

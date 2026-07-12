@@ -121,7 +121,9 @@ Build and verify / 构建与验证：
 ```bash
 npm run check:text
 npm run lint
+npm test
 npm run build
+npm run check:dist
 npm run preview
 ```
 
@@ -144,10 +146,11 @@ Then configure / 然后配置：
 VITE_SUPABASE_URL=your-project-url
 VITE_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_URL=your-project-url
+SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
-`VITE_*` keys are for browser-side auth flows. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are Cloudflare Pages Function variables and must not be exposed in client code.
+`VITE_*` keys are for browser-side auth flows. `SUPABASE_ANON_KEY` lets Pages Functions perform authenticated, user-scoped writes that respect RLS. `SUPABASE_SERVICE_ROLE_KEY` is reserved for trusted server-side reads and must never be exposed in client code.
 
 `VITE_*` 用于浏览器侧登录流程；`SUPABASE_URL` 和 `SUPABASE_SERVICE_ROLE_KEY` 用于 Cloudflare Pages Functions，不能写入前端代码。
 
@@ -163,7 +166,7 @@ Cloudflare Pages 通过 `functions/api/[[path]].js` 提供真实后端接口。G
 | `GET /api/vaults` | Three-vault grouped node data and stats |
 | `GET /api/vaults/:id` | Single node detail endpoint |
 | `GET /api/search?q=&locale=&limit=` | Cross-Vault RAG search contract returning knowledge, tools, and cases |
-| `POST /api/community-signals` | Community validation, usage, fork, merge, comment, and dispute signals |
+| `POST /api/community-signals` | Authenticated community signals for real nodes; node-less requests remain non-persisted demos |
 | `GET /api/leaderboard` | User ranking endpoint |
 
 Related docs / 相关文档：

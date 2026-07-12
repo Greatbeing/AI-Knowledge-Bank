@@ -82,6 +82,7 @@
    - Cloudflare Dashboard → Pages → `aiknowledgebank` → Settings → Environment variables
    - 添加：
      - `SUPABASE_URL`
+     - `SUPABASE_ANON_KEY`
      - `SUPABASE_SERVICE_ROLE_KEY`
      - `VITE_SUPABASE_URL` (如需浏览器侧登录)
      - `VITE_SUPABASE_ANON_KEY` (如需浏览器侧登录)
@@ -137,6 +138,7 @@
 
 ```env
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+SUPABASE_ANON_KEY=YOUR_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
