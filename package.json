@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "lint": "eslint . --max-warnings 0",
     "check:text": "node scripts/check-text-health.mjs",
+    "check:dist": "node scripts/check-build-output.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },

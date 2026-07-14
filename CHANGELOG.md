@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Pull request CI for text health, lint, tests, production build, and required-page verification
+- Production-path API handler tests and authenticated community signal contract coverage
+- Dashboard production build entry and explicit missing-auth-configuration state
+- `npm run check:dist` verification for all six public pages
 - Text health check script (`npm run check:text`) to catch mojibake regressions
 - Rate limiting to API (60 req/min/IP, Cloudflare-aware)
 - GET /api/vaults/:id - single node detail endpoint
@@ -15,6 +19,9 @@ All notable changes to this project will be documented in this file.
 - Enhanced .gitignore (OS files, .vite/, supabase local)
 
 ### Changed
+- Community signals for real nodes now require a verified Supabase user session and execute under RLS
+- Demo community signals remain non-persisted and no longer attempt database writes
+- API helper tests import the production implementation instead of copied functions
 - lib/auth.ts: fixed NEXT_PUBLIC_* env vars to VITE_*
 - API jsonResponse now accepts optional extraHeaders
 
@@ -22,7 +29,7 @@ All notable changes to this project will be documented in this file.
 - pgvector semantic search integration
 - Frontend React migration from vanilla JS pages
 - WebSocket for real-time community signals
-- CI/CD pipeline beyond GitHub Pages deploy
+- Production data seeding and Cloudflare-native rate limiting
 
 ## [1.0.0] - 2026-06-10
 

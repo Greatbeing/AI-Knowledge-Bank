@@ -10,6 +10,7 @@
     <meta property="og:title" content="User Dashboard | AI Knowledge Bank" />
     <meta property="og:description" content="Manage your profile, badges, reputation, and contributions." />
     <meta property="og:url" content="https://aiknowledgebank.pages.dev/dashboard.html" />
+    <link rel="icon" href="./assets/brand/akb-love-logo.svg" type="image/svg+xml" />
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -231,7 +232,7 @@
                 <span class="self-center text-xl font-semibold whitespace-nowrap tracking-tight text-white">AI Knowledge Bank</span>
             </a>
             <div class="flex items-center gap-4">
-                <button id="logout-btn" class="text-gray-300 hover:text-white transition-colors text-sm">
+                <button id="logout-btn" class="hidden text-gray-300 hover:text-white transition-colors text-sm">
                     Sign Out
                 </button>
             </div>
@@ -258,6 +259,19 @@
                     Sign in with GitHub
                 </button>
             </div>
+        </div>
+
+        <!-- Auth Configuration Missing State -->
+        <div id="auth-unavailable" class="hidden text-center py-20">
+            <div class="text-6xl mb-6" aria-hidden="true">⚙️</div>
+            <h2 class="text-2xl font-bold text-white mb-4">Authentication Unavailable</h2>
+            <p class="text-gray-400 mb-8 max-w-lg mx-auto">
+                This deployment does not include the public Supabase configuration required for sign-in.
+                Use the primary AI Knowledge Bank deployment or ask the administrator to configure browser authentication.
+            </p>
+            <a href="https://aiknowledgebank.pages.dev/dashboard.html" class="btn-primary inline-flex items-center py-3 px-6 text-base font-medium text-white rounded-xl">
+                Open primary dashboard
+            </a>
         </div>
 
         <!-- Dashboard Content -->
@@ -363,31 +377,15 @@
     </main>
 
     <script type="module">
-        // Load Supabase client: CDN primary with local dependency fallback
-        let createClient;
-        try {
-            const supabaseModule = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
-            createClient = supabaseModule.createClient;
-        } catch (cdnError) {
-            console.error('Failed to load Supabase from CDN, trying local dependency...', cdnError);
-            try {
-                const supabaseModule = await import('@supabase/supabase-js');
-                createClient = supabaseModule.createClient;
-            } catch (localError) {
-                console.error('Failed to load Supabase library from both CDN and local. Dashboard cannot function.', localError);
-                throw localError;
-            }
-        }
+        import { resolveSupabaseConfig } from './lib/supabase-config.ts';
 
-        // Initialize Supabase client - read credentials from runtime env (window.__ENV__) or build-time env (import.meta.env)
-        const SUPABASE_URL = window.__ENV?.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL;
-        const SUPABASE_ANON_KEY = window.__ENV?.SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
-        
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseConfig = resolveSupabaseConfig(window.__ENV__ || {}, import.meta.env);
+        let supabase = null;
 
         // DOM Elements
         const loadingState = document.getElementById('loading-state');
         const authRequired = document.getElementById('auth-required');
+        const authUnavailable = document.getElementById('auth-unavailable');
         const dashboardContent = document.getElementById('dashboard-content');
         const logoutBtn = document.getElementById('logout-btn');
         const editProfileBtn = document.getElementById('edit-profile-btn');
@@ -407,12 +405,24 @@
         }
 
         function showAuthRequired() {
+            logoutBtn.classList.add('hidden');
             authRequired.classList.remove('hidden');
+            authUnavailable.classList.add('hidden');
+            dashboardContent.classList.add('hidden');
+        }
+
+        function showAuthUnavailable() {
+            logoutBtn.classList.add('hidden');
+            loadingState.classList.add('hidden');
+            authRequired.classList.add('hidden');
+            authUnavailable.classList.remove('hidden');
             dashboardContent.classList.add('hidden');
         }
 
         function showDashboard() {
+            logoutBtn.classList.remove('hidden');
             authRequired.classList.add('hidden');
+            authUnavailable.classList.add('hidden');
             dashboardContent.classList.remove('hidden');
         }
 
@@ -573,11 +583,13 @@
 
         // Event Listeners
         logoutBtn.addEventListener('click', async () => {
+            if (!supabase) return;
             await supabase.auth.signOut();
             window.location.reload();
         });
 
         markReadBtn.addEventListener('click', async () => {
+            if (!supabase) return;
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) return;
 
@@ -592,6 +604,10 @@
 
         // OAuth handler (global scope)
         window.handleOAuth = async (provider) => {
+            if (!supabase) {
+                showAuthUnavailable();
+                return;
+            }
             await supabase.auth.signInWithOAuth({
                 provider,
                 options: {
@@ -600,8 +616,23 @@
             });
         };
 
-        // Initialize
-        checkAuth();
+        async function initializeDashboard() {
+            if (!supabaseConfig) {
+                showAuthUnavailable();
+                return;
+            }
+
+            try {
+                const { getSupabaseClient } = await import('./lib/auth.ts');
+                supabase = getSupabaseClient();
+                await checkAuth();
+            } catch (error) {
+                console.error('Dashboard authentication initialization failed.', error);
+                showAuthUnavailable();
+            }
+        }
+
+        initializeDashboard();
     </script>
 </body>
 </html>

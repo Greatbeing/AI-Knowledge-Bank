@@ -19,7 +19,9 @@ Run these before committing user-facing or runtime changes:
 ```bash
 npm run check:text
 npm run lint
+npm test
 npm run build
+npm run check:dist
 ```
 
 Use `npm run preview` after `npm run build` when visual inspection is needed.
@@ -45,6 +47,7 @@ AI Knowledge Bank
 |-- tools.html                 # Tools Vault page
 |-- cases.html                 # Cases Vault page
 |-- community.html             # Community validation page
+|-- dashboard.html             # Authentication, profile, and contribution dashboard
 |-- assets/                    # Shared CSS, JS, and visual assets
 |-- functions/api/             # Cloudflare Pages Functions backend
 |-- lib/                       # TypeScript utilities and workflow code
@@ -61,20 +64,21 @@ AI Knowledge Bank
 - Phase 2: improved dedicated vault pages with readable fallbacks, filtering, node details, and community signals.
 - Phase 3: added Cross-Vault Dispatch panels to all dedicated vault pages.
 - Phase 4: added text health verification and documented the guardrail.
+- Phase 5: restored the Dashboard build, secured authenticated community writes, and added production-path API and PR checks.
 
 ## Backlog
 
 High priority:
 
-- Add focused API contract tests for `/api/search`, `/api/vaults`, and `/api/community-signals`.
 - Add a contribution flow for submitting knowledge, tool, and case candidates.
 - Add UI smoke checks for the dedicated vault pages.
+- Publish the existing seed corpus so production vault reads no longer use fallback data.
 
 Medium priority:
 
 - Add a lightweight analytics dashboard for evolution signals.
 - Improve Supabase Realtime integration for community signals.
-- Add authenticated authoring flows when credentials are available.
+- Add authenticated authoring flows beyond community validation.
 
 Future:
 
@@ -85,5 +89,5 @@ Future:
 ## Commit Expectations
 
 - Keep commits scoped to one phase or one bugfix.
-- Run `npm run check:text`, `npm run lint`, and `npm run build` before pushing.
+- Run `npm run check:text`, `npm run lint`, `npm test`, `npm run build`, and `npm run check:dist` before pushing.
 - Update `CHANGELOG.md` under `[Unreleased]` when adding visible behavior, scripts, docs, or deployment changes.

@@ -1,21 +1,17 @@
 // lib/auth.ts - Authentication utilities for Supabase
 import { createClient, type User } from '@supabase/supabase-js';
 import type { Database, Json } from '../types/supabase';
+import { resolveSupabaseConfig } from './supabase-config';
 
 export type { User };
+export { resolveSupabaseConfig } from './supabase-config';
 
 // 从环境变量获取配置 (在浏览器环境中通过 window.__ENV__注入)
 const getSupabaseConfig = () => {
   if (typeof window !== 'undefined') {
-    return {
-      url: (window as any).__ENV?.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL,
-      anonKey: (window as any).__ENV?.SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY,
-    };
+    return resolveSupabaseConfig((window as any).__ENV, import.meta.env);
   }
-  return {
-    url: process.env.VITE_SUPABASE_URL,
-    anonKey: process.env.VITE_SUPABASE_ANON_KEY,
-  };
+  return resolveSupabaseConfig({}, process.env);
 };
 
 // 创建 Supabase 客户端单例
@@ -25,13 +21,13 @@ export function getSupabaseClient() {
   if (!supabaseInstance) {
     const config = getSupabaseConfig();
     
-    if (!config.url || !config.anonKey) {
+    if (!config) {
       console.warn('⚠️ Supabase configuration is missing. Some features may not work.');
     }
     
     supabaseInstance = createClient<Database>(
-      config.url || 'https://placeholder.supabase.co',
-      config.anonKey || 'placeholder-key',
+      config?.url || 'https://placeholder.supabase.co',
+      config?.anonKey || 'placeholder-key',
       {
         auth: {
           autoRefreshToken: true,
