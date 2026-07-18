@@ -6,6 +6,7 @@ const allowedExtensions = new Set(['.css', '.html', '.js', '.json', '.md', '.mjs
 const ignoredDirectories = new Set([
   '.git',
   '.vite',
+  '.worktrees',
   'dist',
   'docs/superpowers',
   'node_modules'

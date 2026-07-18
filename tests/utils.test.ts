@@ -4,13 +4,17 @@
  * Unit tests for the pure utility functions exported from lib/utils.ts.
  */
 
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import {
   cn,
   calculateTimeDecay,
   checkEmergence,
   formatWeight,
 } from '../lib/utils';
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 /* -------------------------------------------------------------------------- */
 /*  cn                                                                        */
@@ -79,7 +83,10 @@ describe('calculateTimeDecay', () => {
   });
 
   it('respects a custom gravity constant', () => {
-    const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 10).toISOString(); // 10 hours ago
+    vi.useFakeTimers();
+    const now = new Date('2025-01-01T12:00:00.000Z');
+    vi.setSystemTime(now);
+    const pastDate = new Date(now.getTime() - 1000 * 60 * 60 * 10).toISOString(); // 10 hours ago
     // hoursSinceCreation = 10 + 2 = 12
     const withGravity1 = calculateTimeDecay(pastDate, 1);
     const withGravity2 = calculateTimeDecay(pastDate, 2);
