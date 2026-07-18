@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Knowledge Bank | Public Knowledge Bank for AI</title>
-  <meta name="description" content="AI Knowledge Bank helps you reuse AI methods and real-world experience that others have already tested." />
+  <title>AI Knowledge Bank｜可验证、可复用的 AI 公共知识库</title>
+  <meta name="description" content="汇集知识框架、执行工具与真实案例，通过社区验证，让 AI 实践成为可复用、持续演化的公共知识。" />
   <link rel="canonical" href="https://aiknowledgebank.pages.dev/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="AI Knowledge Bank | Public Knowledge Bank for AI" />
@@ -19,7 +19,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -38,7 +38,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'Noto Sans SC', 'system-ui', 'sans-serif'],
+            sans: ['Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'system-ui', 'sans-serif'],
             mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
           }
         }
@@ -1866,6 +1866,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="./assets/typography.css" />
 </head>
 <body>
   <canvas id="network-canvas" aria-hidden="true"></canvas>
@@ -1899,9 +1900,8 @@
           <summary class="more-summary"><span data-i18n="navMore">更多</span></summary>
           <div class="more-panel text-sm font-semibold">
             <a href="#method-finder" data-i18n="moreMethod">找可用方法</a>
-            <a href="#vision-mission" data-i18n="moreVision">愿景与使命</a>
-            <a href="#experience-map" data-i18n="moreExperience">体验地图</a>
-            <a href="#dispatch" data-i18n="moreDispatch">AI 调度引擎</a>
+            <a href="#live-vaults" data-i18n="moreVaults">查看真实节点</a>
+            <a href="#dispatch" data-i18n="moreDispatch">运行跨库调度</a>
             <a href="#demo" data-i18n="moreValidation">验证演示</a>
             <a href="dashboard.html" data-i18n="moreDashboard">控制台</a>
             <a href="https://github.com/Greatbeing/AI-Knowledge-Bank" target="_blank" rel="noreferrer" data-i18n="moreGithub">GitHub 仓库</a>
@@ -1944,46 +1944,51 @@
 
   <main id="top">
     <section id="vision" class="hero">
-      <div class="shell text-center">
-        <img class="hero-mark reveal" src="./assets/brand/akb-love-logo.svg" alt="AI Knowledge Bank logo" />
-        <div class="pill mx-auto mb-7 inline-flex items-center gap-3 px-4 py-2 text-sm font-bold text-slate-700 reveal">
-          <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_18px_rgba(16,185,129,0.85)]"></span>
-          <span data-i18n="eyebrow">AI 时代的公共知识银行</span>
+      <div class="shell home-hero-shell">
+        <div class="home-hero-intro">
+          <img class="hero-mark reveal" src="./assets/brand/akb-love-logo.svg" alt="AI Knowledge Bank logo" />
+          <div class="pill mb-7 inline-flex items-center gap-3 px-4 py-2 text-sm text-slate-700 reveal">
+            <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+            <span data-i18n="eyebrow">验证过的方法，继续共同验证</span>
+          </div>
+
+          <h1 class="hero-title reveal" data-i18n="heroTitle">把分散的 AI 实践，变成可验证、可复用、持续演化的公共知识。</h1>
+
+          <p class="home-hero-copy reveal" data-i18n="heroCopy">
+            在知识框架、执行工具和真实案例之间找到可用方法；也把你的实践结果带回来，帮助下一版本更可靠。
+          </p>
         </div>
 
-        <h1 class="hero-title reveal">
-          <span class="hero-title-main" data-i18n="heroTitleBrand">AI Knowledge Bank</span>
-          <span class="hero-title-accent" data-i18n="heroTitleAccent">别再一个人摸索 AI</span>
-        </h1>
+        <aside class="home-hero-panel liquid reveal" aria-labelledby="hero-quick-title">
+          <div class="panel-kicker text-xs text-emerald-800" data-i18n="heroQuickKicker">从一个真实问题开始</div>
+          <h2 id="hero-quick-title" class="mt-3 text-2xl text-slate-950" data-i18n="heroQuickTitle">先找到方法，再决定是否采用</h2>
+          <p class="mt-3 text-sm leading-7 text-slate-600" data-i18n="heroQuickCopy">输入你的目标，预览知识解释、执行路径和案例证据。</p>
 
-        <p class="mx-auto mt-7 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl reveal" data-i18n="heroCopy">
-          别人试过的方法，你直接拿去用。
-        </p>
+          <div class="hero-quick" role="search" aria-label="Fast AI method finder">
+            <label class="sr-only" for="hero-problem" data-i18n="heroQuickLabel">你想用 AI 解决什么问题？</label>
+            <input id="hero-problem" class="hero-quick-input" type="text" autocomplete="off" data-i18n-placeholder="heroQuickPlaceholder" placeholder="例如：用 AI 提高客服回复效率" />
+            <button id="hero-quick-run" class="hero-quick-run" type="button" data-i18n="heroQuickRun">预览三层方法</button>
+          </div>
+          <div class="hero-quick-hint" data-i18n="heroQuickHint">系统会同时回答：为什么有效、如何执行、哪里验证过。</div>
 
-        <div class="hero-quick liquid reveal" role="search" aria-label="Fast AI method finder">
-          <label class="sr-only" for="hero-problem" data-i18n="heroQuickLabel">你想用 AI 解决什么问题？</label>
-          <input id="hero-problem" class="hero-quick-input" type="text" autocomplete="off" data-i18n-placeholder="heroQuickPlaceholder" placeholder="输入你的业务问题，例如：用 AI 提高客服回复效率" />
-          <button id="hero-quick-run" class="hero-quick-run" type="button" data-i18n="heroQuickRun">极速生成</button>
-        </div>
-        <div class="hero-quick-hint reveal" data-i18n="heroQuickHint">30 秒得到知识层、工具层、案例层三层结果。</div>
+          <div class="hero-actions">
+            <a class="btn btn-primary px-5" href="#method-finder" data-i18n="primaryCta">查找已验证的方法</a>
+            <a class="btn btn-secondary px-5" href="./community.html" data-i18n="secondaryCta">贡献一次真实验证</a>
+          </div>
+        </aside>
 
-        <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row reveal">
-          <a class="btn btn-primary w-full px-6 sm:w-auto" href="#method-finder" data-i18n="primaryCta">找可用方法</a>
-          <a class="btn btn-secondary w-full px-6 sm:w-auto" href="#vaults" data-i18n="secondaryCta">探索三库</a>
-        </div>
-
-        <div class="mt-14 grid gap-3 sm:grid-cols-3 reveal">
+        <div class="home-metrics reveal" aria-label="Live vault statistics">
           <div class="metric liquid text-left">
-            <div id="metric-nodes-value" class="font-mono text-3xl font-bold text-slate-950">2,847</div>
-            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricNodes">三库节点</div>
+            <div id="metric-nodes-value" class="metric-value text-slate-950">—</div>
+            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricNodes">知识节点</div>
           </div>
           <div class="metric liquid text-left">
-            <div id="metric-routes-value" class="font-mono text-3xl font-bold text-slate-950">15,234</div>
-            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricForks">调度路径</div>
+            <div id="metric-routes-value" class="metric-value text-slate-950">—</div>
+            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricForks">工具节点</div>
           </div>
           <div class="metric liquid text-left">
-            <div id="metric-signals-value" class="font-mono text-3xl font-bold text-slate-950">42,891</div>
-            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricValidations">社区信号</div>
+            <div id="metric-signals-value" class="metric-value text-slate-950">—</div>
+            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricValidations">案例节点</div>
           </div>
         </div>
       </div>
@@ -1993,11 +1998,11 @@
       <div class="shell">
         <div class="mb-10 grid items-end gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div class="reveal">
-            <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="methodKicker">METHOD FINDER</div>
-            <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="methodTitle">把问题丢进来，直接拿到可用的 AI 方法。</h2>
+            <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs text-slate-600" data-i18n="methodKicker">方法预览</div>
+            <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="methodTitle">从一个问题，看到方法的完整结构。</h2>
           </div>
           <p class="reveal text-lg leading-8 text-slate-600" data-i18n="methodCopy">
-            先不用理解系统架构。输入你要解决的问题，AI Knowledge Bank 会从知识库、工具库、案例库给出三层结果：为什么、怎么做、哪里验证过。
+            这是一个引导式预览：知识层解释为什么，工具层给出执行路径，案例层说明它曾在哪些条件下有效。
           </p>
         </div>
 
@@ -2015,8 +2020,8 @@
             </div>
 
             <div class="mt-auto pt-6">
-              <button id="method-run" class="btn btn-primary w-full px-5" type="button" data-i18n="methodRun">生成可用方法</button>
-              <div id="method-status" class="method-status mt-4" data-i18n="methodStatusReady">选择场景或输入问题后开始生成。</div>
+              <button id="method-run" class="btn btn-primary w-full px-5" type="button" data-i18n="methodRun">预览三层方法</button>
+              <div id="method-status" class="method-status mt-4" data-i18n="methodStatusReady">选择场景或输入问题，查看三层方法。</div>
             </div>
           </div>
 
@@ -2089,66 +2094,13 @@
       </div>
     </section>
 
-    <section id="vision-mission" class="section">
-      <div class="shell grid items-start gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <div class="reveal">
-          <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="missionKicker">VISION & MISSION</div>
-          <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="missionTitle">让每一次 AI 实践，都成为可验证、可复用、可共创的公共知识资产。</h2>
-          <p class="mt-6 text-lg leading-8 text-slate-600" data-i18n="missionCopy">
-            AI 正在把知识生产从少数人的经验，推向人人都能参与验证和改进的现场。我们希望把个人、团队和行业中的真实实践沉淀下来，让后来者不必从零开始。
-          </p>
-        </div>
-
-        <div class="grid gap-4">
-          <article class="mission-card card reveal">
-            <div class="font-mono text-xs font-bold uppercase text-emerald-700" data-i18n="visionLabel">Vision</div>
-            <h3 class="mt-4 text-2xl font-extrabold text-slate-950" data-i18n="visionTitle">成为 AI 时代的公共知识银行</h3>
-            <p class="mt-4 leading-7 text-slate-600" data-i18n="visionCopy">让每个人都能站在被验证的经验之上继续创造，让好的 AI 实践被看见、被复用、被改进，并最终成为共享能力。</p>
-          </article>
-          <article class="mission-card card reveal">
-            <div class="font-mono text-xs font-bold uppercase text-blue-700" data-i18n="missionLabel">Mission</div>
-            <h3 class="mt-4 text-2xl font-extrabold text-slate-950" data-i18n="missionCardTitle">把真实实践沉淀为可演化资产</h3>
-            <p class="mt-4 leading-7 text-slate-600" data-i18n="missionCardCopy">我们用三库结构保存知识、工具和案例，用 AI 调度连接需求与路径，用社区演化持续验证、分叉、合并和更新。</p>
-          </article>
-        </div>
-
-        <div class="value-grid mt-6 lg:col-span-2">
-          <article class="value-card card-hover reveal">
-            <div class="font-mono text-xs font-bold uppercase text-emerald-700" data-i18n="valueVerifyLabel">Verify</div>
-            <h3 class="mt-4 text-lg font-extrabold text-slate-950" data-i18n="valueVerifyTitle">真实验证</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="valueVerifyCopy">结果和证据比口号更重要。</p>
-          </article>
-          <article class="value-card card-hover reveal">
-            <div class="font-mono text-xs font-bold uppercase text-blue-700" data-i18n="valueOpenLabel">Open</div>
-            <h3 class="mt-4 text-lg font-extrabold text-slate-950" data-i18n="valueOpenTitle">开放共创</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="valueOpenCopy">每个人的实践都可能成为公共能力。</p>
-          </article>
-          <article class="value-card card-hover reveal">
-            <div class="font-mono text-xs font-bold uppercase text-violet-700" data-i18n="valueHumanLabel">Human</div>
-            <h3 class="mt-4 text-lg font-extrabold text-slate-950" data-i18n="valueHumanTitle">人机协作</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="valueHumanCopy">AI 负责调度和放大，人负责判断和负责。</p>
-          </article>
-          <article class="value-card card-hover reveal">
-            <div class="font-mono text-xs font-bold uppercase text-orange-700" data-i18n="valueEvolveLabel">Evolve</div>
-            <h3 class="mt-4 text-lg font-extrabold text-slate-950" data-i18n="valueEvolveTitle">持续演化</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="valueEvolveCopy">知识不是一次发布，而是在使用中更新。</p>
-          </article>
-          <article class="value-card card-hover reveal">
-            <div class="font-mono text-xs font-bold uppercase text-amber-700" data-i18n="valueShareLabel">Share</div>
-            <h3 class="mt-4 text-lg font-extrabold text-slate-950" data-i18n="valueShareTitle">共享增益</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="valueShareCopy">好方法应该被看见、复用、改进并回流社区。</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section id="vaults" class="section section-band">
       <div class="shell">
         <div class="mx-auto max-w-3xl text-center reveal">
           <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="vaultsKicker">THREE VAULTS</div>
-          <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="vaultsTitle">知识库、工具库、案例库，构成 AI 实践的三层骨架。</h2>
+          <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="vaultsTitle">三库不是分类，而是一条完整判断链。</h2>
           <p class="mt-6 text-lg leading-8 text-slate-600" data-i18n="vaultsCopy">
-            先理解为什么，再知道怎么做，最后用真实案例证明它是否有效。三库让经验不再散落，而能被检索、调度和复用。
+            知识库回答为什么，工具库说明如何执行，案例库提供可以核对的结果。三者一起，才是一条值得采用的方法。
           </p>
         </div>
 
@@ -2216,53 +2168,15 @@
       </div>
     </section>
 
-    <section id="engines" class="section">
-      <div class="shell">
-        <div class="mx-auto max-w-3xl text-center reveal">
-          <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="enginesKicker">TWO ENGINES</div>
-          <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="enginesTitle">两套引擎，让知识从静态内容变成可生长的能力网络。</h2>
-          <p class="mt-6 text-lg leading-8 text-slate-600" data-i18n="enginesCopy">
-            Cross-Vault RAG 负责把三库调度成个性化答案，Community Evolution 负责让真实使用信号推动内容持续进化。
-          </p>
-        </div>
-
-        <div class="engine-grid mt-12">
-          <article class="engine-card card-hover reveal" data-engine="rag">
-            <div class="font-mono text-xs font-bold uppercase text-emerald-700" data-i18n="engineRagLabel">Cross-Vault RAG</div>
-            <h3 class="mt-4 text-2xl font-extrabold text-slate-950" data-i18n="engineRagTitle">个性化调度引擎</h3>
-            <p class="mt-4 leading-7 text-slate-600" data-i18n="engineRagCopy">用户提出目标后，系统分别取回知识解释、工具路径和案例证据，再组合成可执行建议。</p>
-            <div class="engine-orbit">
-              <span data-i18n="engineRagOrbitA">认知解释</span>
-              <span data-i18n="engineRagOrbitB">工具路径</span>
-              <span data-i18n="engineRagOrbitC">案例证据</span>
-            </div>
-            <a class="card-link mt-7" href="#dispatch" data-i18n="engineRagCta">查看调度演示</a>
-          </article>
-
-          <article class="engine-card card-hover reveal" data-engine="community">
-            <div class="font-mono text-xs font-bold uppercase text-amber-700" data-i18n="engineCommunityLabel">Community Evolution</div>
-            <h3 class="mt-4 text-2xl font-extrabold text-slate-950" data-i18n="engineCommunityTitle">社区互助演化引擎</h3>
-            <p class="mt-4 leading-7 text-slate-600" data-i18n="engineCommunityCopy">验证、复用、分叉、合并和争议共同形成演化信号，让好方法在社区中自然浮现。</p>
-            <div class="engine-orbit">
-              <span data-i18n="engineCommunityOrbitA">验证</span>
-              <span data-i18n="engineCommunityOrbitB">分叉</span>
-              <span data-i18n="engineCommunityOrbitC">合并</span>
-            </div>
-            <a class="card-link mt-7" href="#evolution" data-i18n="engineCommunityCta">查看演化机制</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section id="co-create" class="section section-band">
       <div class="shell">
         <div class="grid items-end gap-6 lg:grid-cols-[0.82fr_1.18fr]">
           <div class="reveal">
             <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="cocreateKicker">CO-CREATION LOOP</div>
-            <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="cocreateTitle">把个人实践，转化为可以被所有人继续改进的公共资产。</h2>
+            <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="cocreateTitle">公共知识不是被发布出来的，而是在使用中被验证出来的。</h2>
           </div>
           <p class="reveal text-lg leading-8 text-slate-600" data-i18n="cocreateCopy">
-            一条经验进入 AI Knowledge Bank 后，不会停在发布状态。它会被结构化、验证、分叉、合并，并在使用中形成更可靠的新版本。
+            一条经验先被结构化，再由不同场景复用、质疑和改进。只有证据持续累积，它才会进入公共主干。
           </p>
         </div>
 
@@ -2300,86 +2214,15 @@
       </div>
     </section>
 
-    <section id="experience-map" class="section">
-      <div class="shell">
-        <div class="mx-auto max-w-3xl text-center reveal">
-          <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="entryKicker">EXPERIENCE MAP</div>
-          <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="entryTitle">从这里进入三库、两引擎和共创流程。</h2>
-          <p class="mt-6 text-lg leading-8 text-slate-600" data-i18n="entryCopy">
-            首页下方仍保留实时节点、AI 调度、社区演化和金色涌现演示。你也可以直接进入独立页面查看完整内容。
-          </p>
-        </div>
-
-        <div class="entry-grid mt-12">
-          <a class="entry-card reveal" href="./knowledge.html" data-tone="knowledge">
-            <div class="font-mono text-xs font-bold uppercase text-emerald-700">Knowledge</div>
-            <div>
-              <h3 class="text-xl font-extrabold text-slate-950" data-i18n="entryKnowledgeTitle">知识库</h3>
-              <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="entryKnowledgeCopy">认知模型、原理解释和判断框架。</p>
-            </div>
-          </a>
-          <a class="entry-card reveal" href="./tools.html" data-tone="tool">
-            <div class="font-mono text-xs font-bold uppercase text-violet-700">Tools</div>
-            <div>
-              <h3 class="text-xl font-extrabold text-slate-950" data-i18n="entryToolsTitle">工具库</h3>
-              <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="entryToolsCopy">Agent、Prompt、流程和自动化路径。</p>
-            </div>
-          </a>
-          <a class="entry-card reveal" href="./cases.html" data-tone="case">
-            <div class="font-mono text-xs font-bold uppercase text-orange-700">Cases</div>
-            <div>
-              <h3 class="text-xl font-extrabold text-slate-950" data-i18n="entryCasesTitle">案例库</h3>
-              <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="entryCasesCopy">真实结果、SOP 复盘和证据链。</p>
-            </div>
-          </a>
-          <a class="entry-card reveal" href="./community.html" data-tone="community">
-            <div class="font-mono text-xs font-bold uppercase text-amber-700">Community</div>
-            <div>
-              <h3 class="text-xl font-extrabold text-slate-950" data-i18n="entryCommunityTitle">社区共创</h3>
-              <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="entryCommunityCopy">贡献、验证、分叉与合并。</p>
-            </div>
-          </a>
-          <a class="entry-card reveal" href="#live-vaults" data-tone="knowledge">
-            <div class="font-mono text-xs font-bold uppercase text-emerald-700">Live</div>
-            <div>
-              <h3 class="text-xl font-extrabold text-slate-950" data-i18n="entryLiveTitle">实时节点</h3>
-              <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="entryLiveCopy">查看 Supabase 返回的三库内容。</p>
-            </div>
-          </a>
-          <a class="entry-card reveal" href="#dispatch" data-tone="tool">
-            <div class="font-mono text-xs font-bold uppercase text-violet-700">RAG</div>
-            <div>
-              <h3 class="text-xl font-extrabold text-slate-950" data-i18n="entryDispatchTitle">AI 调度演示</h3>
-              <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="entryDispatchCopy">体验三库如何组合答案。</p>
-            </div>
-          </a>
-          <a class="entry-card reveal" href="#demo" data-tone="case">
-            <div class="font-mono text-xs font-bold uppercase text-orange-700">Emergence</div>
-            <div>
-              <h3 class="text-xl font-extrabold text-slate-950" data-i18n="entryDemoTitle">金色涌现</h3>
-              <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="entryDemoCopy">运行验证并观察演化反馈。</p>
-            </div>
-          </a>
-          <a class="entry-card reveal" href="#ecosystem" data-tone="community">
-            <div class="font-mono text-xs font-bold uppercase text-amber-700">Ecosystem</div>
-            <div>
-              <h3 class="text-xl font-extrabold text-slate-950" data-i18n="entryEcosystemTitle">基础设施</h3>
-              <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="entryEcosystemCopy">后端接口、RAG 合约和演化信号。</p>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
     <section id="live-vaults" class="section">
       <div class="shell">
         <div class="grid items-end gap-6 lg:grid-cols-[0.82fr_1.18fr]">
           <div class="reveal">
             <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="liveVaultsKicker">LIVE VAULTS</div>
-            <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="liveVaultsTitle">真实三库内容，正在从 Supabase 返回。</h2>
+            <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="liveVaultsTitle">先看真实节点，再决定是否采用。</h2>
           </div>
           <p class="reveal text-lg leading-8 text-slate-600" data-i18n="liveVaultsCopy">
-            这里展示当前知识库、工具库、案例库中的真实节点。每张卡片都保留可信度、来源和语义归属，后续可直接接入 Cross-Vault RAG。
+            这里直接读取已发布的知识、工具和案例节点，并保留来源、可信度与适用场景。
           </p>
         </div>
 
@@ -2393,9 +2236,9 @@
       <div class="shell grid items-center gap-10 lg:grid-cols-[0.82fr_1.18fr]">
         <div class="reveal">
           <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="dispatchKicker">CROSS-VAULT RAG</div>
-          <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="dispatchTitle">AI 个性化调度引擎，让答案同时有认知、路径和证据。</h2>
+          <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="dispatchTitle">一次查询，同时得到解释、路径和证据。</h2>
           <p class="mt-6 text-lg leading-8 text-slate-600" data-i18n="dispatchCopy">
-            用户不是在一个库里搜索关键词，而是把目标交给调度引擎。系统会跨三库取回知识解释、工具流程和案例证据，再组合成可执行建议。
+            调度引擎不只匹配关键词。它会跨三库取回判断框架、执行步骤和真实案例，再组合成一条可核对的建议。
           </p>
           <div class="mt-8 grid gap-3">
             <button class="scenario-btn is-active px-4 text-left" type="button" data-scenario="marketing" data-i18n="scenarioMarketing">跨境营销团队要用 AI 重做本地化 SOP</button>
@@ -2464,8 +2307,8 @@
       <div class="shell">
         <div class="mx-auto max-w-3xl text-center reveal">
           <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="evolutionKicker">COMMUNITY EVOLUTION</div>
-          <h2 class="text-4xl font-extrabold text-slate-950 sm:text-5xl" data-i18n="evolutionTitle">社区互助演化引擎，让好方法自己长出来。</h2>
-          <p class="mt-5 text-lg leading-8 text-slate-600" data-i18n="evolutionCopy">贡献不是点赞计数，而是由真实使用、验证、分叉、合并和争议共同构成的演化信号。</p>
+          <h2 class="text-4xl text-slate-950 sm:text-5xl" data-i18n="evolutionTitle">好方法不靠热度上位，而靠证据进入主干。</h2>
+          <p class="mt-5 text-lg leading-8 text-slate-600" data-i18n="evolutionCopy">真实使用、验证、分叉、合并、争议和衰减共同决定一个节点是否值得继续被推荐。</p>
         </div>
 
         <div class="evolution-loop mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -2507,9 +2350,9 @@
       <div class="shell grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr]">
         <div class="reveal">
           <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="demoKicker">LIVE SIMULATION</div>
-          <h2 class="text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="demoTitle">看一次知识如何完成涌现</h2>
+          <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="demoTitle">运行一次演示验证，观察分支如何达到合并阈值。</h2>
           <p class="mt-6 text-lg leading-8 text-slate-600" data-i18n="demoCopy">
-            这个演示模拟一次社区验证：当分支权重超过阈值，系统会把它提升为新的公共标准。
+            这里使用不写数据库的演示信号。权重超过阈值后，分支会被标记为新的共享版本。
           </p>
           <div class="mt-8 grid gap-3 sm:grid-cols-2">
             <div class="card p-5">
@@ -2572,43 +2415,17 @@
       </div>
     </section>
 
-    <section id="ecosystem" class="section">
-      <div class="shell">
-        <div class="mx-auto max-w-3xl text-center reveal">
-          <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="ecosystemKicker">ECOSYSTEM</div>
-          <h2 class="text-4xl font-extrabold text-slate-950 sm:text-5xl" data-i18n="ecosystemTitle">为真实协作准备的基础设施</h2>
-        </div>
-        <div class="mt-12 grid gap-4 md:grid-cols-3">
-          <article class="card card-hover p-7 reveal">
-            <div class="font-mono text-xs font-bold text-emerald-700">DATA MODEL</div>
-            <h3 class="mt-4 text-xl font-extrabold" data-i18n="ecoDataTitle">结构化知识资产</h3>
-            <p class="mt-4 leading-7 text-slate-600" data-i18n="ecoDataCopy">节点、分叉、验证、评论和演化历史都有清晰的数据模型。</p>
-          </article>
-          <article class="card card-hover p-7 reveal">
-            <div class="font-mono text-xs font-bold text-blue-700">RAG CONTRACT</div>
-            <h3 class="mt-4 text-xl font-extrabold" data-i18n="ecoTrustTitle">声誉与贡献网络</h3>
-            <p class="mt-4 leading-7 text-slate-600" data-i18n="ecoTrustCopy">贡献者的验证行为会形成可追踪的信誉信号。</p>
-          </article>
-          <article class="card card-hover p-7 reveal">
-            <div class="font-mono text-xs font-bold text-orange-700">EVOLUTION</div>
-            <h3 class="mt-4 text-xl font-extrabold" data-i18n="ecoDeployTitle">多平台发布</h3>
-            <p class="mt-4 leading-7 text-slate-600" data-i18n="ecoDeployCopy">支持 GitHub Pages、Cloudflare Pages 和 Vercel 工作流。</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section id="join" class="section section-band">
       <div class="shell">
         <div class="cta-panel reveal">
           <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="finalCtaKicker">JOIN THE BANK</div>
-          <h2 class="mx-auto max-w-4xl text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl" data-i18n="finalCtaTitle">加入共创，把你的 AI 实践变成公共知识资产。</h2>
+          <h2 class="mx-auto max-w-4xl text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="finalCtaTitle">使用一个节点，也贡献一次验证。</h2>
           <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600" data-i18n="finalCtaCopy">
-            无论你贡献一个案例、一条工具路径，还是一次验证结果，都会帮助更多人站在被验证的经验之上继续创造。
+            你可以直接从被验证的方法开始，也可以把真实使用结果带回来，让下一位使用者少走一步弯路。
           </p>
           <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a class="btn btn-primary w-full px-6 sm:w-auto" href="./community.html" data-i18n="finalCtaPrimary">加入社区</a>
-            <a class="btn btn-secondary w-full px-6 sm:w-auto" href="https://github.com/Greatbeing/AI-Knowledge-Bank" target="_blank" rel="noreferrer" data-i18n="finalCtaSecondary">访问 GitHub</a>
+            <a class="btn btn-primary w-full px-6 sm:w-auto" href="#method-finder" data-i18n="finalCtaPrimary">查找已验证的方法</a>
+            <a class="btn btn-secondary w-full px-6 sm:w-auto" href="./community.html" data-i18n="finalCtaSecondary">贡献一次真实验证</a>
           </div>
         </div>
       </div>
@@ -2635,6 +2452,8 @@
   <script>
     const translations = {
       zh: {
+        pageTitle: 'AI Knowledge Bank｜可验证、可复用的 AI 公共知识库',
+        pageDescription: '汇集知识框架、执行工具与真实案例，通过社区验证，让 AI 实践成为可复用、持续演化的公共知识。',
         navKnowledge: '知识库',
         navTools: '工具库',
         navCases: '案例库',
@@ -2661,39 +2480,40 @@
         searchCommunityTitle: '社区',
         searchCommunityCopy: '验证、分叉、合并和演化信号',
         moreMethod: '找可用方法',
-        moreVision: '愿景与使命',
-        moreExperience: '体验地图',
-        moreDispatch: 'AI 调度引擎',
+        moreVaults: '查看真实节点',
+        moreDispatch: '运行跨库调度',
         moreValidation: '验证演示',
         moreDashboard: '控制台',
         moreGithub: 'GitHub 仓库',
         dashboard: '控制台',
-        eyebrow: 'AI 时代的公共知识银行',
-        heroTitleBrand: 'AI Knowledge Bank',
-        heroTitleAccent: '别再一个人摸索 AI',
-        heroCopy: '别人试过的方法，你直接拿去用。',
+        eyebrow: '验证过的方法，继续共同验证',
+        heroTitle: '把分散的 AI 实践，变成可验证、可复用、持续演化的公共知识。',
+        heroCopy: '在知识框架、执行工具和真实案例之间找到可用方法；也把你的实践结果带回来，帮助下一版本更可靠。',
+        heroQuickKicker: '从一个真实问题开始',
+        heroQuickTitle: '先找到方法，再决定是否采用',
+        heroQuickCopy: '输入你的目标，预览知识解释、执行路径和案例证据。',
         heroQuickLabel: '你想用 AI 解决什么问题？',
-        heroQuickPlaceholder: '输入你的业务问题，例如：用 AI 提高客服回复效率',
-        heroQuickRun: '极速生成',
-        heroQuickHint: '30 秒得到知识层、工具层、案例层三层结果。',
-        primaryCta: '找可用方法',
-        secondaryCta: '探索三库',
-        metricNodes: '三库节点',
-        metricForks: '调度路径',
-        metricValidations: '社区信号',
-        methodKicker: 'METHOD FINDER',
-        methodTitle: '把问题丢进来，直接拿到可用的 AI 方法。',
-        methodCopy: '先不用理解系统架构。输入你要解决的问题，AI Knowledge Bank 会从知识库、工具库、案例库给出三层结果：为什么、怎么做、哪里验证过。',
+        heroQuickPlaceholder: '例如：用 AI 提高客服回复效率',
+        heroQuickRun: '预览三层方法',
+        heroQuickHint: '系统会同时回答：为什么有效、如何执行、哪里验证过。',
+        primaryCta: '查找已验证的方法',
+        secondaryCta: '贡献一次真实验证',
+        metricNodes: '知识节点',
+        metricForks: '工具节点',
+        metricValidations: '案例节点',
+        methodKicker: '方法预览',
+        methodTitle: '从一个问题，看到方法的完整结构。',
+        methodCopy: '这是一个引导式预览：知识层解释为什么，工具层给出执行路径，案例层说明它曾在哪些条件下有效。',
         methodInputLabel: '你的 AI 任务',
         methodPlaceholder: '例如：我想用 AI 把团队的客户反馈整理成可复用 SOP',
         methodScenarioLabel: '选择一个常见场景',
         methodScenarioMarketing: '跨境营销 SOP',
         methodScenarioEducation: '教师 AI 助教工作流',
         methodScenarioSupport: '客服 FAQ 自动化',
-        methodRun: '生成可用方法',
-        methodStatusReady: '选择场景或输入问题后开始生成。',
-        methodStatusRunning: '正在从三库组合可用方法...',
-        methodStatusGenerated: '已生成三层结果：先理解，再执行，最后用案例校验。',
+        methodRun: '预览三层方法',
+        methodStatusReady: '选择场景或输入问题，查看三层方法。',
+        methodStatusRunning: '正在组合知识、工具和案例...',
+        methodStatusGenerated: '三层方法已就绪：先理解，再执行，最后用案例校验。',
         methodStatusCopied: '已复制，可直接拿去改写或执行。',
         methodStatusImproved: '已改进为更具体的版本。',
         methodStatusUseful: '已记录为有用反馈，会进入社区演化信号。',
@@ -2720,33 +2540,9 @@
         methodCustomCaseCopy: '先选择一个真实场景试运行，记录节省时间、返工次数和结果采用率，再决定是否扩大使用。',
         methodCustomCaseReason: '案例层用真实反馈判断方法是否值得复用。',
         methodCustomCaseImproved: '用 3 到 5 个真实样本做 A/B 验证，比较人工处理和 AI 辅助后的时间、质量和复用率。',
-        missionKicker: 'VISION & MISSION',
-        missionTitle: '让每一次 AI 实践，都成为可验证、可复用、可共创的公共知识资产。',
-        missionCopy: 'AI 正在把知识生产从少数人的经验，推向人人都能参与验证和改进的现场。我们希望把个人、团队和行业中的真实实践沉淀下来，让后来者不必从零开始。',
-        visionLabel: 'Vision',
-        visionTitle: '成为 AI 时代的公共知识银行',
-        visionCopy: '让每个人都能站在被验证的经验之上继续创造，让好的 AI 实践被看见、被复用、被改进，并最终成为共享能力。',
-        missionLabel: 'Mission',
-        missionCardTitle: '把真实实践沉淀为可演化资产',
-        missionCardCopy: '我们用三库结构保存知识、工具和案例，用 AI 调度连接需求与路径，用社区演化持续验证、分叉、合并和更新。',
-        valueVerifyLabel: 'Verify',
-        valueVerifyTitle: '真实验证',
-        valueVerifyCopy: '结果和证据比口号更重要。',
-        valueOpenLabel: 'Open',
-        valueOpenTitle: '开放共创',
-        valueOpenCopy: '每个人的实践都可能成为公共能力。',
-        valueHumanLabel: 'Human',
-        valueHumanTitle: '人机协作',
-        valueHumanCopy: 'AI 负责调度和放大，人负责判断和负责。',
-        valueEvolveLabel: 'Evolve',
-        valueEvolveTitle: '持续演化',
-        valueEvolveCopy: '知识不是一次发布，而是在使用中更新。',
-        valueShareLabel: 'Share',
-        valueShareTitle: '共享增益',
-        valueShareCopy: '好方法应该被看见、复用、改进并回流社区。',
         vaultsKicker: 'THREE VAULTS',
-        vaultsTitle: '知识库、工具库、案例库，构成 AI 实践的三层骨架。',
-        vaultsCopy: '先理解为什么，再知道怎么做，最后用真实案例证明它是否有效。三库让经验不再散落，而能被检索、调度和复用。',
+        vaultsTitle: '三库不是分类，而是一条完整判断链。',
+        vaultsCopy: '知识库回答为什么，工具库说明如何执行，案例库提供可以核对的结果。三者一起，才是一条值得采用的方法。',
         vaultKnowledgeTitle: '知识库',
         vaultKnowledgeCopy: '沉淀认知模型、原理解释、判断框架和边界条件，回答“为什么这样做”。',
         vaultKnowledgeTagA: '原理',
@@ -2765,26 +2561,9 @@
         vaultCaseTagB: 'Before/After',
         vaultCaseTagC: '证据链',
         vaultExploreCases: '进入案例库',
-        enginesKicker: 'TWO ENGINES',
-        enginesTitle: '两套引擎，让知识从静态内容变成可生长的能力网络。',
-        enginesCopy: 'Cross-Vault RAG 负责把三库调度成个性化答案，Community Evolution 负责让真实使用信号推动内容持续进化。',
-        engineRagLabel: 'Cross-Vault RAG',
-        engineRagTitle: 'AI 个性化调度引擎',
-        engineRagCopy: '用户提出目标后，系统分别取回知识解释、工具路径和案例证据，再组合成可执行建议。',
-        engineRagOrbitA: '认知解释',
-        engineRagOrbitB: '工具路径',
-        engineRagOrbitC: '案例证据',
-        engineRagCta: '查看调度演示',
-        engineCommunityLabel: 'Community Evolution',
-        engineCommunityTitle: '社区互助演化引擎',
-        engineCommunityCopy: '验证、复用、分叉、合并和争议共同形成演化信号，让好方法在社区中自然浮现。',
-        engineCommunityOrbitA: '验证',
-        engineCommunityOrbitB: '分叉',
-        engineCommunityOrbitC: '合并',
-        engineCommunityCta: '查看演化机制',
         cocreateKicker: 'CO-CREATION LOOP',
-        cocreateTitle: '把个人实践，转化为可以被所有人继续改进的公共资产。',
-        cocreateCopy: '一条经验进入 AI Knowledge Bank 后，不会停在发布状态。它会被结构化、验证、分叉、合并，并在使用中形成更可靠的新版本。',
+        cocreateTitle: '公共知识不是被发布出来的，而是在使用中被验证出来的。',
+        cocreateCopy: '一条经验先被结构化，再由不同场景复用、质疑和改进。只有证据持续累积，它才会进入公共主干。',
         flowContributeTitle: '贡献实践',
         flowContributeCopy: '提交真实问题、过程、工具和结果。',
         flowStructureTitle: '结构化入库',
@@ -2796,28 +2575,9 @@
         flowMergeTitle: '合并标准',
         flowMergeCopy: '被反复验证的分支回流为新的公共标准。',
         cocreateCta: '进入社区共创',
-        entryKicker: 'EXPERIENCE MAP',
-        entryTitle: '从这里进入三库、两引擎和共创流程。',
-        entryCopy: '首页下方仍保留实时节点、AI 调度、社区演化和金色涌现演示。你也可以直接进入独立页面查看完整内容。',
-        entryKnowledgeTitle: '知识库',
-        entryKnowledgeCopy: '认知模型、原理解释和判断框架。',
-        entryToolsTitle: '工具库',
-        entryToolsCopy: 'Agent、Prompt、流程和自动化路径。',
-        entryCasesTitle: '案例库',
-        entryCasesCopy: '真实结果、SOP 复盘和证据链。',
-        entryCommunityTitle: '社区共创',
-        entryCommunityCopy: '贡献、验证、分叉与合并。',
-        entryLiveTitle: '实时节点',
-        entryLiveCopy: '查看 Supabase 返回的三库内容。',
-        entryDispatchTitle: 'AI 调度演示',
-        entryDispatchCopy: '体验三库如何组合答案。',
-        entryDemoTitle: '金色涌现',
-        entryDemoCopy: '运行验证并观察演化反馈。',
-        entryEcosystemTitle: '基础设施',
-        entryEcosystemCopy: '后端接口、RAG 合约和演化信号。',
         liveVaultsKicker: 'LIVE VAULTS',
-        liveVaultsTitle: '真实三库内容，正在从 Supabase 返回。',
-        liveVaultsCopy: '这里展示当前知识库、工具库、案例库中的真实节点。每张卡片都保留可信度、来源和语义归属，后续可直接接入 Cross-Vault RAG。',
+        liveVaultsTitle: '先看真实节点，再决定是否采用。',
+        liveVaultsCopy: '这里直接读取已发布的知识、工具和案例节点，并保留来源、可信度与适用场景。',
         liveVaultsLoading: '正在读取实时三库内容...',
         liveVaultsEmpty: '暂时没有可展示的实时节点',
         liveVaultsSource: '实时数据',
@@ -2826,8 +2586,8 @@
         liveVaultsTool: '工具库',
         liveVaultsCase: '案例库',
         dispatchKicker: 'CROSS-VAULT RAG',
-        dispatchTitle: 'AI 个性化调度引擎，让答案同时有认知、路径和证据。',
-        dispatchCopy: '用户不是在一个库里搜索关键词，而是把目标交给调度引擎。系统会跨三库取回知识解释、工具流程和案例证据，再组合成可执行建议。',
+        dispatchTitle: '一次查询，同时得到解释、路径和证据。',
+        dispatchCopy: '调度引擎不只匹配关键词。它会跨三库取回判断框架、执行步骤和真实案例，再组合成一条可核对的建议。',
         scenarioMarketing: '跨境营销团队要用 AI 重做本地化 SOP',
         scenarioEducation: '培训机构要为老师建立 AI 助教工作流',
         scenarioSupport: '客服团队要把高频问题变成自动化案例库',
@@ -2844,8 +2604,8 @@
         dispatchRunning: '正在跨三库检索与重排...',
         dispatchComplete: '调度完成：已组合知识、工具和案例证据',
         evolutionKicker: 'COMMUNITY EVOLUTION',
-        evolutionTitle: '社区互助演化引擎，让好方法自己长出来。',
-        evolutionCopy: '贡献不是点赞计数，而是由真实使用、验证、分叉、合并和争议共同构成的演化信号。',
+        evolutionTitle: '好方法不靠热度上位，而靠证据进入主干。',
+        evolutionCopy: '真实使用、验证、分叉、合并、争议和衰减共同决定一个节点是否值得继续被推荐。',
         signalValidateTitle: '真实验证',
         signalValidateCopy: '把结果、场景和置信度变成可追踪证据。',
         signalForkTitle: '场景分叉',
@@ -2857,8 +2617,8 @@
         signalMergeTitle: '涌现合并',
         signalMergeCopy: '当分支超过阈值，它会成为新的公共标准。',
         demoKicker: 'LIVE SIMULATION',
-        demoTitle: '点击 Run Validation，触发一次金色涌现。',
-        demoCopy: '这个演示模拟社区验证信号进入演化引擎：当分支权重超过阈值，系统会用金色光芒提示它被提升为新的公共标准。',
+        demoTitle: '运行一次演示验证，观察分支如何达到合并阈值。',
+        demoCopy: '这里使用不写数据库的演示信号。权重超过阈值后，分支会被标记为新的共享版本。',
         demoSignal: '单次验证信号',
         demoThreshold: '自动合并阈值',
         consoleLabel: 'Active Node',
@@ -2880,23 +2640,17 @@
         branchMerged: 'V2.0 新主干',
         branchMergedCopy: '社区验证通过',
         branchStateMerged: 'merged',
-        ecosystemKicker: 'ECOSYSTEM',
-        ecosystemTitle: '从体验演示走向真实产品的接口已经预留。',
-        ecoDataTitle: '三库数据模型',
-        ecoDataCopy: '知识节点新增 vault_type、场景标签、来源引用和可信度字段。',
-        ecoTrustTitle: 'Cross-Vault RAG 合约',
-        ecoTrustCopy: '查询输入和三库结果输出已经按未来语义检索接口组织。',
-        ecoDeployTitle: '社区演化信号',
-        ecoDeployCopy: '验证、使用、分叉、合并和争议信号可进入演化评分。',
         finalCtaKicker: 'JOIN THE BANK',
-        finalCtaTitle: '加入共创，把你的 AI 实践变成公共知识资产。',
-        finalCtaCopy: '无论你贡献一个案例、一条工具路径，还是一次验证结果，都会帮助更多人站在被验证的经验之上继续创造。',
-        finalCtaPrimary: '加入社区',
-        finalCtaSecondary: '访问 GitHub',
+        finalCtaTitle: '使用一个节点，也贡献一次验证。',
+        finalCtaCopy: '你可以直接从被验证的方法开始，也可以把真实使用结果带回来，让下一位使用者少走一步弯路。',
+        finalCtaPrimary: '查找已验证的方法',
+        finalCtaSecondary: '贡献一次真实验证',
         footerCopy: 'AI 时代的公共知识银行。',
         toggle: 'EN'
       },
       en: {
+        pageTitle: 'AI Knowledge Bank | Verified, reusable public AI knowledge',
+        pageDescription: 'Connect decision frames, executable tools, and real cases, then improve public AI knowledge through community validation.',
         navKnowledge: 'Knowledge',
         navTools: 'Tools',
         navCases: 'Cases',
@@ -2923,39 +2677,40 @@
         searchCommunityTitle: 'Community',
         searchCommunityCopy: 'Validation, forks, merges, and evolution signals',
         moreMethod: 'Find a tested method',
-        moreVision: 'Vision & Mission',
-        moreExperience: 'Experience Map',
-        moreDispatch: 'AI Dispatch Engine',
+        moreVaults: 'View live nodes',
+        moreDispatch: 'Run cross-vault dispatch',
         moreValidation: 'Validation Demo',
         moreDashboard: 'Dashboard',
         moreGithub: 'GitHub Repository',
         dashboard: 'Dashboard',
-        eyebrow: 'Where AI experience grows together',
-        heroTitleBrand: 'AI Knowledge Bank',
-        heroTitleAccent: 'Stop figuring out AI alone',
-        heroCopy: 'Use AI methods that others have already tested.',
+        eyebrow: 'Use what is verified. Help verify what comes next.',
+        heroTitle: 'Turn scattered AI practice into public knowledge that can be tested, reused, and improved.',
+        heroCopy: 'Find useful methods across knowledge frames, executable tools, and real cases—and bring your results back so the next version is more reliable.',
+        heroQuickKicker: 'Start with a real problem',
+        heroQuickTitle: 'Find the method before choosing the tool',
+        heroQuickCopy: 'Describe your goal to preview the explanation, execution path, and supporting evidence.',
         heroQuickLabel: 'What do you want AI to solve?',
-        heroQuickPlaceholder: 'Enter a work problem, e.g. use AI to improve support replies',
-        heroQuickRun: 'Generate fast',
-        heroQuickHint: 'Get knowledge, tool, and case layers in 30 seconds.',
-        primaryCta: 'Find a Method',
-        secondaryCta: 'Explore Vaults',
-        metricNodes: 'Vault nodes',
-        metricForks: 'Dispatch routes',
-        metricValidations: 'Community signals',
-        methodKicker: 'METHOD FINDER',
-        methodTitle: 'Find an AI method you can use.',
-        methodCopy: 'You do not need to understand the whole architecture first. Describe the problem, and AI Knowledge Bank returns three layers from knowledge, tools, and cases: why it works, how to do it, and where it has been validated.',
+        heroQuickPlaceholder: 'Example: use AI to improve support replies',
+        heroQuickRun: 'Preview three layers',
+        heroQuickHint: 'The system answers why it works, how to run it, and where it has been tested.',
+        primaryCta: 'Find verified methods',
+        secondaryCta: 'Contribute real validation',
+        metricNodes: 'Knowledge nodes',
+        metricForks: 'Tool nodes',
+        metricValidations: 'Case nodes',
+        methodKicker: 'Method preview',
+        methodTitle: 'See the full structure of a method from one problem.',
+        methodCopy: 'This guided preview explains why through knowledge, shows how through tools, and grounds the route in case evidence.',
         methodInputLabel: 'Your AI task',
         methodPlaceholder: 'Example: I want AI to turn customer feedback into reusable team SOPs',
         methodScenarioLabel: 'Choose a common scenario',
         methodScenarioMarketing: 'Cross-border marketing SOP',
         methodScenarioEducation: 'Teacher AI assistant workflow',
         methodScenarioSupport: 'Support FAQ automation',
-        methodRun: 'Find a tested method',
-        methodStatusReady: 'Choose a scenario or enter a problem to begin.',
-        methodStatusRunning: 'Composing a usable method across the three vaults...',
-        methodStatusGenerated: 'Three layers generated: understand first, execute next, validate with cases.',
+        methodRun: 'Preview three layers',
+        methodStatusReady: 'Choose a scenario or enter a problem to view the three layers.',
+        methodStatusRunning: 'Combining knowledge, tools, and cases...',
+        methodStatusGenerated: 'Three layers ready: understand first, execute next, validate with cases.',
         methodStatusCopied: 'Copied. You can adapt or run it directly.',
         methodStatusImproved: 'Improved into a more specific version.',
         methodStatusUseful: 'Useful feedback recorded as a community evolution signal.',
@@ -2982,33 +2737,9 @@
         methodCustomCaseCopy: 'Run it in one real scenario first, then track time saved, rework, and adoption before expanding.',
         methodCustomCaseReason: 'The case layer uses real feedback to decide whether the method is reusable.',
         methodCustomCaseImproved: 'Test 3 to 5 real samples and compare manual versus AI-assisted time, quality, and reuse rate.',
-        missionKicker: 'VISION & MISSION',
-        missionTitle: 'Turn every AI practice into a verifiable, reusable, co-created public knowledge asset.',
-        missionCopy: 'AI is moving knowledge from isolated expertise into field-tested practice that anyone can validate and improve. We preserve real experience from individuals, teams, and industries so others do not have to restart from zero.',
-        visionLabel: 'Vision',
-        visionTitle: 'Become the public knowledge bank for the AI era',
-        visionCopy: 'Help everyone build on verified experience, so useful AI practice can be discovered, reused, improved, and shared as common capability.',
-        missionLabel: 'Mission',
-        missionCardTitle: 'Turn real practice into evolving assets',
-        missionCardCopy: 'We use three vaults to preserve knowledge, tools, and cases, AI dispatch to connect needs with paths, and community evolution to validate, fork, merge, and update what works.',
-        valueVerifyLabel: 'Verify',
-        valueVerifyTitle: 'Real validation',
-        valueVerifyCopy: 'Evidence and outcomes matter more than slogans.',
-        valueOpenLabel: 'Open',
-        valueOpenTitle: 'Open co-creation',
-        valueOpenCopy: 'Anyone’s practice can become shared capability.',
-        valueHumanLabel: 'Human',
-        valueHumanTitle: 'Human-AI collaboration',
-        valueHumanCopy: 'AI routes and amplifies. People judge and take responsibility.',
-        valueEvolveLabel: 'Evolve',
-        valueEvolveTitle: 'Continuous evolution',
-        valueEvolveCopy: 'Knowledge is not published once. It is updated through use.',
-        valueShareLabel: 'Share',
-        valueShareTitle: 'Shared gain',
-        valueShareCopy: 'Good methods should be seen, reused, improved, and returned to the community.',
         vaultsKicker: 'THREE VAULTS',
-        vaultsTitle: 'Knowledge, tools, and cases form the three-layer skeleton of AI practice.',
-        vaultsCopy: 'First understand why, then know how to act, then prove where it works. The vaults make experience searchable, dispatchable, and reusable.',
+        vaultsTitle: 'The three vaults form one complete chain of judgment.',
+        vaultsCopy: 'Knowledge explains why, tools show how to execute, and cases provide outcomes that can be checked. Together, they make a method worth considering.',
         vaultKnowledgeTitle: 'Knowledge Vault',
         vaultKnowledgeCopy: 'Cognitive models, principles, decision frames, and boundary conditions that answer why it works.',
         vaultKnowledgeTagA: 'Principles',
@@ -3027,26 +2758,9 @@
         vaultCaseTagB: 'Before/After',
         vaultCaseTagC: 'Evidence',
         vaultExploreCases: 'Open Cases',
-        enginesKicker: 'TWO ENGINES',
-        enginesTitle: 'Two engines turn static content into a living capability network.',
-        enginesCopy: 'Cross-Vault RAG dispatches the three vaults into personalized answers. Community Evolution lets real usage signals keep improving the system.',
-        engineRagLabel: 'Cross-Vault RAG',
-        engineRagTitle: 'Personalized AI Dispatch Engine',
-        engineRagCopy: 'When a user brings a goal, the system retrieves knowledge explanations, tool paths, and case evidence, then assembles executable guidance.',
-        engineRagOrbitA: 'Cognition',
-        engineRagOrbitB: 'Tool path',
-        engineRagOrbitC: 'Evidence',
-        engineRagCta: 'View Dispatch Demo',
-        engineCommunityLabel: 'Community Evolution',
-        engineCommunityTitle: 'Community Evolution Engine',
-        engineCommunityCopy: 'Validation, reuse, forks, merges, and disputes become evolution signals, allowing strong methods to emerge through the community.',
-        engineCommunityOrbitA: 'Validate',
-        engineCommunityOrbitB: 'Fork',
-        engineCommunityOrbitC: 'Merge',
-        engineCommunityCta: 'View Evolution Loop',
         cocreateKicker: 'CO-CREATION LOOP',
-        cocreateTitle: 'Turn individual practice into public assets that everyone can keep improving.',
-        cocreateCopy: 'After an experience enters AI Knowledge Bank, it does not stop at publication. It is structured, validated, forked, merged, and strengthened through use.',
+        cocreateTitle: 'Public knowledge is not merely published. It is verified through use.',
+        cocreateCopy: 'A practice is structured, reused, challenged, and improved across contexts. It enters the shared mainline only when evidence keeps accumulating.',
         flowContributeTitle: 'Contribute practice',
         flowContributeCopy: 'Submit real problems, processes, tools, and outcomes.',
         flowStructureTitle: 'Structure into vaults',
@@ -3058,28 +2772,9 @@
         flowMergeTitle: 'Merge standards',
         flowMergeCopy: 'Repeatedly validated branches return as shared standards.',
         cocreateCta: 'Enter Community',
-        entryKicker: 'EXPERIENCE MAP',
-        entryTitle: 'Enter the three vaults, two engines, and co-creation loop from here.',
-        entryCopy: 'The live vault feed, AI dispatch, community evolution, and golden emergence demo remain below. You can also jump into dedicated pages for deeper content.',
-        entryKnowledgeTitle: 'Knowledge',
-        entryKnowledgeCopy: 'Cognitive models, principles, and decision frames.',
-        entryToolsTitle: 'Tools',
-        entryToolsCopy: 'Agents, prompts, workflows, and automation routes.',
-        entryCasesTitle: 'Cases',
-        entryCasesCopy: 'Real outcomes, SOP reviews, and evidence chains.',
-        entryCommunityTitle: 'Community',
-        entryCommunityCopy: 'Contribution, validation, forks, and merges.',
-        entryLiveTitle: 'Live nodes',
-        entryLiveCopy: 'View vault content returned from Supabase.',
-        entryDispatchTitle: 'AI Dispatch Demo',
-        entryDispatchCopy: 'See how the three vaults compose answers.',
-        entryDemoTitle: 'Golden Emergence',
-        entryDemoCopy: 'Run validation and watch evolution feedback.',
-        entryEcosystemTitle: 'Infrastructure',
-        entryEcosystemCopy: 'Backend contracts, RAG shape, and evolution signals.',
         liveVaultsKicker: 'LIVE VAULTS',
-        liveVaultsTitle: 'Real vault content is now coming back from Supabase.',
-        liveVaultsCopy: 'This section renders active nodes from the Knowledge, Tools, and Cases vaults. Each card keeps trust, source, and semantic ownership so it can plug into Cross-Vault RAG later.',
+        liveVaultsTitle: 'Read the real nodes before deciding what to use.',
+        liveVaultsCopy: 'This view reads published knowledge, tool, and case nodes directly, preserving source, trust, and applicable context.',
         liveVaultsLoading: 'Loading live vault content...',
         liveVaultsEmpty: 'No live vault nodes are available yet',
         liveVaultsSource: 'Live data',
@@ -3088,8 +2783,8 @@
         liveVaultsTool: 'Tool',
         liveVaultsCase: 'Case',
         dispatchKicker: 'CROSS-VAULT RAG',
-        dispatchTitle: 'Personalized AI dispatch gives every answer cognition, route, and evidence.',
-        dispatchCopy: 'Users do not search one repository. They give the engine a goal. The engine retrieves knowledge, tool paths, and case evidence across all vaults, then assembles executable guidance.',
+        dispatchTitle: 'One query returns explanation, route, and evidence.',
+        dispatchCopy: 'Dispatch goes beyond keyword matching. It retrieves a decision frame, execution steps, and real cases across the vaults, then assembles guidance that can be checked.',
         scenarioMarketing: 'A cross-border marketing team rebuilds localization SOPs with AI',
         scenarioEducation: 'A training company builds AI teaching-assistant workflows',
         scenarioSupport: 'A support team turns FAQs into an automation case library',
@@ -3106,8 +2801,8 @@
         dispatchRunning: 'Searching and reranking across the three vaults...',
         dispatchComplete: 'Dispatch complete: knowledge, tools, and case evidence assembled',
         evolutionKicker: 'COMMUNITY EVOLUTION',
-        evolutionTitle: 'Community Evolution lets strong methods grow into standards.',
-        evolutionCopy: 'Contribution is not a like counter. It is an evolution signal built from real usage, validation, forks, merges, and disputes.',
+        evolutionTitle: 'Strong methods enter the mainline through evidence, not attention.',
+        evolutionCopy: 'Real use, validation, forks, merges, disputes, and decay determine whether a node should keep being recommended.',
         signalValidateTitle: 'Field validation',
         signalValidateCopy: 'Turn results, contexts, and confidence into traceable evidence.',
         signalForkTitle: 'Scenario forks',
@@ -3119,8 +2814,8 @@
         signalMergeTitle: 'Emergent merge',
         signalMergeCopy: 'When a branch crosses the threshold, it becomes the new standard.',
         demoKicker: 'LIVE SIMULATION',
-        demoTitle: 'Click Run Validation to trigger golden emergence.',
-        demoCopy: 'This simulation sends a community validation signal into the evolution engine. When branch weight crosses the threshold, golden light marks its promotion into a shared standard.',
+        demoTitle: 'Run a demo validation and watch a branch cross the merge threshold.',
+        demoCopy: 'This uses a demo signal that does not write to the database. When the weight crosses the threshold, the branch becomes a new shared version.',
         demoSignal: 'Validation signal',
         demoThreshold: 'Auto-merge threshold',
         consoleLabel: 'Active Node',
@@ -3142,19 +2837,11 @@
         branchMerged: 'V2.0 New Mainline',
         branchMergedCopy: 'Community validated',
         branchStateMerged: 'merged',
-        ecosystemKicker: 'ECOSYSTEM',
-        ecosystemTitle: 'The path from demo to real product is already shaped.',
-        ecoDataTitle: 'Three-vault data model',
-        ecoDataCopy: 'Knowledge nodes now carry vault type, scenario tags, source references, and trust fields.',
-        ecoTrustTitle: 'Cross-Vault RAG contract',
-        ecoTrustCopy: 'Query input and three-vault result output are structured for future semantic retrieval.',
-        ecoDeployTitle: 'Community evolution signals',
-        ecoDeployCopy: 'Validation, usage, fork, merge, and dispute signals can feed evolution scoring.',
         finalCtaKicker: 'JOIN THE BANK',
-        finalCtaTitle: 'Join co-creation and turn your AI practice into public knowledge.',
-        finalCtaCopy: 'Whether you contribute a case, a tool path, or a validation result, you help more people build on experience that has already been tested.',
-        finalCtaPrimary: 'Join Community',
-        finalCtaSecondary: 'Visit GitHub',
+        finalCtaTitle: 'Use one node. Contribute one validation.',
+        finalCtaCopy: 'Start from a verified method, then bring back what happened in real use so the next person has stronger evidence.',
+        finalCtaPrimary: 'Find verified methods',
+        finalCtaSecondary: 'Contribute real validation',
         footerCopy: 'Where AI experience grows together.',
         toggle: '中'
       }
@@ -3514,17 +3201,13 @@
         latestVaultData = data;
         renderLiveVaults(data);
         if (!data.ok || data.source !== 'supabase') return;
-        if (data.schema && data.schema !== 'knowledge_nodes') return;
 
-        const total = Number(data.stats?.total || 0);
-        if (total > 0) {
-          metricNodesValue.textContent = total.toLocaleString();
-          metricRoutesValue.textContent = Math.max(total * 2, Number(data.stats?.tools || 0) + Number(data.stats?.cases || 0)).toLocaleString();
-          metricSignalsValue.textContent = Math.max(total * 6, total * 8).toLocaleString();
-        }
+        metricNodesValue.textContent = Number(data.stats?.knowledge || 0).toLocaleString();
+        metricRoutesValue.textContent = Number(data.stats?.tools || 0).toLocaleString();
+        metricSignalsValue.textContent = Number(data.stats?.cases || 0).toLocaleString();
       } catch {
         renderLiveVaults(null);
-        // Static metrics remain as the brand-level demo numbers.
+        // Neutral placeholders remain visible when real statistics are unavailable.
       }
     }
 
@@ -3816,6 +3499,8 @@
       localStorage.setItem('language', lang);
       document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
       const dict = translations[lang];
+      document.title = dict.pageTitle;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', dict.pageDescription);
 
       document.querySelectorAll('[data-i18n]').forEach((element) => {
         const key = element.getAttribute('data-i18n');

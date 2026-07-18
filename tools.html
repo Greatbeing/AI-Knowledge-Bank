@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tools Vault | AI Knowledge Bank</title>
-  <meta name="description" content="Tools Vault: agents, prompts, workflows, automation routes, and sandbox recipes for AI-powered productivity. Reusable tools validated in real scenarios." />
+  <title>Tools Vault | Repeatable AI execution paths</title>
+  <meta name="description" content="Turn effective AI methods into repeatable routes with clear inputs, steps, human checkpoints, and quality bars." />
   <link rel="canonical" href="https://aiknowledgebank.pages.dev/tools.html" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Tools Vault | AI Knowledge Bank" />
@@ -17,8 +17,9 @@
   <link rel="icon" href="./assets/brand/akb-love-logo.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/vault-page.css" />
+  <link rel="stylesheet" href="./assets/typography.css" />
 </head>
 <body data-page="tools">
   <canvas id="network-canvas" aria-hidden="true"></canvas>
@@ -37,7 +38,7 @@
       </nav>
       <div class="nav-actions">
         <a class="nav-button" href="./index.html" data-i18n="backHome">首页</a>
-        <a class="nav-button primary" href="./index.html#dispatch" data-i18n="startLearning">开始学习</a>
+      <a class="nav-button primary" href="./index.html#dispatch" data-i18n="startLearning">运行调度</a>
         <button id="language-toggle" class="nav-button" type="button" aria-label="Switch language">EN</button>
       </div>
     </div>
@@ -47,11 +48,11 @@
     <section class="page-hero">
       <div class="shell hero-grid">
         <div>
-          <div class="pill" data-page-i18n="pageKicker">TOOLS VAULT</div>
-          <h1 class="hero-title" data-page-i18n="pageTitle">工具库：把有效方法变成可执行的 Agent、Prompt 和工作流。</h1>
+          <div class="pill" data-page-i18n="pageKicker">工具库 / Tools</div>
+          <h1 class="hero-title" data-page-i18n="pageTitle">把有效方法，变成可以重复执行的路径。</h1>
         </div>
         <div class="hero-panel">
-          <p class="hero-copy" data-page-i18n="pageCopy">这里组织工具路径、自动化流程、Prompt 模板和组合方案。</p>
+          <p class="hero-copy" data-page-i18n="pageCopy">这里组织 Agent、Prompt、工作流和人工确认点。工具节点不仅告诉你用什么，也说明输入、步骤、质量标准和复用边界。</p>
           <div class="metric-grid mt-6">
             <div class="metric"><strong id="metric-nodes">0</strong><span data-i18n="nodeCount">节点</span></div>
             <div class="metric"><strong id="metric-routes">0</strong><span data-i18n="routeCount">路径</span></div>
@@ -65,21 +66,21 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <h2 class="section-title" data-page-i18n="sectionTitle">可执行工具路径</h2>
+            <h2 class="section-title" data-page-i18n="sectionTitle">可执行的方法节点</h2>
           </div>
-          <p class="section-copy" data-page-i18n="sectionCopy">这些工具节点可被调度引擎选中。</p>
+          <p class="section-copy" data-page-i18n="sectionCopy">这些节点可以被调度并组合成面向具体目标的执行路线。</p>
         </div>
         <section class="dispatch-panel" aria-labelledby="dispatch-title">
           <div class="dispatch-copy">
-            <span class="panel-kicker" data-i18n="dispatchKicker">Cross-Vault Dispatch</span>
-            <h2 id="dispatch-title" data-i18n="dispatchTitle">用一个场景调度知识、工具和案例</h2>
-            <p data-i18n="dispatchCopy">输入你的目标或问题，系统会跨三库组合认知解释、执行路径和案例证据。</p>
+          <span class="panel-kicker" data-i18n="dispatchKicker">跨库调度</span>
+          <h2 id="dispatch-title" data-i18n="dispatchTitle">从一个问题，找到解释、路径和证据。</h2>
+          <p data-i18n="dispatchCopy">输入你的目标，系统会跨三库返回知识解释、执行路径和真实案例。</p>
           </div>
           <form id="dispatch-form" class="dispatch-form">
             <input id="dispatch-query" class="dispatch-input" type="search" autocomplete="off" data-i18n-placeholder="dispatchPlaceholder" placeholder="例如：跨境营销团队要优化 AI 本地化 SOP" />
-            <button id="dispatch-run" class="dispatch-button" type="submit" data-i18n="dispatchRun">运行调度</button>
+          <button id="dispatch-run" class="dispatch-button" type="submit" data-i18n="dispatchRun">查找三层结果</button>
           </form>
-          <p id="dispatch-status" class="dispatch-status" aria-live="polite" data-i18n="dispatchReady">准备调度三库内容</p>
+          <p id="dispatch-status" class="dispatch-status" aria-live="polite" data-i18n="dispatchReady">输入一个真实问题，开始跨库查找</p>
           <div id="dispatch-results" class="dispatch-results" aria-live="polite">
             <article class="dispatch-result" data-dispatch-layer="knowledge"></article>
             <article class="dispatch-result" data-dispatch-layer="tools"></article>
@@ -109,18 +110,18 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <h2 class="section-title" data-page-i18n="insightTitle">工具库如何工作</h2>
+            <h2 class="section-title" data-page-i18n="insightTitle">方法如何变成可复用流程</h2>
           </div>
-          <p class="section-copy" data-page-i18n="insightCopy">工具库强调输入、步骤、质量标准和人工确认点。</p>
+          <p class="section-copy" data-page-i18n="insightCopy">把输入契约、执行步骤、人工判断和质量标准放在同一条路径里。</p>
         </div>
         <div id="insight-grid" class="insight-grid"></div>
         <div class="community-only community-layout">
           <div id="signal-grid" class="signal-grid"></div>
           <aside class="action-panel">
-            <h3 data-i18n="panelTitleCommunity">实时验证信号</h3>
-            <p data-i18n="panelCopyCommunity">点击后会向现有 Cloudflare API 提交一次社区验证信号。</p>
-            <button id="run-validation" class="run-button" type="button" data-i18n="runValidation">运行社区验证</button>
-            <p id="status-line" class="status-line" data-i18n="validationReady">准备接收社区验证信号</p>
+            <h3 data-i18n="panelTitleCommunity">提交一次真实验证</h3>
+            <p data-i18n="panelCopyCommunity">真实节点会以当前登录用户的身份写入；演示节点只在本地模拟，不会写入数据库。</p>
+            <button id="run-validation" class="run-button" type="button" data-i18n="runValidation">验证当前节点</button>
+            <p id="status-line" class="status-line" data-i18n="validationReady">选择一个节点并提交你的真实使用结果。</p>
           </aside>
         </div>
       </div>
@@ -128,7 +129,7 @@
   </main>
 
   <footer class="footer">
-    <div class="shell" data-i18n="footer">AI Knowledge Bank：AI 时代的公共知识银行。</div>
+    <div class="shell" data-i18n="footer">AI Knowledge Bank：使用被验证的方法，也为下一版本贡献证据。</div>
   </footer>
 
   <div id="detail-panel" class="detail-panel" aria-hidden="true">

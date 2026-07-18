@@ -28,7 +28,9 @@ function escapeRegExp(value) {
 function localeBlock(source, declaration, locale) {
   const declarationStart = source.indexOf(declaration);
   const localeStart = source.indexOf(`  ${locale}: {`, declarationStart);
-  const localeEnd = source.indexOf(locale === 'zh' ? '\n  en: {' : '\n};', localeStart);
+  const localeEnd = locale === 'zh'
+    ? source.indexOf('\n  en: {', localeStart)
+    : localeStart + source.slice(localeStart).search(/\r?\n\s*};/);
 
   expect(declarationStart).toBeGreaterThanOrEqual(0);
   expect(localeStart).toBeGreaterThanOrEqual(0);

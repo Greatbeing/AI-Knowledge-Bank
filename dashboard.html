@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard | AI Knowledge Bank</title>
-    <meta name="description" content="Manage your profile, badges, reputation, and contributions in the AI Knowledge Bank community.">
+    <title>贡献控制台 | AI Knowledge Bank</title>
+    <meta name="description" content="查看你的验证、信誉、徽章和通知，并继续为公共知识贡献证据。">
     <link rel="canonical" href="https://aiknowledgebank.pages.dev/dashboard.html" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="User Dashboard | AI Knowledge Bank" />
@@ -18,7 +18,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
 
     <!-- Configuration -->
     <script>
@@ -27,7 +27,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        sans: ['Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'system-ui', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
@@ -219,6 +219,7 @@
             transform: scaleX(1);
         }
     </style>
+    <link rel="stylesheet" href="./assets/typography.css" />
 </head>
 <body class="antialiased min-h-screen">
 
@@ -226,14 +227,13 @@
     <nav class="fixed w-full z-50 top-0 start-0 border-b border-white/5 glass">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between px-6 py-4">
             <a href="index.html" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                    🧬
-                </div>
+                <img src="./assets/brand/akb-love-logo.svg" alt="AI Knowledge Bank logo" class="w-10 h-10 rounded-xl shadow-lg" />
                 <span class="self-center text-xl font-semibold whitespace-nowrap tracking-tight text-white">AI Knowledge Bank</span>
             </a>
             <div class="flex items-center gap-4">
-                <button id="logout-btn" class="hidden text-gray-300 hover:text-white transition-colors text-sm">
-                    Sign Out
+                <button id="language-toggle" class="dashboard-language-toggle" type="button" aria-label="切换语言" data-i18n-aria="dashboard.languageLabel">EN</button>
+                <button id="logout-btn" class="hidden text-gray-300 hover:text-white transition-colors text-sm" data-i18n="dashboard.logout">
+                    退出登录
                 </button>
             </div>
         </div>
@@ -245,32 +245,31 @@
         <!-- Loading State -->
         <div id="loading-state" class="flex items-center justify-center py-20">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            <span class="ml-4 text-gray-400">Loading your profile...</span>
+            <span class="ml-4 text-gray-400" data-i18n="dashboard.loading">正在读取贡献记录...</span>
         </div>
 
         <!-- Auth Required State -->
-        <div id="auth-required" class="hidden text-center py-20">
+        <div id="auth-required" class="hidden py-20 max-w-2xl mx-auto">
             <div class="text-6xl mb-6">🔐</div>
-            <h2 class="text-2xl font-bold text-white mb-4">Authentication Required</h2>
-            <p class="text-gray-400 mb-8 max-w-md mx-auto">Please sign in to access your dashboard and manage your contributions.</p>
-            <div class="flex justify-center gap-4">
+            <h2 class="dashboard-state-title text-white mb-4" data-i18n="dashboard.authRequired.title">登录后，继续你的贡献记录</h2>
+            <p class="dashboard-state-copy text-gray-400 mb-8" data-i18n="dashboard.authRequired.copy">使用 GitHub 登录，验证真实节点并查看信誉、徽章和通知。</p>
+            <div class="flex gap-4">
                 <button onclick="handleOAuth('github')" class="btn-primary inline-flex items-center py-3 px-6 text-base font-medium text-white rounded-xl">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    Sign in with GitHub
+                    <span data-i18n="dashboard.authRequired.button">使用 GitHub 登录</span>
                 </button>
             </div>
         </div>
 
         <!-- Auth Configuration Missing State -->
-        <div id="auth-unavailable" class="hidden text-center py-20">
+        <div id="auth-unavailable" class="hidden py-20 max-w-2xl mx-auto">
             <div class="text-6xl mb-6" aria-hidden="true">⚙️</div>
-            <h2 class="text-2xl font-bold text-white mb-4">Authentication Unavailable</h2>
-            <p class="text-gray-400 mb-8 max-w-lg mx-auto">
-                This deployment does not include the public Supabase configuration required for sign-in.
-                Use the primary AI Knowledge Bank deployment or ask the administrator to configure browser authentication.
+            <h2 class="dashboard-state-title text-white mb-4" data-i18n="dashboard.authUnavailable.title">此部署未启用用户登录</h2>
+            <p class="dashboard-state-copy text-gray-400 mb-8" data-i18n="dashboard.authUnavailable.copy">
+                当前部署缺少浏览器登录所需的公开 Supabase 配置。你仍可浏览三库和演示内容。
             </p>
-            <a href="https://aiknowledgebank.pages.dev/dashboard.html" class="btn-primary inline-flex items-center py-3 px-6 text-base font-medium text-white rounded-xl">
-                Open primary dashboard
+            <a href="./index.html" class="btn-primary inline-flex items-center py-3 px-6 text-base font-medium text-white rounded-xl" data-i18n="dashboard.authUnavailable.link">
+                返回公共知识库
             </a>
         </div>
 
@@ -279,25 +278,23 @@
             
             <!-- Profile Header -->
             <div class="glass-card rounded-2xl p-8">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center gap-6">
+                <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                    <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
                         <div id="user-avatar" class="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-4xl font-bold text-white shadow-lg">
                             👤
                         </div>
                         <div>
-                            <h1 id="user-name" class="text-3xl font-bold text-white mb-2">Loading...</h1>
+                            <div class="text-xs font-medium text-primary mb-2" data-i18n="dashboard.overview">贡献者概览</div>
+                            <h1 id="user-name" class="text-3xl text-white mb-2">正在读取...</h1>
                             <p id="user-email" class="text-gray-400 mb-3">-</p>
                             <div class="flex items-center gap-4">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/20 text-primary">
-                                    Reputation: <span id="user-reputation" class="ml-1 font-bold">-</span>
+                                    <span data-i18n="dashboard.reputation">信誉</span>: <span id="user-reputation" class="ml-1 font-bold">-</span>
                                 </span>
-                                <span class="text-sm text-gray-500">Member since <span id="member-since">-</span></span>
+                                <span class="text-sm text-gray-500"><span data-i18n="dashboard.memberSince">加入于</span> <span id="member-since">-</span></span>
                             </div>
                         </div>
                     </div>
-                    <button id="edit-profile-btn" class="px-4 py-2 text-sm text-gray-300 hover:text-white border border-gray-700 hover:border-gray-600 rounded-lg transition-all">
-                        Edit Profile
-                    </button>
                 </div>
             </div>
 
@@ -305,28 +302,28 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="glass-card rounded-xl p-6 stat-card group cursor-default">
                     <div class="flex items-center justify-between mb-2">
-                        <div class="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">Validations</div>
+                        <div class="text-sm text-gray-500 group-hover:text-gray-400 transition-colors" data-i18n="dashboard.stat.validations">验证</div>
                         <div class="text-green-500 opacity-70">✓</div>
                     </div>
                     <div id="stat-validations" class="text-3xl font-bold text-primary group-hover:scale-110 transition-transform origin-left">-</div>
                 </div>
                 <div class="glass-card rounded-xl p-6 stat-card group cursor-default">
                     <div class="flex items-center justify-between mb-2">
-                        <div class="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">Forks Created</div>
+                        <div class="text-sm text-gray-500 group-hover:text-gray-400 transition-colors" data-i18n="dashboard.stat.forks">分叉</div>
                         <div class="text-blue-500 opacity-70">🍴</div>
                     </div>
                     <div id="stat-forks" class="text-3xl font-bold text-blue-400 group-hover:scale-110 transition-transform origin-left">-</div>
                 </div>
                 <div class="glass-card rounded-xl p-6 stat-card group cursor-default">
                     <div class="flex items-center justify-between mb-2">
-                        <div class="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">Merges</div>
+                        <div class="text-sm text-gray-500 group-hover:text-gray-400 transition-colors" data-i18n="dashboard.stat.merges">合并</div>
                         <div class="text-yellow-500 opacity-70">✨</div>
                     </div>
                     <div id="stat-merges" class="text-3xl font-bold text-accent group-hover:scale-110 transition-transform origin-left">-</div>
                 </div>
                 <div class="glass-card rounded-xl p-6 stat-card group cursor-default">
                     <div class="flex items-center justify-between mb-2">
-                        <div class="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">Badges</div>
+                        <div class="text-sm text-gray-500 group-hover:text-gray-400 transition-colors" data-i18n="dashboard.stat.badges">徽章</div>
                         <div class="text-purple-500 opacity-70">🏅</div>
                     </div>
                     <div id="stat-badges" class="text-3xl font-bold text-purple-400 group-hover:scale-110 transition-transform origin-left">-</div>
@@ -338,8 +335,7 @@
                 <!-- Badges Section -->
                 <div class="glass-card rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-xl font-bold text-white">🏆 Your Badges</h2>
-                        <span class="text-xs text-gray-500">Achievements & Milestones</span>
+                        <h2 class="text-xl text-white" data-i18n="dashboard.badges.title">获得的徽章</h2>
                     </div>
                     <div id="badges-grid" class="grid grid-cols-3 gap-4">
                         <!-- Badges will be loaded here -->
@@ -349,11 +345,10 @@
                 <!-- Recent Activity -->
                 <div class="glass-card rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-xl font-bold text-white">📊 Recent Activity</h2>
-                        <span class="text-xs text-gray-500">Last 7 days</span>
+                        <h2 class="text-xl text-white" data-i18n="dashboard.activity.title">最近贡献</h2>
                     </div>
-                    <div id="activity-list" class="space-y-3">
-                        <!-- Activity items will be loaded here -->
+                    <div id="activity-list" class="space-y-3 text-sm text-gray-500">
+                        <p data-i18n="dashboard.activity.empty">还没有贡献记录。先从验证一个真实节点开始。</p>
                     </div>
                 </div>
 
@@ -362,9 +357,9 @@
             <!-- Notifications -->
             <div class="glass-card rounded-2xl p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-white">🔔 Notifications</h2>
-                    <button id="mark-read-btn" class="text-xs text-primary hover:text-primary/80">
-                        Mark all as read
+                    <h2 class="text-xl text-white" data-i18n="dashboard.notifications.title">通知</h2>
+                    <button id="mark-read-btn" class="text-xs text-primary hover:text-primary/80" data-i18n="dashboard.notifications.markRead">
+                        全部标为已读
                     </button>
                 </div>
                 <div id="notifications-list" class="space-y-3">
@@ -378,8 +373,10 @@
 
     <script type="module">
         import { resolveSupabaseConfig } from './lib/supabase-config.ts';
+        import { applyTranslations, getCurrentLang, setLanguage, t } from './lib/shared/i18n.js';
 
         const supabaseConfig = resolveSupabaseConfig(window.__ENV__ || {}, import.meta.env);
+        const currentLanguage = getCurrentLang();
         let supabase = null;
 
         // DOM Elements
@@ -388,7 +385,7 @@
         const authUnavailable = document.getElementById('auth-unavailable');
         const dashboardContent = document.getElementById('dashboard-content');
         const logoutBtn = document.getElementById('logout-btn');
-        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const languageToggle = document.getElementById('language-toggle');
         const markReadBtn = document.getElementById('mark-read-btn');
 
         // Check authentication on load
@@ -428,6 +425,9 @@
 
         async function loadDashboard(user) {
             showDashboard();
+
+            document.getElementById('user-name').textContent = user.user_metadata?.user_name || t('dashboard.userFallback', currentLanguage);
+            document.getElementById('user-email').textContent = user.email || '-';
             
             // Load user profile
             const { data: profile } = await supabase
@@ -438,11 +438,11 @@
 
             if (profile) {
                 // Update UI with profile data
-                document.getElementById('user-name').textContent = profile.username || 'User';
+                document.getElementById('user-name').textContent = profile.username || t('dashboard.userFallback', currentLanguage);
                 document.getElementById('user-email').textContent = profile.email || user.email;
-                document.getElementById('user-reputation').textContent = profile.reputation_score.toFixed(1);
+                document.getElementById('user-reputation').textContent = Number(profile.reputation_score || 0).toFixed(1);
                 
-                const memberSince = new Date(profile.created_at).toLocaleDateString('en-US', { 
+                const memberSince = new Date(profile.created_at).toLocaleDateString(currentLanguage === 'zh' ? 'zh-CN' : 'en-US', {
                     year: 'numeric', 
                     month: 'long' 
                 });
@@ -461,7 +461,7 @@
                     const img = document.createElement('img');
                     img.src = profile.avatar_url;
                     img.className = 'w-full h-full rounded-full object-cover';
-                    img.alt = profile.username || 'User avatar';
+                    img.alt = profile.username || t('dashboard.userFallback', currentLanguage);
                     avatarEl.appendChild(img);
                 } else {
                     avatarEl.textContent = (profile.username || 'U')[0].toUpperCase();
@@ -491,7 +491,7 @@
                 badgesGrid.innerHTML = `
                     <div class="col-span-3 text-center py-8 text-gray-500">
                         <div class="text-4xl mb-2">🌱</div>
-                        <p class="text-sm">No badges yet. Start contributing!</p>
+                        <p class="text-sm">${t('dashboard.badges.empty', currentLanguage)}</p>
                     </div>
                 `;
                 return;
@@ -509,12 +509,12 @@
 
                 const nameDiv = document.createElement('div');
                 nameDiv.className = 'text-xs font-medium text-white';
-                nameDiv.textContent = ub.badges?.name || 'Badge';
+                nameDiv.textContent = ub.badges?.name || t('dashboard.badgeFallback', currentLanguage);
                 badgeDiv.appendChild(nameDiv);
 
                 const dateDiv = document.createElement('div');
                 dateDiv.className = 'text-[10px] text-gray-500 mt-1';
-                dateDiv.textContent = new Date(ub.awarded_at).toLocaleDateString();
+                dateDiv.textContent = new Date(ub.awarded_at).toLocaleDateString(currentLanguage === 'zh' ? 'zh-CN' : 'en-US');
                 badgeDiv.appendChild(dateDiv);
 
                 badgesGrid.appendChild(badgeDiv);
@@ -535,7 +535,7 @@
                 notificationsList.innerHTML = `
                     <div class="text-center py-8 text-gray-500">
                         <div class="text-4xl mb-2">📭</div>
-                        <p class="text-sm">No notifications</p>
+                        <p class="text-sm">${t('dashboard.notifications.empty', currentLanguage)}</p>
                     </div>
                 `;
                 return;
@@ -566,7 +566,7 @@
 
                 const dateDiv = document.createElement('div');
                 dateDiv.className = 'text-[10px] text-gray-600 mt-2';
-                dateDiv.textContent = new Date(notif.created_at).toLocaleString();
+                dateDiv.textContent = new Date(notif.created_at).toLocaleString(currentLanguage === 'zh' ? 'zh-CN' : 'en-US');
                 contentDiv.appendChild(dateDiv);
 
                 notifDiv.appendChild(contentDiv);
@@ -585,6 +585,11 @@
         logoutBtn.addEventListener('click', async () => {
             if (!supabase) return;
             await supabase.auth.signOut();
+            window.location.reload();
+        });
+
+        languageToggle.addEventListener('click', () => {
+            setLanguage(currentLanguage === 'zh' ? 'en' : 'zh');
             window.location.reload();
         });
 
@@ -632,6 +637,11 @@
             }
         }
 
+        applyTranslations(currentLanguage);
+        languageToggle.textContent = currentLanguage === 'zh' ? 'EN' : '中';
+        languageToggle.setAttribute('aria-label', t('dashboard.languageLabel', currentLanguage));
+        document.title = t('dashboard.pageTitle', currentLanguage);
+        document.querySelector('meta[name="description"]')?.setAttribute('content', t('dashboard.description', currentLanguage));
         initializeDashboard();
     </script>
 </body>
