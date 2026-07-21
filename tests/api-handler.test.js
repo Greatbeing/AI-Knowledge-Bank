@@ -93,6 +93,36 @@ describe('API request handler', () => {
     expect(payload).toMatchObject({ ok: false, error: 'not_found' });
   });
 
+  it('returns only the public Supabase browser configuration', async () => {
+    const { response, payload } = await invoke({
+      path: 'public-config',
+      method: 'GET',
+      env: configuredEnv()
+    });
+
+    expect(response.status).toBe(200);
+    expect(payload).toEqual({
+      ok: true,
+      supabase: {
+        url: 'https://project.supabase.co',
+        anonKey: 'anon-key'
+      }
+    });
+    expect(JSON.stringify(payload)).not.toContain('service-role-key');
+  });
+
+  it('reports unavailable browser auth without falling back to service-role credentials', async () => {
+    const { response, payload } = await invoke({
+      path: 'public-config',
+      method: 'GET',
+      env: configuredEnv({ SUPABASE_ANON_KEY: undefined })
+    });
+
+    expect(response.status).toBe(200);
+    expect(payload).toEqual({ ok: true, supabase: null });
+    expect(JSON.stringify(payload)).not.toContain('service-role-key');
+  });
+
   it('keeps node-less community signals in demo mode without calling Supabase', async () => {
     const fetchSpy = vi.fn();
     vi.stubGlobal('fetch', fetchSpy);

@@ -1,4 +1,5 @@
 import { buildCommunitySignalRequest, fetchApi } from '../lib/shared/api.js';
+import { loadSupabaseConfig, mergeSupabaseRuntimeEnv } from '../lib/supabase-config.ts';
 
 const pageType = document.body.dataset.page || 'knowledge';
 const vaultKeyByPage = {
@@ -805,7 +806,17 @@ async function submitCommunityValidation() {
 
   try {
     let accessToken = null;
+    const supabaseConfig = await loadSupabaseConfig(window.__ENV || {}, import.meta.env);
+    if (supabaseConfig) {
+      window.__ENV = mergeSupabaseRuntimeEnv(window.__ENV || {}, supabaseConfig);
+    }
+
     if (latestSource === 'supabase' && latestNodes[0]) {
+      if (!supabaseConfig) {
+        statusLine.textContent = dictionaries[currentLanguage].validationAuthRequired;
+        return;
+      }
+
       const { getCurrentUser } = await import('../lib/auth.ts');
       const session = await getCurrentUser();
       accessToken = session?.accessToken || null;

@@ -372,10 +372,10 @@
     </main>
 
     <script type="module">
-        import { resolveSupabaseConfig } from './lib/supabase-config.ts';
+        import { loadSupabaseConfig, mergeSupabaseRuntimeEnv } from './lib/supabase-config.ts';
         import { applyTranslations, getCurrentLang, setLanguage, t } from './lib/shared/i18n.js';
 
-        const supabaseConfig = resolveSupabaseConfig(window.__ENV__ || {}, import.meta.env);
+        let supabaseConfig = null;
         const currentLanguage = getCurrentLang();
         let supabase = null;
 
@@ -622,10 +622,13 @@
         };
 
         async function initializeDashboard() {
+            supabaseConfig = await loadSupabaseConfig(window.__ENV || {}, import.meta.env);
             if (!supabaseConfig) {
                 showAuthUnavailable();
                 return;
             }
+
+            window.__ENV = mergeSupabaseRuntimeEnv(window.__ENV || {}, supabaseConfig);
 
             try {
                 const { getSupabaseClient } = await import('./lib/auth.ts');

@@ -150,9 +150,9 @@ SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
-`VITE_*` keys are for browser-side auth flows. `SUPABASE_ANON_KEY` lets Pages Functions perform authenticated, user-scoped writes that respect RLS. `SUPABASE_SERVICE_ROLE_KEY` is reserved for trusted server-side reads and must never be exposed in client code.
+On Cloudflare Pages, browser auth loads the public URL and anon key at runtime from `GET /api/public-config`; `VITE_*` remains an optional build-time path for static-only hosts. `SUPABASE_ANON_KEY` lets Pages Functions perform authenticated, user-scoped writes that respect RLS. `SUPABASE_SERVICE_ROLE_KEY` is reserved for trusted server-side reads and is never returned by the public-config endpoint or bundled into client code.
 
-`VITE_*` 用于浏览器侧登录流程；`SUPABASE_URL` 和 `SUPABASE_SERVICE_ROLE_KEY` 用于 Cloudflare Pages Functions，不能写入前端代码。
+在 Cloudflare Pages 上，浏览器登录会通过 `GET /api/public-config` 在运行时读取公开 URL 和 anon key；`VITE_*` 仅作为纯静态托管的可选构建配置。`SUPABASE_ANON_KEY` 用于执行受 RLS 约束的用户写入；`SUPABASE_SERVICE_ROLE_KEY` 只用于服务端可信读取，不会由公开配置接口返回，也不会打包进前端。
 
 ## Backend API / 后端接口
 
@@ -163,6 +163,7 @@ Cloudflare Pages 通过 `functions/api/[[path]].js` 提供真实后端接口。G
 | Endpoint | Purpose |
 | --- | --- |
 | `GET /api/health` | Backend health, runtime, Supabase configuration state |
+| `GET /api/public-config` | Public browser auth configuration; never includes service-role credentials |
 | `GET /api/vaults` | Three-vault grouped node data and stats |
 | `GET /api/vaults/:id` | Single node detail endpoint |
 | `GET /api/search?q=&locale=&limit=` | Cross-Vault RAG search contract returning knowledge, tools, and cases |

@@ -114,6 +114,10 @@ export async function onRequest(context) {
       return jsonResponse(handleHealth(context.env), 200, {}, request);
     }
 
+    if (route === 'public-config' && request.method === 'GET') {
+      return jsonResponse(handlePublicConfig(context.env), 200, {}, request);
+    }
+
     if (route === 'vaults' && request.method === 'GET') {
       return jsonResponse(await handleVaults(request, context.env), 200, {}, request);
     }
@@ -168,8 +172,21 @@ function handleHealth(env) {
       configured: Boolean(supabase),
       hasServiceRole: Boolean(env.SUPABASE_SERVICE_ROLE_KEY)
     },
-    endpoints: ['/api/health', '/api/vaults', '/api/vaults/:id', '/api/search', '/api/community-signals', '/api/leaderboard'],
+    endpoints: ['/api/health', '/api/public-config', '/api/vaults', '/api/vaults/:id', '/api/search', '/api/community-signals', '/api/leaderboard'],
     generatedAt: new Date().toISOString()
+  };
+}
+
+function handlePublicConfig(env) {
+  const url = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
+  const anonKey = env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY;
+
+  return {
+    ok: true,
+    supabase: url && anonKey ? {
+      url: String(url).replace(/\/+$/, ''),
+      anonKey: String(anonKey)
+    } : null
   };
 }
 

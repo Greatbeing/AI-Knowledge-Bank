@@ -1,5 +1,9 @@
-import { describe, expect, it } from 'vitest';
-import { resolveSupabaseConfig } from '../lib/supabase-config';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  loadSupabaseConfig,
+  mergeSupabaseRuntimeEnv,
+  resolveSupabaseConfig
+} from '../lib/supabase-config';
 
 describe('resolveSupabaseConfig', () => {
   it('returns null when public Supabase configuration is missing', () => {
@@ -23,6 +27,44 @@ describe('resolveSupabaseConfig', () => {
     })).toEqual({
       url: 'https://build.supabase.co',
       anonKey: 'build-key'
+    });
+  });
+
+  it('loads public runtime configuration when static values are absent', async () => {
+    const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      ok: true,
+      supabase: {
+        url: 'https://runtime.supabase.co/',
+        anonKey: 'runtime-key'
+      }
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    }));
+
+    await expect(loadSupabaseConfig({}, {}, fetcher)).resolves.toEqual({
+      url: 'https://runtime.supabase.co',
+      anonKey: 'runtime-key'
+    });
+    expect(fetcher).toHaveBeenCalledWith('./api/public-config', {
+      headers: { Accept: 'application/json' }
+    });
+  });
+
+  it('keeps runtime configuration unavailable when the endpoint fails', async () => {
+    const fetcher = vi.fn().mockRejectedValue(new Error('network detail'));
+
+    await expect(loadSupabaseConfig({}, {}, fetcher)).resolves.toBeNull();
+  });
+
+  it('merges loaded public values into the runtime environment used by auth', () => {
+    expect(mergeSupabaseRuntimeEnv({ featureFlag: true }, {
+      url: 'https://runtime.supabase.co',
+      anonKey: 'runtime-key'
+    })).toEqual({
+      featureFlag: true,
+      SUPABASE_URL: 'https://runtime.supabase.co',
+      SUPABASE_ANON_KEY: 'runtime-key'
     });
   });
 });

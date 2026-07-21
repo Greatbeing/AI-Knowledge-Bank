@@ -84,12 +84,13 @@
      - `SUPABASE_URL`
      - `SUPABASE_ANON_KEY`
      - `SUPABASE_SERVICE_ROLE_KEY`
-     - `VITE_SUPABASE_URL` (如需浏览器侧登录)
-     - `VITE_SUPABASE_ANON_KEY` (如需浏览器侧登录)
    - `SUPABASE_SERVICE_ROLE_KEY` 只放在 Cloudflare 环境变量中，不要提交到仓库
+   - Cloudflare 浏览器登录会从 `/api/public-config` 读取 `SUPABASE_URL` 和 `SUPABASE_ANON_KEY`；该接口不会返回 service-role
+   - 只有部署到不支持 Pages Functions 的纯静态平台时，才需要在构建阶段提供 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`
 
 5. **验证接口**
    - 打开 `https://aiknowledgebank.pages.dev/api/health`
+   - 打开 `https://aiknowledgebank.pages.dev/api/public-config`，确认只包含公开 URL 和 anon key
    - 搜索接口示例：`https://aiknowledgebank.pages.dev/api/search?q=marketing&locale=zh`
    - 首页搜索面板会显示“后端已连接”或“演示数据模式”
 
@@ -140,6 +141,7 @@
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 SUPABASE_ANON_KEY=YOUR_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+# 仅纯静态构建需要以下两项：
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 ```
@@ -152,6 +154,7 @@ VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 ### 3. 测试完整流程
 - [ ] 打开部署链接
 - [ ] 打开 `/api/health` 检查后端状态
+- [ ] 打开 `/api/public-config`，确认未暴露 `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] 打开 `/api/search?q=marketing&locale=zh` 检查 Cross-Vault RAG 接口
 - [ ] 点击 "Sign In" 测试 OAuth 登录
 - [ ] 检查 Dashboard 是否显示用户信息

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Runtime public Supabase configuration endpoint for Cloudflare browser authentication without exposing service-role credentials
 - Pull request CI for text health, lint, tests, production build, and required-page verification
 - Production-path API handler tests and authenticated community signal contract coverage
 - Dashboard production build entry and explicit missing-auth-configuration state
@@ -19,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Enhanced .gitignore (OS files, .vite/, supabase local)
 
 ### Changed
+- Dashboard and community validation now load public Supabase configuration before importing browser auth
 - Community signals for real nodes now require a verified Supabase user session and execute under RLS
 - Demo community signals remain non-persisted and no longer attempt database writes
 - API helper tests import the production implementation instead of copied functions

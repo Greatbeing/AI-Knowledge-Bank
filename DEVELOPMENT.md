@@ -65,6 +65,7 @@ AI Knowledge Bank
 - Phase 3: added Cross-Vault Dispatch panels to all dedicated vault pages.
 - Phase 4: added text health verification and documented the guardrail.
 - Phase 5: restored the Dashboard build, secured authenticated community writes, and added production-path API and PR checks.
+- Phase 5.1: connected Cloudflare runtime public configuration to Dashboard and community authentication without exposing service-role credentials.
 
 ## Backlog
 
