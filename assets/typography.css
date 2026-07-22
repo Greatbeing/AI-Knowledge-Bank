@@ -3,40 +3,40 @@
   --font-sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   --copy-measure: 42rem;
-  --display-measure: 15ch;
+}
+
+*,
+*::before,
+*::after {
+  letter-spacing: 0;
 }
 
 html {
   font-family: var(--font-sans);
+  font-size: 16px;
   font-kerning: normal;
   text-size-adjust: 100%;
 }
 
 body {
   font-family: var(--font-sans);
+  font-size: 16px;
   font-weight: 400;
+  line-height: 1.7;
   font-synthesis: none;
 }
 
-:where(h1, h2, .hero-title, .section-title, .display-title) {
+:where(h1, .hero-title, .display-title) {
   font-family: var(--font-display);
+  font-weight: 700;
   font-synthesis: none;
   text-wrap: balance;
 }
 
-:where(h1, .hero-title, .display-title) {
-  font-weight: 700;
-  letter-spacing: -0.015em;
-}
-
-:where(h2, .section-title) {
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-:where(h3, h4) {
+:where(h2, h3, h4, .section-title, .panel-title, .dashboard-state-title) {
   font-family: var(--font-sans);
   font-weight: 600;
+  font-synthesis: none;
   text-wrap: balance;
 }
 
@@ -44,39 +44,81 @@ body {
   text-wrap: pretty;
 }
 
-:where(.font-mono, [class*="font-mono"], .metric strong, .numeric) {
+:where(.font-mono, [class*="font-mono"], .metric strong, .metric-value, .numeric, .kbd, .search-result-meta, .step::before) {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-:where(.font-extrabold, .font-black) {
-  font-weight: 600;
+:where(.font-medium) {
+  font-weight: 500;
 }
 
-:where(.font-bold) {
+:where(.font-semibold, .font-bold, .font-extrabold, .font-black) {
   font-weight: 600;
 }
 
 .copy-measure,
 .hero-copy,
-.section-copy {
+.home-hero-copy,
+.section-copy,
+.prose-copy {
   max-width: var(--copy-measure);
 }
 
-.hero-title {
-  max-width: var(--display-measure);
-  line-height: 1.12;
+.home-hero-intro .hero-title {
+  max-width: 11em;
+  margin: 0;
+  color: var(--ink);
+  background: none;
+  font-size: 56px;
+  line-height: 1.18;
 }
 
-.section-title {
-  line-height: 1.16;
+html[lang="en"] .home-hero-intro .hero-title {
+  max-width: 19ch;
 }
 
+.home-hero-intro .hero-title span {
+  color: inherit;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+.page-hero .hero-title {
+  max-width: 11em;
+  font-size: 52px;
+  line-height: 1.18;
+}
+
+html[lang="en"] .page-hero .hero-title {
+  max-width: 19ch;
+}
+
+.section-title,
+.section h2,
+.section-band h2 {
+  font-size: 40px;
+  line-height: 1.24;
+}
+
+.home-hero-panel h2,
+.dispatch-panel h2,
+.panel-title {
+  font-size: 24px;
+  line-height: 1.35;
+}
+
+.home-hero-copy,
 .hero-copy,
+.lead-copy {
+  font-size: 19px;
+  line-height: 1.75;
+}
+
 .section-copy,
 .prose-copy {
-  font-size: clamp(1rem, 0.94rem + 0.25vw, 1.125rem);
-  line-height: 1.85;
+  font-size: 16px;
+  line-height: 1.7;
 }
 
 .pill,
@@ -85,26 +127,13 @@ body {
 [class*="kicker"] {
   font-family: var(--font-sans);
   font-weight: 600;
-  letter-spacing: 0.04em;
   text-transform: none;
-}
-
-html[lang="en"] :where(h1, .hero-title, .display-title) {
-  letter-spacing: -0.035em;
-}
-
-html[lang="en"] :where(h2, .section-title) {
-  letter-spacing: -0.025em;
-}
-
-html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
-  letter-spacing: 0.08em;
 }
 
 .home-hero-shell {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
-  gap: clamp(2.5rem, 6vw, 6rem);
+  gap: 40px 64px;
   align-items: center;
   text-align: left;
 }
@@ -118,7 +147,7 @@ html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
 }
 
 .home-hero-intro .hero-mark {
-  margin: 0 0 1.25rem;
+  margin: 0 0 20px;
 }
 
 .home-hero-intro .pill {
@@ -126,47 +155,30 @@ html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
   margin-right: 0;
 }
 
-.home-hero-intro .hero-title {
-  margin: 0;
-  max-width: 12.5ch;
-  color: var(--ink);
-  background: none;
-  font-size: clamp(3rem, 5.25vw, 5.4rem);
-  line-height: 1.08;
-}
-
-.home-hero-intro .hero-title span {
-  color: inherit;
-  background: none;
-  -webkit-text-fill-color: currentColor;
-}
-
 .home-hero-copy {
-  max-width: 36rem;
-  margin: 1.75rem 0 0;
+  max-width: 40rem;
+  margin: 24px 0 0;
   color: #526070;
-  font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
-  line-height: 1.85;
 }
 
 .home-hero-panel {
-  padding: clamp(1.25rem, 2.5vw, 2rem);
+  padding: 28px;
 }
 
 .home-hero-panel .hero-quick {
   width: 100%;
-  margin: 1rem 0 0;
+  margin: 16px 0 0;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .hero-actions .btn {
-  min-height: 3rem;
+  min-height: 48px;
 }
 
 .hero-actions .btn-secondary {
@@ -178,32 +190,26 @@ html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-top: clamp(1rem, 3vw, 2.5rem);
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .home-metrics .metric {
-  padding: 1rem 1.125rem;
+  padding: 16px 18px;
 }
 
 .home-metrics .metric-value {
-  font-size: clamp(1.7rem, 2.6vw, 2.5rem);
+  font-size: 32px;
   font-weight: 600;
 }
 
 .editorial-statement {
-  max-width: 46rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 3rem);
+  max-width: 42rem;
+  font-family: var(--font-sans);
+  font-size: 40px;
   font-weight: 600;
   line-height: 1.32;
   text-wrap: balance;
-}
-
-.page-hero .hero-title {
-  max-width: 10.5ch;
-  font-size: clamp(2.75rem, 4.7vw, 4.6rem);
-  line-height: 1.16;
 }
 
 .page-hero .hero-copy {
@@ -211,27 +217,44 @@ html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
 }
 
 .dashboard-state-title {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 3vw, 2.75rem);
+  font-size: 24px;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.35;
 }
 
 .dashboard-state-copy {
   max-width: 34rem;
-  font-size: 1rem;
-  line-height: 1.75;
+  font-size: 16px;
+  line-height: 1.7;
 }
 
 .dashboard-language-toggle {
-  min-width: 2.75rem;
-  min-height: 2.5rem;
+  min-width: 44px;
+  min-height: 40px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 0.5rem;
+  border-radius: 8px;
   color: rgba(255, 255, 255, 0.82);
   background: rgba(255, 255, 255, 0.06);
   font-family: var(--font-sans);
   font-weight: 600;
+}
+
+@media (max-width: 1100px) and (min-width: 861px) {
+  .home-hero-shell {
+    grid-template-columns: minmax(0, 1.3fr) minmax(20rem, 0.7fr);
+  }
+
+  .home-hero-intro .hero-title {
+    font-size: 48px;
+  }
+
+  .home-hero-panel .hero-quick {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-hero-panel .hero-quick-run {
+    width: 100%;
+  }
 }
 
 @media (max-width: 860px) {
@@ -245,7 +268,7 @@ html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
     grid-column: 1 / -1;
     grid-row: 2;
     order: initial;
-    padding-top: 0.25rem;
+    padding-top: 4px;
   }
 
   .nav-actions {
@@ -255,31 +278,47 @@ html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
 
   .hero {
     min-height: auto;
-    padding-top: 11rem;
+    padding-top: 176px;
   }
 
   .home-hero-shell {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 28px;
   }
 
   .home-hero-intro .hero-title {
-    max-width: 13ch;
-    font-size: clamp(2.45rem, 10.5vw, 4rem);
-  }
-
-  .home-hero-panel {
-    padding: 1rem;
-  }
-
-  .home-metrics {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 0;
+    font-size: 48px;
   }
 
   .page-hero .hero-title {
-    max-width: 12ch;
-    font-size: clamp(2.35rem, 10vw, 3.5rem);
+    font-size: 44px;
+  }
+
+  .section-title,
+  .section h2,
+  .section-band h2 {
+    font-size: 34px;
+  }
+
+  .home-hero-panel h2,
+  .dispatch-panel h2,
+  .panel-title,
+  .dashboard-state-title {
+    font-size: 22px;
+  }
+
+  .home-hero-copy,
+  .hero-copy,
+  .lead-copy {
+    font-size: 18px;
+  }
+
+  .home-hero-panel {
+    padding: 20px;
+  }
+
+  .home-metrics {
+    margin-top: 0;
   }
 }
 
@@ -295,11 +334,11 @@ html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
   }
 
   .nav-inner {
-    row-gap: 0.5rem;
+    row-gap: 4px;
   }
 
   .nav-links {
-    gap: 0.25rem;
+    gap: 4px;
     scrollbar-width: none;
   }
 
@@ -307,27 +346,97 @@ html[lang="en"] :where(.pill, .panel-kicker, .card-label, [class*="kicker"]) {
     display: none;
   }
 
-  .nav .nav-link {
-    padding-inline: 0.5rem;
-  }
-
+  .nav .nav-link,
   .nav-link-main {
-    padding-inline: 0.5rem;
+    padding-inline: 8px;
   }
 
   .hero {
-    padding-top: 9.5rem;
+    padding: 118px 0 24px;
   }
 
-  .home-metrics {
-    grid-template-columns: 1fr;
+  .home-hero-shell {
+    gap: 16px;
+  }
+
+  .home-hero-intro .hero-mark {
+    display: none;
+  }
+
+  .home-hero-intro .pill {
+    margin-bottom: 10px;
+    padding-block: 5px;
+  }
+
+  .home-hero-intro .hero-title {
+    font-size: 38px;
+  }
+
+  .page-hero .hero-title {
+    font-size: 36px;
+  }
+
+  .section-title,
+  .section h2,
+  .section-band h2 {
+    font-size: 30px;
   }
 
   .home-hero-copy,
   .hero-copy,
-  .section-copy,
-  .prose-copy {
-    line-height: 1.75;
+  .lead-copy {
+    margin-top: 12px;
+    font-size: 17px;
+  }
+
+  .home-hero-panel {
+    padding: 14px;
+  }
+
+  .home-hero-panel :where(.mt-3) {
+    margin-top: 6px;
+  }
+
+  .home-hero-panel .hero-quick {
+    grid-template-columns: 1fr auto;
+    margin-top: 10px;
+  }
+
+  .home-hero-panel .hero-quick-input,
+  .home-hero-panel .hero-quick-run {
+    min-height: 44px;
+  }
+
+  .home-hero-panel .hero-quick-input {
+    min-width: 0;
+    padding-inline: 10px;
+  }
+
+  .home-hero-panel .hero-quick-run {
+    padding-inline: 12px;
+  }
+
+  .home-hero-panel .hero-quick-hint,
+  .home-hero-panel .hero-actions {
+    display: none;
+  }
+
+  .home-metrics,
+  .metric-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .metric-grid .metric {
+    min-height: 76px;
+    padding: 12px 8px;
+  }
+
+  .metric-grid .metric strong {
+    font-size: 24px;
+  }
+
+  .metric-grid .metric span {
+    margin-top: 6px;
   }
 
   .hero-actions {

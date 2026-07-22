@@ -20,6 +20,13 @@ const homepageSource = pageSources['index.html'];
 const dashboardSource = pageSources['dashboard.html'];
 const vaultPageSource = readSource('assets/vault-page.js');
 const sharedI18nSource = readSource('lib/shared/i18n.js');
+const typographySource = readSource('assets/typography.css');
+const typographyControlSources = {
+  'index.html': homepageSource,
+  'dashboard.html': dashboardSource,
+  'assets/vault-page.css': readSource('assets/vault-page.css'),
+  'assets/typography.css': typographySource
+};
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -27,9 +34,9 @@ function escapeRegExp(value) {
 
 function localeBlock(source, declaration, locale) {
   const declarationStart = source.indexOf(declaration);
-  const localeStart = source.indexOf(`  ${locale}: {`, declarationStart);
+  const localeStart = source.search(new RegExp(`^[ \\t]*${locale}: \\{`, 'm'));
   const localeEnd = locale === 'zh'
-    ? source.indexOf('\n  en: {', localeStart)
+    ? source.search(/^\s*en: \{/m)
     : localeStart + source.slice(localeStart).search(/\r?\n\s*};/);
 
   expect(declarationStart).toBeGreaterThanOrEqual(0);
@@ -60,23 +67,74 @@ describe('shared typography', () => {
     expect(source).toMatch(/fonts\.googleapis\.com\/css2\?[^"']*Noto(?:\+|%20)Serif(?:\+|%20)SC/i);
     expect(source).toMatch(/fonts\.googleapis\.com\/css2\?[^"']*Noto(?:\+|%20)Sans(?:\+|%20)SC/i);
   });
+
+  it('uses only the approved loaded weights and zero letter spacing', () => {
+    for (const [sourceName, source] of Object.entries(typographyControlSources)) {
+      const declaredWeights = [...source.matchAll(/font-weight\s*:\s*(\d+)/gi)].map((match) => Number(match[1]));
+      expect(declaredWeights, sourceName).toEqual(expect.arrayContaining([]));
+      expect(declaredWeights.every((weight) => [400, 500, 600, 700].includes(weight)), sourceName).toBe(true);
+      expect(source, sourceName).not.toMatch(/letter-spacing\s*:\s*-(?:\d|\.)/i);
+    }
+
+    for (const source of Object.values(pageSources)) {
+      expect(source).toMatch(/Noto\+Sans\+SC:wght@400;500;600;700/);
+      expect(source).toMatch(/Noto\+Serif\+SC:wght@600;700/);
+      expect(source).toMatch(/JetBrains\+Mono:wght@500;600/);
+    }
+  });
+
+  it('does not use viewport-relative font sizing', () => {
+    for (const [sourceName, source] of Object.entries(typographyControlSources)) {
+      expect(source, sourceName).not.toMatch(/font-size\s*:[^;}]*(?:vw|cqw)/i);
+    }
+  });
+
+  it('defines the fixed responsive hierarchy at the shared breakpoints', () => {
+    expect(typographySource).toMatch(/\.home-hero-intro \.hero-title\s*{[^}]*font-size:\s*56px;[^}]*line-height:\s*1\.18/s);
+    expect(typographySource).toMatch(/\.page-hero \.hero-title\s*{[^}]*font-size:\s*52px;[^}]*line-height:\s*1\.18/s);
+    expect(typographySource).toMatch(/\.section-title,[\s\S]*?font-size:\s*40px;[\s\S]*?line-height:\s*1\.24/s);
+    expect(typographySource).toMatch(/\.hero-copy,[\s\S]*font-size:\s*19px;[\s\S]*line-height:\s*1\.75/);
+    expect(typographySource).toMatch(/\.dashboard-state-title\s*{[^}]*font-size:\s*24px;[^}]*line-height:\s*1\.35/s);
+    expect(typographySource).toMatch(/@media \(max-width:\s*1100px\) and \(min-width:\s*861px\)[\s\S]*\.home-hero-intro \.hero-title\s*{[^}]*font-size:\s*48px/s);
+    expect(typographySource).toMatch(/@media \(max-width:\s*1100px\) and \(min-width:\s*861px\)[\s\S]*\.home-hero-panel \.hero-quick\s*{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
+    expect(typographySource).toMatch(/@media \(max-width:\s*860px\)[\s\S]*\.home-hero-intro \.hero-title\s*{[^}]*font-size:\s*48px/s);
+    expect(typographySource).toMatch(/@media \(max-width:\s*860px\)[\s\S]*\.page-hero \.hero-title\s*{[^}]*font-size:\s*44px/s);
+    expect(typographySource).toMatch(/@media \(max-width:\s*860px\)[\s\S]*\.dashboard-state-title\s*{[^}]*font-size:\s*22px/s);
+    expect(typographySource).toMatch(/@media \(max-width:\s*560px\)[\s\S]*\.home-hero-intro \.hero-title\s*{[^}]*font-size:\s*38px/s);
+    expect(typographySource).toMatch(/@media \(max-width:\s*560px\)[\s\S]*\.page-hero \.hero-title\s*{[^}]*font-size:\s*36px/s);
+    expect(typographySource).toMatch(/@media \(max-width:\s*560px\)[\s\S]*\.metric-grid\s*{[^}]*grid-template-columns:\s*repeat\(3,/s);
+  });
 });
 
 describe('approved bilingual content', () => {
   it('uses the public-knowledge homepage promise and supporting copy', () => {
-    expect(homepageSource).toContain('把分散的 AI 实践，变成可验证、可复用、持续演化的公共知识。');
-    expect(homepageSource).toContain('在知识框架、执行工具和真实案例之间找到可用方法；也把你的实践结果带回来，帮助下一版本更可靠。');
-    expect(homepageSource).toContain('Turn scattered AI practice into public knowledge that can be tested, reused, and improved.');
-    expect(homepageSource).toContain('Find useful methods across knowledge frames, executable tools, and real cases—and bring your results back so the next version is more reliable.');
+    const chineseHomepage = localeBlock(homepageSource, 'const translations = {', 'zh');
+    const englishHomepage = localeBlock(homepageSource, 'const translations = {', 'en');
+    const approvedCopy = [
+      ['eyebrow', '经真实使用不断验证的 AI 方法', 'AI methods improved through real use'],
+      ['heroTitle', '让有效的 AI 实践，成为可验证、可复用的公共知识。', 'Turn effective AI practice into reusable public knowledge.'],
+      ['heroCopy', '从知识框架、执行路径和真实案例中找到答案；用过之后，把结果带回来，让下一版本更可靠。', 'Find the reasoning, workflow, and evidence behind a method. After using it, bring back the result so the next version is more reliable.'],
+      ['heroQuickTitle', '先找方法，再选工具', 'Start with the method, not the tool.'],
+      ['heroQuickCopy', '描述目标，查看为什么有效、如何执行、在哪些场景验证过。', 'Describe your goal to see why it works, how to run it, and where it has been tested.'],
+      ['primaryCta', '开始查找方法', 'Find a method'],
+      ['secondaryCta', '提交使用结果', 'Submit a result'],
+      ['finalCtaTitle', '找到一个方法，带回一次真实结果。', 'Use one method. Bring back one real result.']
+    ];
+
+    for (const [key, chinese, english] of approvedCopy) {
+      expectKeyValue(chineseHomepage, key, chinese);
+      expectKeyValue(englishHomepage, key, english);
+      expect(homepageSource).toContain(`data-i18n="${key}"`);
+    }
   });
 
   it('renders equal entry points for finding and contributing evidence', () => {
-    expectLinkedI18nCopy(homepageSource, 'primaryCta', '查找已验证的方法');
-    expectLinkedI18nCopy(homepageSource, 'secondaryCta', '贡献一次真实验证');
+    expectLinkedI18nCopy(homepageSource, 'primaryCta', '开始查找方法');
+    expectLinkedI18nCopy(homepageSource, 'secondaryCta', '提交使用结果');
 
     const englishHomepage = localeBlock(homepageSource, 'const translations = {', 'en');
-    expectKeyValue(englishHomepage, 'primaryCta', 'Find verified methods');
-    expectKeyValue(englishHomepage, 'secondaryCta', 'Contribute real validation');
+    expectKeyValue(englishHomepage, 'primaryCta', 'Find a method');
+    expectKeyValue(englishHomepage, 'secondaryCta', 'Submit a result');
   });
 
   it('maps each vault promise to the correct page and locale', () => {
@@ -86,7 +144,7 @@ describe('approved bilingual content', () => {
       ['pageTitleKnowledge', '先理解为什么，再决定用什么。', 'Understand why before choosing what to use.'],
       ['pageTitleTools', '把有效方法，变成可以重复执行的路径。', 'Turn effective methods into repeatable execution paths.'],
       ['pageTitleCases', '用真实结果，判断一种方法能否迁移。', 'Use real outcomes to decide whether a method can transfer.'],
-      ['pageTitleCommunity', '知识的可信度，来自一次次真实使用。', 'Knowledge earns trust through repeated real-world use.']
+      ['pageTitleCommunity', '知识因真实使用而可信。', 'Knowledge earns trust through real use.']
     ];
 
     for (const [key, chinese, english] of pagePromises) {
@@ -161,8 +219,8 @@ describe('Dashboard bilingual authentication', () => {
     const chineseDashboardCopy = localeBlock(sharedI18nSource, 'export const translations = {', 'zh');
     const englishDashboardCopy = localeBlock(sharedI18nSource, 'export const translations = {', 'en');
     const approvedAuthCopy = [
-      ['dashboard.authRequired.title', '登录后，继续你的贡献记录', 'Sign in to continue your contribution history'],
-      ['dashboard.authRequired.copy', '使用 GitHub 登录，验证真实节点并查看信誉、徽章和通知。', 'Sign in with GitHub to validate real nodes and review your reputation, badges, and notifications.'],
+      ['dashboard.authRequired.title', '登录后继续验证与贡献', 'Sign in to keep validating and contributing.'],
+      ['dashboard.authRequired.copy', '使用 GitHub 登录，提交使用结果并查看信誉、徽章和通知。', 'Sign in with GitHub to submit results and review your reputation, badges, and notifications.'],
       ['dashboard.authUnavailable.title', '此部署未启用用户登录', 'Sign-in is unavailable on this deployment']
     ];
 

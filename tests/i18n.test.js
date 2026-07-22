@@ -38,11 +38,11 @@ describe('shared language preference', () => {
 
   it('defines Dashboard auth states in both locales', () => {
     expect(translations.zh).toMatchObject({
-      'dashboard.authRequired.title': '登录后，继续你的贡献记录',
+      'dashboard.authRequired.title': '登录后继续验证与贡献',
       'dashboard.authUnavailable.title': '此部署未启用用户登录'
     });
     expect(translations.en).toMatchObject({
-      'dashboard.authRequired.title': 'Sign in to continue your contribution history',
+      'dashboard.authRequired.title': 'Sign in to keep validating and contributing.',
       'dashboard.authUnavailable.title': 'Sign-in is unavailable on this deployment'
     });
   });

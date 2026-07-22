@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Knowledge Bank｜可验证、可复用的 AI 公共知识库</title>
-  <meta name="description" content="汇集知识框架、执行工具与真实案例，通过社区验证，让 AI 实践成为可复用、持续演化的公共知识。" />
+  <title>AI Knowledge Bank｜可验证、可复用的 AI 方法</title>
+  <meta name="description" content="从解释、路径和证据中查找可复用的 AI 方法，并提交真实使用结果。" />
   <link rel="canonical" href="https://aiknowledgebank.pages.dev/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="AI Knowledge Bank | Public Knowledge Bank for AI" />
@@ -74,7 +74,6 @@
       margin: 0;
       min-height: 100vh;
       color: var(--ink);
-      font-family: Inter, "Noto Sans SC", system-ui, sans-serif;
       background:
         linear-gradient(115deg, rgba(15, 159, 142, 0.12), transparent 32%),
         linear-gradient(245deg, rgba(217, 106, 67, 0.1), transparent 34%),
@@ -244,7 +243,7 @@
       background: rgba(255, 255, 255, 0.24);
       border: 1px solid rgba(255, 255, 255, 0.34);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      font-weight: 800;
+      font-weight: 700;
       transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
     }
 
@@ -260,7 +259,6 @@
       color: #334155;
       background: rgba(255, 255, 255, 0.72);
       box-shadow: inset 0 -1px 0 rgba(17, 24, 39, 0.12);
-      font-family: "JetBrains Mono", monospace;
       font-size: 12px;
       line-height: 1;
     }
@@ -276,7 +274,7 @@
       color: white;
       background: linear-gradient(135deg, #2388dc, #2f94e7);
       box-shadow: 0 16px 34px rgba(37, 99, 235, 0.22);
-      font-weight: 800;
+      font-weight: 700;
       transition: transform 180ms ease, box-shadow 180ms ease;
     }
 
@@ -296,7 +294,7 @@
       color: rgba(255, 255, 255, 0.82);
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.14);
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .search-overlay {
@@ -334,7 +332,7 @@
       color: var(--ink);
       background: rgba(241, 245, 249, 0.95);
       font: inherit;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .search-result {
@@ -363,7 +361,6 @@
       gap: 8px;
       margin-top: 10px;
       font-size: 11px;
-      font-family: "JetBrains Mono", monospace;
       font-weight: 700;
       color: rgba(71, 85, 105, 0.78);
       text-transform: uppercase;
@@ -387,7 +384,7 @@
       color: rgba(71, 85, 105, 0.86);
       background: rgba(241, 245, 249, 0.86);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .api-status::before {
@@ -476,9 +473,8 @@
     .hero-title {
       display: grid;
       gap: 10px;
-      font-size: clamp(3.25rem, 6.2vw, 5.7rem);
       line-height: 0.98;
-      font-weight: 800;
+      font-weight: 700;
       max-width: 1180px;
       margin: 0 auto;
       text-wrap: balance;
@@ -499,13 +495,11 @@
     }
 
     .hero-title .hero-title-accent {
-      font-size: clamp(2.55rem, 4.55vw, 4.2rem);
       line-height: 0.98;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     html[lang="en"] .hero-title .hero-title-accent {
-      font-size: clamp(2.25rem, 3.9vw, 3.45rem);
     }
 
     .hero-quick {
@@ -527,7 +521,7 @@
       color: var(--ink);
       background: rgba(255, 255, 255, 0.72);
       font: inherit;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .hero-quick-input:focus {
@@ -542,7 +536,7 @@
       color: white;
       background: linear-gradient(135deg, var(--ink), var(--jade-dark));
       box-shadow: 0 16px 34px rgba(15, 159, 142, 0.18);
-      font-weight: 900;
+      font-weight: 700;
       white-space: nowrap;
       transition: transform 180ms ease, box-shadow 180ms ease;
     }
@@ -556,7 +550,7 @@
       margin-top: 10px;
       color: rgba(71, 85, 105, 0.7);
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .method-workbench {
@@ -662,7 +656,7 @@
       background: rgba(255, 255, 255, 0.6);
       text-align: left;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 700;
       transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
     }
 
@@ -678,7 +672,7 @@
       min-height: 24px;
       color: rgba(17, 24, 39, 0.58);
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 700;
       transition: color 220ms ease, text-shadow 220ms ease;
     }
 
@@ -728,7 +722,7 @@
       background: linear-gradient(135deg, #fff7d1, #f1d16b);
       box-shadow: 0 14px 30px rgba(214, 164, 48, 0.18);
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 700;
       white-space: nowrap;
       transition: transform 180ms ease, box-shadow 180ms ease;
     }
@@ -828,7 +822,7 @@
       color: rgba(255, 255, 255, 0.8);
       background: rgba(255, 255, 255, 0.08);
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 700;
       transition: transform 180ms ease, background 180ms ease, color 180ms ease;
     }
 
@@ -844,7 +838,7 @@
       gap: 7px;
       color: rgba(255, 255, 255, 0.62);
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 700;
     }
 
     .method-trust::before {
@@ -976,7 +970,7 @@
       padding: 8px 10px;
       color: rgba(17, 24, 39, 0.62);
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 700;
       text-align: center;
     }
 
@@ -991,7 +985,7 @@
       background: rgba(255, 255, 255, 0.66);
       border: 1px solid rgba(17, 24, 39, 0.08);
       font-size: 13px;
-      font-weight: 900;
+      font-weight: 700;
       text-decoration: none;
       transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
     }
@@ -1168,7 +1162,7 @@
       background: rgba(255, 255, 255, 0.62);
       padding: 6px 10px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
       color: rgba(17, 24, 39, 0.62);
     }
 
@@ -1237,7 +1231,7 @@
       background: rgba(255, 255, 255, 0.58);
       padding: 5px 9px;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
       color: rgba(17, 24, 39, 0.58);
     }
 
@@ -1247,7 +1241,7 @@
       gap: 7px;
       color: rgba(17, 24, 39, 0.64);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .live-vault-score::before {
@@ -1321,7 +1315,7 @@
       border: 1px solid rgba(17, 24, 39, 0.08);
       background: rgba(255, 255, 255, 0.62);
       color: rgba(17, 24, 39, 0.7);
-      font-weight: 800;
+      font-weight: 700;
       transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
     }
 
@@ -1339,7 +1333,7 @@
       background: rgba(255, 255, 255, 0.08);
       padding: 8px 12px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
       color: rgba(255, 255, 255, 0.72);
     }
 
@@ -1500,9 +1494,8 @@
       position: absolute;
       right: 18px;
       top: 12px;
-      font-family: "JetBrains Mono", monospace;
       font-size: 42px;
-      font-weight: 800;
+      font-weight: 700;
       color: rgba(17, 24, 39, 0.07);
     }
 
@@ -1754,15 +1747,12 @@
 
       .hero-title {
         gap: 8px;
-        font-size: clamp(2.1rem, 9vw, 3.3rem);
       }
 
       .hero-title .hero-title-accent {
-        font-size: clamp(1.65rem, 7.2vw, 3.3rem);
       }
 
       html[lang="en"] .hero-title .hero-title-accent {
-        font-size: clamp(1.35rem, 5.8vw, 2.7rem);
       }
 
       .section {
@@ -1900,8 +1890,8 @@
           <summary class="more-summary"><span data-i18n="navMore">更多</span></summary>
           <div class="more-panel text-sm font-semibold">
             <a href="#method-finder" data-i18n="moreMethod">找可用方法</a>
-            <a href="#live-vaults" data-i18n="moreVaults">查看真实节点</a>
-            <a href="#dispatch" data-i18n="moreDispatch">运行跨库调度</a>
+            <a href="#live-vaults" data-i18n="moreVaults">查看真实条目</a>
+            <a href="#dispatch" data-i18n="moreDispatch">开始跨库查找</a>
             <a href="#demo" data-i18n="moreValidation">验证演示</a>
             <a href="dashboard.html" data-i18n="moreDashboard">控制台</a>
             <a href="https://github.com/Greatbeing/AI-Knowledge-Bank" target="_blank" rel="noreferrer" data-i18n="moreGithub">GitHub 仓库</a>
@@ -1949,20 +1939,20 @@
           <img class="hero-mark reveal" src="./assets/brand/akb-love-logo.svg" alt="AI Knowledge Bank logo" />
           <div class="pill mb-7 inline-flex items-center gap-3 px-4 py-2 text-sm text-slate-700 reveal">
             <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
-            <span data-i18n="eyebrow">验证过的方法，继续共同验证</span>
+            <span data-i18n="eyebrow">经真实使用不断验证的 AI 方法</span>
           </div>
 
-          <h1 class="hero-title reveal" data-i18n="heroTitle">把分散的 AI 实践，变成可验证、可复用、持续演化的公共知识。</h1>
+          <h1 class="hero-title reveal" data-i18n="heroTitle">让有效的 AI 实践，成为可验证、可复用的公共知识。</h1>
 
           <p class="home-hero-copy reveal" data-i18n="heroCopy">
-            在知识框架、执行工具和真实案例之间找到可用方法；也把你的实践结果带回来，帮助下一版本更可靠。
+            从知识框架、执行路径和真实案例中找到答案；用过之后，把结果带回来，让下一版本更可靠。
           </p>
         </div>
 
         <aside class="home-hero-panel liquid reveal" aria-labelledby="hero-quick-title">
           <div class="panel-kicker text-xs text-emerald-800" data-i18n="heroQuickKicker">从一个真实问题开始</div>
-          <h2 id="hero-quick-title" class="mt-3 text-2xl text-slate-950" data-i18n="heroQuickTitle">先找到方法，再决定是否采用</h2>
-          <p class="mt-3 text-sm leading-7 text-slate-600" data-i18n="heroQuickCopy">输入你的目标，预览知识解释、执行路径和案例证据。</p>
+          <h2 id="hero-quick-title" class="mt-3 text-2xl text-slate-950" data-i18n="heroQuickTitle">先找方法，再选工具</h2>
+          <p class="mt-3 text-sm leading-7 text-slate-600" data-i18n="heroQuickCopy">描述目标，查看为什么有效、如何执行、在哪些场景验证过。</p>
 
           <div class="hero-quick" role="search" aria-label="Fast AI method finder">
             <label class="sr-only" for="hero-problem" data-i18n="heroQuickLabel">你想用 AI 解决什么问题？</label>
@@ -1972,23 +1962,23 @@
           <div class="hero-quick-hint" data-i18n="heroQuickHint">系统会同时回答：为什么有效、如何执行、哪里验证过。</div>
 
           <div class="hero-actions">
-            <a class="btn btn-primary px-5" href="#method-finder" data-i18n="primaryCta">查找已验证的方法</a>
-            <a class="btn btn-secondary px-5" href="./community.html" data-i18n="secondaryCta">贡献一次真实验证</a>
+            <a class="btn btn-primary px-5" href="#method-finder" data-i18n="primaryCta">开始查找方法</a>
+            <a class="btn btn-secondary px-5" href="./community.html" data-i18n="secondaryCta">提交使用结果</a>
           </div>
         </aside>
 
         <div class="home-metrics reveal" aria-label="Live vault statistics">
           <div class="metric liquid text-left">
             <div id="metric-nodes-value" class="metric-value text-slate-950">—</div>
-            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricNodes">知识节点</div>
+            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricNodes">知识条目</div>
           </div>
           <div class="metric liquid text-left">
             <div id="metric-routes-value" class="metric-value text-slate-950">—</div>
-            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricForks">工具节点</div>
+            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricForks">工具方法</div>
           </div>
           <div class="metric liquid text-left">
             <div id="metric-signals-value" class="metric-value text-slate-950">—</div>
-            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricValidations">案例节点</div>
+            <div class="mt-2 text-sm font-semibold text-slate-500" data-i18n="metricValidations">案例条目</div>
           </div>
         </div>
       </div>
@@ -2176,7 +2166,7 @@
             <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="cocreateTitle">公共知识不是被发布出来的，而是在使用中被验证出来的。</h2>
           </div>
           <p class="reveal text-lg leading-8 text-slate-600" data-i18n="cocreateCopy">
-            一条经验先被结构化，再由不同场景复用、质疑和改进。只有证据持续累积，它才会进入公共主干。
+            一条经验先被结构化，再由不同场景复用、质疑和改进。只有证据持续累积，它才会形成共同标准。
           </p>
         </div>
 
@@ -2219,10 +2209,10 @@
         <div class="grid items-end gap-6 lg:grid-cols-[0.82fr_1.18fr]">
           <div class="reveal">
             <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="liveVaultsKicker">LIVE VAULTS</div>
-            <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="liveVaultsTitle">先看真实节点，再决定是否采用。</h2>
+            <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="liveVaultsTitle">先看真实条目，再决定是否采用。</h2>
           </div>
           <p class="reveal text-lg leading-8 text-slate-600" data-i18n="liveVaultsCopy">
-            这里直接读取已发布的知识、工具和案例节点，并保留来源、可信度与适用场景。
+            这里直接读取已发布的知识、工具和案例条目，并保留来源、可信度与适用场景。
           </p>
         </div>
 
@@ -2238,7 +2228,7 @@
           <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="dispatchKicker">CROSS-VAULT RAG</div>
           <h2 class="text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="dispatchTitle">一次查询，同时得到解释、路径和证据。</h2>
           <p class="mt-6 text-lg leading-8 text-slate-600" data-i18n="dispatchCopy">
-            调度引擎不只匹配关键词。它会跨三库取回判断框架、执行步骤和真实案例，再组合成一条可核对的建议。
+            跨库查找不只匹配关键词。它会取回判断框架、执行步骤和真实案例，再组合成一条可核对的建议。
           </p>
           <div class="mt-8 grid gap-3">
             <button class="scenario-btn is-active px-4 text-left" type="button" data-scenario="marketing" data-i18n="scenarioMarketing">跨境营销团队要用 AI 重做本地化 SOP</button>
@@ -2254,7 +2244,7 @@
                 <div class="font-mono text-xs font-bold uppercase text-emerald-300" data-i18n="dispatchConsoleLabel">AI Dispatch Console</div>
                 <h3 id="dispatch-query" class="mt-2 text-2xl font-extrabold">跨境营销团队要用 AI 重做本地化 SOP</h3>
               </div>
-              <button id="dispatch-run" class="btn bg-white px-4 text-sm text-slate-950 hover:bg-amber-50" type="button" data-i18n="dispatchRun">运行调度</button>
+              <button id="dispatch-run" class="btn bg-white px-4 text-sm text-slate-950 hover:bg-amber-50" type="button" data-i18n="dispatchRun">开始查找</button>
             </div>
 
             <div class="mt-5 flex flex-wrap gap-2">
@@ -2307,8 +2297,8 @@
       <div class="shell">
         <div class="mx-auto max-w-3xl text-center reveal">
           <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="evolutionKicker">COMMUNITY EVOLUTION</div>
-          <h2 class="text-4xl text-slate-950 sm:text-5xl" data-i18n="evolutionTitle">好方法不靠热度上位，而靠证据进入主干。</h2>
-          <p class="mt-5 text-lg leading-8 text-slate-600" data-i18n="evolutionCopy">真实使用、验证、分叉、合并、争议和衰减共同决定一个节点是否值得继续被推荐。</p>
+          <h2 class="text-4xl text-slate-950 sm:text-5xl" data-i18n="evolutionTitle">好方法不靠热度上位，而靠证据形成共同标准。</h2>
+          <p class="mt-5 text-lg leading-8 text-slate-600" data-i18n="evolutionCopy">真实使用、验证、分叉、合并、争议和衰减共同决定一个方法是否值得继续被推荐。</p>
         </div>
 
         <div class="evolution-loop mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -2333,7 +2323,7 @@
           <article class="signal-card card card-hover reveal">
             <div class="font-mono text-xs font-bold text-orange-700">DECAY</div>
             <h3 class="mt-4 text-lg font-extrabold text-slate-950" data-i18n="signalDecayTitle">衰减校准</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="signalDecayCopy">过时实践会自然降权，避免旧经验占据主干。</p>
+            <p class="mt-3 text-sm leading-6 text-slate-600" data-i18n="signalDecayCopy">过时实践会自然降权，避免旧经验占据推荐位。</p>
             <div class="signal-track mt-5"><div class="signal-fill" style="width: 63%"></div></div>
           </article>
           <article class="signal-card card card-hover is-gold reveal">
@@ -2419,13 +2409,13 @@
       <div class="shell">
         <div class="cta-panel reveal">
           <div class="pill mb-5 inline-flex px-3 py-1.5 text-xs font-bold text-slate-600" data-i18n="finalCtaKicker">JOIN THE BANK</div>
-          <h2 class="mx-auto max-w-4xl text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="finalCtaTitle">使用一个节点，也贡献一次验证。</h2>
+          <h2 class="mx-auto max-w-4xl text-4xl leading-tight text-slate-950 sm:text-5xl" data-i18n="finalCtaTitle">找到一个方法，带回一次真实结果。</h2>
           <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600" data-i18n="finalCtaCopy">
             你可以直接从被验证的方法开始，也可以把真实使用结果带回来，让下一位使用者少走一步弯路。
           </p>
           <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a class="btn btn-primary w-full px-6 sm:w-auto" href="#method-finder" data-i18n="finalCtaPrimary">查找已验证的方法</a>
-            <a class="btn btn-secondary w-full px-6 sm:w-auto" href="./community.html" data-i18n="finalCtaSecondary">贡献一次真实验证</a>
+            <a class="btn btn-primary w-full px-6 sm:w-auto" href="#method-finder" data-i18n="finalCtaPrimary">开始查找方法</a>
+            <a class="btn btn-secondary w-full px-6 sm:w-auto" href="./community.html" data-i18n="finalCtaSecondary">提交使用结果</a>
           </div>
         </div>
       </div>
@@ -2452,8 +2442,8 @@
   <script>
     const translations = {
       zh: {
-        pageTitle: 'AI Knowledge Bank｜可验证、可复用的 AI 公共知识库',
-        pageDescription: '汇集知识框架、执行工具与真实案例，通过社区验证，让 AI 实践成为可复用、持续演化的公共知识。',
+        pageTitle: 'AI Knowledge Bank｜可验证、可复用的 AI 方法',
+        pageDescription: '从解释、路径和证据中查找可复用的 AI 方法，并提交真实使用结果。',
         navKnowledge: '知识库',
         navTools: '工具库',
         navCases: '案例库',
@@ -2480,27 +2470,27 @@
         searchCommunityTitle: '社区',
         searchCommunityCopy: '验证、分叉、合并和演化信号',
         moreMethod: '找可用方法',
-        moreVaults: '查看真实节点',
-        moreDispatch: '运行跨库调度',
+        moreVaults: '查看真实条目',
+        moreDispatch: '开始跨库查找',
         moreValidation: '验证演示',
         moreDashboard: '控制台',
         moreGithub: 'GitHub 仓库',
         dashboard: '控制台',
-        eyebrow: '验证过的方法，继续共同验证',
-        heroTitle: '把分散的 AI 实践，变成可验证、可复用、持续演化的公共知识。',
-        heroCopy: '在知识框架、执行工具和真实案例之间找到可用方法；也把你的实践结果带回来，帮助下一版本更可靠。',
+        eyebrow: '经真实使用不断验证的 AI 方法',
+        heroTitle: '让有效的 AI 实践，成为可验证、可复用的公共知识。',
+        heroCopy: '从知识框架、执行路径和真实案例中找到答案；用过之后，把结果带回来，让下一版本更可靠。',
         heroQuickKicker: '从一个真实问题开始',
-        heroQuickTitle: '先找到方法，再决定是否采用',
-        heroQuickCopy: '输入你的目标，预览知识解释、执行路径和案例证据。',
+        heroQuickTitle: '先找方法，再选工具',
+        heroQuickCopy: '描述目标，查看为什么有效、如何执行、在哪些场景验证过。',
         heroQuickLabel: '你想用 AI 解决什么问题？',
         heroQuickPlaceholder: '例如：用 AI 提高客服回复效率',
         heroQuickRun: '预览三层方法',
         heroQuickHint: '系统会同时回答：为什么有效、如何执行、哪里验证过。',
-        primaryCta: '查找已验证的方法',
-        secondaryCta: '贡献一次真实验证',
-        metricNodes: '知识节点',
-        metricForks: '工具节点',
-        metricValidations: '案例节点',
+        primaryCta: '开始查找方法',
+        secondaryCta: '提交使用结果',
+        metricNodes: '知识条目',
+        metricForks: '工具方法',
+        metricValidations: '案例条目',
         methodKicker: '方法预览',
         methodTitle: '从一个问题，看到方法的完整结构。',
         methodCopy: '这是一个引导式预览：知识层解释为什么，工具层给出执行路径，案例层说明它曾在哪些条件下有效。',
@@ -2563,7 +2553,7 @@
         vaultExploreCases: '进入案例库',
         cocreateKicker: 'CO-CREATION LOOP',
         cocreateTitle: '公共知识不是被发布出来的，而是在使用中被验证出来的。',
-        cocreateCopy: '一条经验先被结构化，再由不同场景复用、质疑和改进。只有证据持续累积，它才会进入公共主干。',
+        cocreateCopy: '一条经验先被结构化，再由不同场景复用、质疑和改进。只有证据持续累积，它才会形成共同标准。',
         flowContributeTitle: '贡献实践',
         flowContributeCopy: '提交真实问题、过程、工具和结果。',
         flowStructureTitle: '结构化入库',
@@ -2576,23 +2566,23 @@
         flowMergeCopy: '被反复验证的分支回流为新的公共标准。',
         cocreateCta: '进入社区共创',
         liveVaultsKicker: 'LIVE VAULTS',
-        liveVaultsTitle: '先看真实节点，再决定是否采用。',
-        liveVaultsCopy: '这里直接读取已发布的知识、工具和案例节点，并保留来源、可信度与适用场景。',
+        liveVaultsTitle: '先看真实条目，再决定是否采用。',
+        liveVaultsCopy: '这里直接读取已发布的知识、工具和案例条目，并保留来源、可信度与适用场景。',
         liveVaultsLoading: '正在读取实时三库内容...',
-        liveVaultsEmpty: '暂时没有可展示的实时节点',
+        liveVaultsEmpty: '暂时没有可展示的实时条目',
         liveVaultsSource: '实时数据',
         liveVaultsTrust: '可信度',
         liveVaultsKnowledge: '知识库',
         liveVaultsTool: '工具库',
         liveVaultsCase: '案例库',
-        dispatchKicker: 'CROSS-VAULT RAG',
+        dispatchKicker: '跨库查找',
         dispatchTitle: '一次查询，同时得到解释、路径和证据。',
-        dispatchCopy: '调度引擎不只匹配关键词。它会跨三库取回判断框架、执行步骤和真实案例，再组合成一条可核对的建议。',
+        dispatchCopy: '跨库查找不只匹配关键词。它会取回判断框架、执行步骤和真实案例，再组合成一条可核对的建议。',
         scenarioMarketing: '跨境营销团队要用 AI 重做本地化 SOP',
         scenarioEducation: '培训机构要为老师建立 AI 助教工作流',
         scenarioSupport: '客服团队要把高频问题变成自动化案例库',
         dispatchConsoleLabel: 'AI Dispatch Console',
-        dispatchRun: '运行调度',
+        dispatchRun: '开始查找',
         routeKnowledge: 'Knowledge Vault',
         routeTool: 'Tools Vault',
         routeCase: 'Cases Vault',
@@ -2604,8 +2594,8 @@
         dispatchRunning: '正在跨三库检索与重排...',
         dispatchComplete: '调度完成：已组合知识、工具和案例证据',
         evolutionKicker: 'COMMUNITY EVOLUTION',
-        evolutionTitle: '好方法不靠热度上位，而靠证据进入主干。',
-        evolutionCopy: '真实使用、验证、分叉、合并、争议和衰减共同决定一个节点是否值得继续被推荐。',
+        evolutionTitle: '好方法不靠热度上位，而靠证据形成共同标准。',
+        evolutionCopy: '真实使用、验证、分叉、合并、争议和衰减共同决定一个方法是否值得继续被推荐。',
         signalValidateTitle: '真实验证',
         signalValidateCopy: '把结果、场景和置信度变成可追踪证据。',
         signalForkTitle: '场景分叉',
@@ -2613,7 +2603,7 @@
         signalReputationTitle: '信誉加权',
         signalReputationCopy: '高质量贡献者的验证会获得更高权重。',
         signalDecayTitle: '衰减校准',
-        signalDecayCopy: '过时实践会自然降权，避免旧经验占据主干。',
+        signalDecayCopy: '过时实践会自然降权，避免旧经验占据推荐位。',
         signalMergeTitle: '涌现合并',
         signalMergeCopy: '当分支超过阈值，它会成为新的公共标准。',
         demoKicker: 'LIVE SIMULATION',
@@ -2641,10 +2631,10 @@
         branchMergedCopy: '社区验证通过',
         branchStateMerged: 'merged',
         finalCtaKicker: 'JOIN THE BANK',
-        finalCtaTitle: '使用一个节点，也贡献一次验证。',
+        finalCtaTitle: '找到一个方法，带回一次真实结果。',
         finalCtaCopy: '你可以直接从被验证的方法开始，也可以把真实使用结果带回来，让下一位使用者少走一步弯路。',
-        finalCtaPrimary: '查找已验证的方法',
-        finalCtaSecondary: '贡献一次真实验证',
+        finalCtaPrimary: '开始查找方法',
+        finalCtaSecondary: '提交使用结果',
         footerCopy: 'AI 时代的公共知识银行。',
         toggle: 'EN'
       },
@@ -2677,27 +2667,27 @@
         searchCommunityTitle: 'Community',
         searchCommunityCopy: 'Validation, forks, merges, and evolution signals',
         moreMethod: 'Find a tested method',
-        moreVaults: 'View live nodes',
-        moreDispatch: 'Run cross-vault dispatch',
+        moreVaults: 'View live entries',
+        moreDispatch: 'Start a cross-vault search',
         moreValidation: 'Validation Demo',
         moreDashboard: 'Dashboard',
         moreGithub: 'GitHub Repository',
         dashboard: 'Dashboard',
-        eyebrow: 'Use what is verified. Help verify what comes next.',
-        heroTitle: 'Turn scattered AI practice into public knowledge that can be tested, reused, and improved.',
-        heroCopy: 'Find useful methods across knowledge frames, executable tools, and real cases—and bring your results back so the next version is more reliable.',
+        eyebrow: 'AI methods improved through real use',
+        heroTitle: 'Turn effective AI practice into reusable public knowledge.',
+        heroCopy: 'Find the reasoning, workflow, and evidence behind a method. After using it, bring back the result so the next version is more reliable.',
         heroQuickKicker: 'Start with a real problem',
-        heroQuickTitle: 'Find the method before choosing the tool',
-        heroQuickCopy: 'Describe your goal to preview the explanation, execution path, and supporting evidence.',
+        heroQuickTitle: 'Start with the method, not the tool.',
+        heroQuickCopy: 'Describe your goal to see why it works, how to run it, and where it has been tested.',
         heroQuickLabel: 'What do you want AI to solve?',
         heroQuickPlaceholder: 'Example: use AI to improve support replies',
         heroQuickRun: 'Preview three layers',
         heroQuickHint: 'The system answers why it works, how to run it, and where it has been tested.',
-        primaryCta: 'Find verified methods',
-        secondaryCta: 'Contribute real validation',
-        metricNodes: 'Knowledge nodes',
-        metricForks: 'Tool nodes',
-        metricValidations: 'Case nodes',
+        primaryCta: 'Find a method',
+        secondaryCta: 'Submit a result',
+        metricNodes: 'Knowledge entries',
+        metricForks: 'Tool methods',
+        metricValidations: 'Case entries',
         methodKicker: 'Method preview',
         methodTitle: 'See the full structure of a method from one problem.',
         methodCopy: 'This guided preview explains why through knowledge, shows how through tools, and grounds the route in case evidence.',
@@ -2760,7 +2750,7 @@
         vaultExploreCases: 'Open Cases',
         cocreateKicker: 'CO-CREATION LOOP',
         cocreateTitle: 'Public knowledge is not merely published. It is verified through use.',
-        cocreateCopy: 'A practice is structured, reused, challenged, and improved across contexts. It enters the shared mainline only when evidence keeps accumulating.',
+        cocreateCopy: 'A practice is structured, reused, challenged, and improved across contexts. It becomes a shared standard only when evidence keeps accumulating.',
         flowContributeTitle: 'Contribute practice',
         flowContributeCopy: 'Submit real problems, processes, tools, and outcomes.',
         flowStructureTitle: 'Structure into vaults',
@@ -2773,10 +2763,10 @@
         flowMergeCopy: 'Repeatedly validated branches return as shared standards.',
         cocreateCta: 'Enter Community',
         liveVaultsKicker: 'LIVE VAULTS',
-        liveVaultsTitle: 'Read the real nodes before deciding what to use.',
-        liveVaultsCopy: 'This view reads published knowledge, tool, and case nodes directly, preserving source, trust, and applicable context.',
+        liveVaultsTitle: 'Read real entries before deciding what to use.',
+        liveVaultsCopy: 'This view reads published knowledge, tool, and case entries directly, preserving source, trust, and applicable context.',
         liveVaultsLoading: 'Loading live vault content...',
-        liveVaultsEmpty: 'No live vault nodes are available yet',
+        liveVaultsEmpty: 'No live vault entries are available yet',
         liveVaultsSource: 'Live data',
         liveVaultsTrust: 'Trust',
         liveVaultsKnowledge: 'Knowledge',
@@ -2784,12 +2774,12 @@
         liveVaultsCase: 'Case',
         dispatchKicker: 'CROSS-VAULT RAG',
         dispatchTitle: 'One query returns explanation, route, and evidence.',
-        dispatchCopy: 'Dispatch goes beyond keyword matching. It retrieves a decision frame, execution steps, and real cases across the vaults, then assembles guidance that can be checked.',
+        dispatchCopy: 'Cross-vault search goes beyond keyword matching. It retrieves a decision frame, execution steps, and real cases, then assembles guidance that can be checked.',
         scenarioMarketing: 'A cross-border marketing team rebuilds localization SOPs with AI',
         scenarioEducation: 'A training company builds AI teaching-assistant workflows',
         scenarioSupport: 'A support team turns FAQs into an automation case library',
         dispatchConsoleLabel: 'AI Dispatch Console',
-        dispatchRun: 'Run Dispatch',
+        dispatchRun: 'Find across vaults',
         routeKnowledge: 'Knowledge Vault',
         routeTool: 'Tools Vault',
         routeCase: 'Cases Vault',
@@ -2801,8 +2791,8 @@
         dispatchRunning: 'Searching and reranking across the three vaults...',
         dispatchComplete: 'Dispatch complete: knowledge, tools, and case evidence assembled',
         evolutionKicker: 'COMMUNITY EVOLUTION',
-        evolutionTitle: 'Strong methods enter the mainline through evidence, not attention.',
-        evolutionCopy: 'Real use, validation, forks, merges, disputes, and decay determine whether a node should keep being recommended.',
+        evolutionTitle: 'Strong methods earn a shared standard through evidence, not attention.',
+        evolutionCopy: 'Real use, validation, forks, merges, disputes, and decay determine whether a method should keep being recommended.',
         signalValidateTitle: 'Field validation',
         signalValidateCopy: 'Turn results, contexts, and confidence into traceable evidence.',
         signalForkTitle: 'Scenario forks',
@@ -2810,7 +2800,7 @@
         signalReputationTitle: 'Reputation weight',
         signalReputationCopy: 'High-quality validators carry stronger signal weight.',
         signalDecayTitle: 'Decay calibration',
-        signalDecayCopy: 'Outdated practices lose weight before they dominate the mainline.',
+        signalDecayCopy: 'Outdated practices lose weight before they dominate recommendations.',
         signalMergeTitle: 'Emergent merge',
         signalMergeCopy: 'When a branch crosses the threshold, it becomes the new standard.',
         demoKicker: 'LIVE SIMULATION',
@@ -2838,10 +2828,10 @@
         branchMergedCopy: 'Community validated',
         branchStateMerged: 'merged',
         finalCtaKicker: 'JOIN THE BANK',
-        finalCtaTitle: 'Use one node. Contribute one validation.',
+        finalCtaTitle: 'Use one method. Bring back one real result.',
         finalCtaCopy: 'Start from a verified method, then bring back what happened in real use so the next person has stronger evidence.',
-        finalCtaPrimary: 'Find verified methods',
-        finalCtaSecondary: 'Contribute real validation',
+        finalCtaPrimary: 'Find a method',
+        finalCtaSecondary: 'Submit a result',
         footerCopy: 'Where AI experience grows together.',
         toggle: '中'
       }
