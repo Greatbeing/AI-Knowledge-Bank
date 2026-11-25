@@ -3180,7 +3180,8 @@
     async function checkApiHealth() {
       try {
         const data = await fetchApi('/health');
-        setApiStatus(data.supabase?.configured ? 'connected' : 'fallback', data.supabase?.configured ? 'apiConnected' : 'apiDemoMode');
+        const apiOn = data.supabase?.configured || data.source === 'local';
+        setApiStatus(apiOn ? 'connected' : 'fallback', apiOn ? 'apiConnected' : 'apiDemoMode');
       } catch {
         setApiStatus('fallback', 'apiOffline');
       }
@@ -3191,7 +3192,7 @@
         const data = await fetchApi(`/vaults?locale=${currentLanguage}`);
         latestVaultData = data;
         renderLiveVaults(data);
-        if (!data.ok || data.source !== 'supabase') return;
+        if (!data.ok || !['supabase', 'local'].includes(data.source)) return;
 
         metricNodesValue.textContent = Number(data.stats?.knowledge || 0).toLocaleString();
         metricRoutesValue.textContent = Number(data.stats?.tools || 0).toLocaleString();
@@ -3269,7 +3270,7 @@
 
       const meta = document.createElement('div');
       meta.className = 'live-vault-meta';
-      meta.append(createMetaToken(`${dict.liveVaultsSource}: ${source === 'supabase' ? 'Supabase' : 'Demo'}`));
+      meta.append(createMetaToken(`${dict.liveVaultsSource}: ${source === 'supabase' ? 'Supabase' : (source === 'local' ? '本地库' : 'Demo')}`));
       (item.scenario_tags || []).slice(0, 2).forEach((tag) => meta.append(createMetaToken(tag)));
 
       article.append(header, title, summary);
@@ -3594,7 +3595,7 @@
         }
 
         document.getElementById('dispatch-synthesis').textContent = data.synthesis;
-        setApiStatus(data.source === 'supabase' ? 'connected' : 'fallback', data.source === 'supabase' ? 'apiConnected' : 'apiDemoMode');
+        setApiStatus(data.source === 'supabase' || data.source === 'local' ? 'connected' : 'fallback', data.source === 'supabase' || data.source === 'local' ? 'apiConnected' : 'apiDemoMode');
       } catch {
         // Keep the local scenario copy when the backend is unavailable.
       }
@@ -3701,7 +3702,7 @@
         const link = document.createElement('a');
         link.className = 'search-result';
         link.href = item.href || vaultHref(item.vault_type);
-        link.dataset.source = source === 'supabase' ? 'supabase' : 'fallback';
+        link.dataset.source = source === 'supabase' || source === 'local' ? 'supabase' : 'fallback';
 
         const title = document.createElement('div');
         title.className = 'font-bold';
@@ -3716,7 +3717,7 @@
         meta.append(createMetaToken(vaultLabel(item.vault_type)));
         if (item.confidence) meta.append(createMetaToken(`${item.confidence}%`));
         if (item.source && item.source !== 'local') {
-          meta.append(createMetaToken(source === 'supabase' ? translations[currentLanguage].searchSourceSupabase : translations[currentLanguage].searchSourceFallback));
+          meta.append(createMetaToken((source === 'supabase' || source === 'local') ? translations[currentLanguage].searchSourceSupabase : translations[currentLanguage].searchSourceFallback));
         }
 
         link.append(title, summary, meta);
@@ -3771,7 +3772,7 @@
         const data = await fetchApi(`/search?q=${encodeURIComponent(normalized)}&locale=${currentLanguage}&limit=4`);
         if (requestId !== searchRequestId) return;
         renderSearchList(flattenSearchResults(data), data.source);
-        setApiStatus(data.source === 'supabase' ? 'connected' : 'fallback', data.source === 'supabase' ? 'apiConnected' : 'apiDemoMode');
+        setApiStatus(data.source === 'supabase' || data.source === 'local' ? 'connected' : 'fallback', data.source === 'supabase' || data.source === 'local' ? 'apiConnected' : 'apiDemoMode');
       } catch {
         if (requestId === searchRequestId) setApiStatus('fallback', 'apiOffline');
       }

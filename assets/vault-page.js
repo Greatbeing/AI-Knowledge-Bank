@@ -489,7 +489,7 @@ function updateResultStatus(shown, total) {
   if (!resultStatus) return;
 
   const dict = dictionaries[currentLanguage];
-  const sourceName = latestSource === 'supabase' ? dict.sourceSupabase : dict.sourceFallback;
+  const sourceName = ['supabase', 'local'].includes(latestSource) ? dict.sourceSupabase : dict.sourceFallback;
 
   if (loadState === 'loading') {
     resultStatus.textContent = dict.resultLoading;
@@ -574,7 +574,7 @@ function renderDispatchResult(layer, item, source) {
   if (!card) return;
 
   const dict = dictionaries[currentLanguage];
-  const sourceName = source === 'supabase' ? dict.sourceSupabase : dict.sourceFallback;
+  const sourceName = ['supabase', 'local'].includes(source) ? dict.sourceSupabase : dict.sourceFallback;
   const confidence = Math.max(0, Number(item?.confidence || 0));
 
   const label = document.createElement('span');
@@ -655,7 +655,7 @@ function createNodeCard(node) {
 
   const tagRow = document.createElement('div');
   tagRow.className = 'tag-row';
-  tagRow.append(createTag(`${dict.liveSource}: ${latestSource === 'supabase' ? dict.sourceSupabase : dict.sourceFallback}`));
+  tagRow.append(createTag(`${dict.liveSource}: ${['supabase', 'local'].includes(latestSource) ? dict.sourceSupabase : dict.sourceFallback}`));
   (node.scenario_tags || []).slice(0, 3).forEach((tag) => tagRow.append(createTag(tag)));
 
   const actions = document.createElement('div');
@@ -727,7 +727,7 @@ function openDetail(node) {
   const dict = dictionaries[currentLanguage];
   const sourceRefs = normalizeList(node.source_refs);
   const scenarioTags = normalizeList(node.scenario_tags);
-  const sourceName = latestSource === 'supabase' ? dict.sourceSupabase : dict.sourceFallback;
+  const sourceName = ['supabase', 'local'].includes(latestSource) ? dict.sourceSupabase : dict.sourceFallback;
   const confidence = `${dict.trust} ${Math.max(0, Number(node.confidence || 0))}%`;
 
   const header = document.createElement('header');
@@ -811,7 +811,7 @@ async function submitCommunityValidation() {
       window.__ENV = mergeSupabaseRuntimeEnv(window.__ENV || {}, supabaseConfig);
     }
 
-    if (latestSource === 'supabase' && latestNodes[0]) {
+    if (['supabase', 'local'].includes(latestSource) && latestNodes[0]) {
       if (!supabaseConfig) {
         statusLine.textContent = dictionaries[currentLanguage].validationAuthRequired;
         return;
