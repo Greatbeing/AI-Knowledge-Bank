@@ -11,7 +11,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        brand: resolve(__dirname, 'brand.html'),
         knowledge: resolve(__dirname, 'knowledge.html'),
         tools: resolve(__dirname, 'tools.html'),
         cases: resolve(__dirname, 'cases.html'),
