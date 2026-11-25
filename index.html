@@ -3190,7 +3190,7 @@
         const data = await fetchApi(`/vaults?locale=${currentLanguage}`);
         latestVaultData = data;
         renderLiveVaults(data);
-        if (!data.ok || data.source !== 'supabase') return;
+        if (!data.ok || !['supabase', 'seed'].includes(data.source)) return;
 
         metricNodesValue.textContent = Number(data.stats?.knowledge || 0).toLocaleString();
         metricRoutesValue.textContent = Number(data.stats?.tools || 0).toLocaleString();
@@ -3250,7 +3250,10 @@
 
       const score = document.createElement('div');
       score.className = 'live-vault-score';
-      score.textContent = `${dict.liveVaultsTrust} ${Math.max(0, Number(item.confidence || 0))}%`;
+      // 未评测的条目如实写「未评测」，不补默认分数。
+      score.textContent = (typeof item.confidence === 'number' && Number.isFinite(item.confidence))
+        ? `${dict.liveVaultsTrust} ${item.confidence}%`
+        : `${dict.liveVaultsTrust} ${currentLanguage === 'zh' ? '未评测' : 'Not evaluated'}`;
 
       header.append(label, score);
 
@@ -3268,7 +3271,7 @@
 
       const meta = document.createElement('div');
       meta.className = 'live-vault-meta';
-      meta.append(createMetaToken(`${dict.liveVaultsSource}: ${source === 'supabase' ? 'Supabase' : 'Demo'}`));
+      meta.append(createMetaToken(`${dict.liveVaultsSource}: ${source === 'supabase' ? 'Supabase' : (source === 'seed' ? '本地种子库' : 'Demo')}`));
       (item.scenario_tags || []).slice(0, 2).forEach((tag) => meta.append(createMetaToken(tag)));
 
       article.append(header, title, summary);
@@ -3593,7 +3596,7 @@
         }
 
         document.getElementById('dispatch-synthesis').textContent = data.synthesis;
-        setApiStatus(data.source === 'supabase' ? 'connected' : 'fallback', data.source === 'supabase' ? 'apiConnected' : 'apiDemoMode');
+        setApiStatus(['supabase', 'seed'].includes(data.source) ? 'connected' : 'fallback', ['supabase', 'seed'].includes(data.source) ? 'apiConnected' : 'apiDemoMode');
       } catch {
         // Keep the local scenario copy when the backend is unavailable.
       }
@@ -3770,7 +3773,7 @@
         const data = await fetchApi(`/search?q=${encodeURIComponent(normalized)}&locale=${currentLanguage}&limit=4`);
         if (requestId !== searchRequestId) return;
         renderSearchList(flattenSearchResults(data), data.source);
-        setApiStatus(data.source === 'supabase' ? 'connected' : 'fallback', data.source === 'supabase' ? 'apiConnected' : 'apiDemoMode');
+        setApiStatus(['supabase', 'seed'].includes(data.source) ? 'connected' : 'fallback', ['supabase', 'seed'].includes(data.source) ? 'apiConnected' : 'apiDemoMode');
       } catch {
         if (requestId === searchRequestId) setApiStatus('fallback', 'apiOffline');
       }

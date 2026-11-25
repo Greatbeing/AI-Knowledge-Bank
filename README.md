@@ -1,5 +1,13 @@
 # AI Knowledge Bank
 
+> **现状（2026-11-25）**：本仓库已转向，不再是「AI 实践知识社区」。
+> - 原先的社区机制（登录、投票、分叉合并、涌现评分）**从未有过真实数据**；线上首页显示的条目是写死的示例。
+> - 原先使用的 Supabase 项目已不存在（域名 NXDOMAIN），后端接口目前只会返回示例数据。
+> - 现在的用途：**作品集入口页** [`portfolio.html`](./portfolio.html)，由 `scripts/build-index.mjs` 每晚从 GitHub 自动生成，没有手写条目。见 [llms.txt](./llms.txt)。
+> - 下文的三库、跨库检索、路线图等描述属于转型前的设计，保留作记录，**不是当前在做的功能**。
+>
+> 转型说明见 [`docs/REPOSITIONING.md`](./docs/REPOSITIONING.md)。
+
 <p align="center">
   <img src="./assets/readme/hero.svg" alt="AI Knowledge Bank banner" width="100%" />
 </p>
