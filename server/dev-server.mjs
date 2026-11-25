@@ -82,6 +82,12 @@ const server = createServer(async (req, res) => {
     return json(res, { ok: true, source: 'local', leaderboard: Object.entries(by).map(([actor, n]) => ({ actor, contributions: n })).sort((a, b) => b.contributions - a.contributions) });
   }
 
+  // 读取：节点列表（可按 status 过滤，供贡献/审核界面使用）
+  if (p === '/api/nodes' && req.method === 'GET') {
+    const status = url.searchParams.get('status');
+    const list = db.nodes.filter((n) => !status || n.status === status).map((n) => decorate(db, n));
+    return json(res, { ok: true, source: 'local', count: list.length, nodes: list });
+  }
   // 写入：记录社区信号（validated / used / forked / disputed）
   if (p === '/api/community-signals' && req.method === 'POST') {
     const body = await readBody(req);
