@@ -50,3 +50,9 @@ npm run dev:local      # = node server/dev-server.mjs → http://127.0.0.1:4319
 
 - Cloudflare 账号可用吗？可用的话我接 D1，线上就能真正跑起来。
 - 若暂时没有云端资源，就把「本地可运行 + 文档」作为这一阶段成果，先继续补前端贡献 UI。
+
+## 本轮补充（早上 · 继续执行）
+- 修好三库子页在零依赖本地服务的运行：新增 lib/supabase-config.mjs（纯 JS 孪生，浏览器可直跑），ssets/vault-page.js、dashboard.html 的浏览器侧 import 指向 .mjs；.ts 保留给 tsc/测试。
+- local 数据源卡片标签由 Supabase 改为 Local，避免误标。
+- 验证：knowledge / tools / cases 各渲染 3 条真实数据；/api/search 跨库命中（「模型」→ 知识3/工具1/案例2；「告警」→ 案例1）。
+- 已合并 2eed23b（PR #13）。
