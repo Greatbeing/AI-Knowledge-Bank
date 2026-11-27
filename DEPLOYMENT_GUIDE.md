@@ -30,6 +30,7 @@
    - `supabase/migrations/002_user_system.sql`
    - `supabase/migrations/003_knowledge_workflow.sql` (如果存在)
    - `supabase/migrations/004_three_vault_cross_rag.sql`
+   - `supabase/migrations/005_production_security_hardening.sql`
 3. 每次执行后确认显示 "Success"
 
 ### 4. 配置 OAuth 登录 (GitHub)
@@ -84,8 +85,10 @@
      - `SUPABASE_URL`
      - `SUPABASE_ANON_KEY`
      - `SUPABASE_SERVICE_ROLE_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY` 只放在 Cloudflare 环境变量中，不要提交到仓库
-   - Cloudflare 浏览器登录会从 `/api/public-config` 读取 `SUPABASE_URL` 和 `SUPABASE_ANON_KEY`；该接口不会返回 service-role
+   - `SUPABASE_SERVICE_ROLE_KEY` 当前公开 API 不需要；不要为了公开读取而配置或使用它
+   - 公开 API 只使用 `SUPABASE_ANON_KEY`，确保所有读取继续受 Supabase RLS 约束
+   - 只有未来确有受控后台任务时，才单独引入 service-role，并且必须限制在服务端专用路由，绝不用于公开读取
+   - Cloudflare 浏览器登录会从 `/api/public-config` 读取 `SUPABASE_URL` 和 `SUPABASE_ANON_KEY`；该接口不会返回任何 service-role 凭据
    - 只有部署到不支持 Pages Functions 的纯静态平台时，才需要在构建阶段提供 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`
 
 5. **验证接口**
@@ -140,7 +143,7 @@
 ```env
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 SUPABASE_ANON_KEY=YOUR_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+ # 不要配置 service-role key，公开 API 使用 anon key + RLS
 # 仅纯静态构建需要以下两项：
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
@@ -209,7 +212,8 @@ VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 
 ```markdown
 - [ ] Supabase 项目已创建
-- [ ] 数据库迁移脚本已执行
+- [ ] 数据库迁移脚本 001–005 已按顺序执行
+- [ ] RLS 安全策略已验证：普通用户无法修改角色、声誉、审核状态或可信度指标
 - [ ] OAuth 提供商已配置
 - [ ] 代码已推送到 GitHub
 - [ ] `npm run check:text` 通过
