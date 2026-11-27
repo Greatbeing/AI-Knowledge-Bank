@@ -162,3 +162,15 @@ body { color: var(--akb-ink); }
   .metric { min-height: 88px; padding: 12px; }
   .metric strong { font-size: 25px; }
 }
+
+.metrics-note {
+  grid-column: 1 / -1;
+  margin: -4px 2px 0;
+  color: #718096;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: right;
+}
+@media (max-width: 640px) {
+  .metrics-note { text-align: left; }
+}
