@@ -134,17 +134,50 @@ SET search_path = public, auth, pg_temp
 AS $$
 DECLARE
   actor_is_reviewer BOOLEAN := FALSE;
+  actor_is_admin BOOLEAN := FALSE;
 BEGIN
-  actor_is_reviewer :=
-    COALESCE(auth.role(), '') = 'service_role'
-    OR EXISTS (
-      SELECT 1
-      FROM public.user_profiles up
-      WHERE up.user_id = auth.uid()
-        AND up.role IN ('validator', 'admin')
-    );
+  IF COALESCE(auth.role(), '') = 'service_role' THEN
+    RETURN NEW;
+  END IF;
+
+  SELECT
+    COALESCE(BOOL_OR(role IN ('validator', 'admin')), FALSE),
+    COALESCE(BOOL_OR(role = 'admin'), FALSE)
+  INTO actor_is_reviewer, actor_is_admin
+  FROM public.user_profiles
+  WHERE user_id = auth.uid();
+
+  IF actor_is_admin THEN
+    RETURN NEW;
+  END IF;
+
+  IF actor_is_reviewer AND TG_OP = 'INSERT' THEN
+    -- Validators may contribute nodes, but publication always requires a
+    -- separate review action by another validator/admin.
+    NEW.author_id := auth.uid();
+    NEW.status := 'draft';
+    NEW.validation_count := 0;
+    NEW.fork_count := 0;
+    NEW.merge_count := 0;
+    NEW.validated_at := NULL;
+    NEW.merged_at := NULL;
+    NEW.trust_score := 0.5;
+    NEW.emergence_level := 0;
+    NEW.complexity_score := 0;
+    NEW.connectivity_score := 0;
+    NEW.adaptation_score := 0;
+    NEW.version := 1;
+    NEW.is_latest_version := TRUE;
+    RETURN NEW;
+  END IF;
 
   IF actor_is_reviewer THEN
+    IF OLD.author_id = auth.uid()
+       AND NEW.status IS DISTINCT FROM OLD.status
+       AND NEW.status IN ('validated', 'merged') THEN
+      RAISE EXCEPTION 'A validator cannot publish or merge their own node'
+        USING ERRCODE = '42501';
+    END IF;
     RETURN NEW;
   END IF;
 
@@ -169,8 +202,8 @@ BEGIN
   NEW.author_id := OLD.author_id;
   NEW.status := OLD.status;
   NEW.validation_count := OLD.validation_count;
-  -- Recompute the fork counter from source records. This also lets the
-  -- existing AFTER INSERT/DELETE fork trigger update the counter safely.
+  -- Recompute this derived counter from source records so the existing
+  -- fork-maintenance trigger can update it without trusting client values.
   NEW.fork_count := (
     SELECT COUNT(*)::INT FROM public.node_forks nf
     WHERE nf.original_node_id = OLD.id
