@@ -531,7 +531,7 @@ BEGIN
   NEW.weight_snapshot := '{}'::jsonb;
   RETURN NEW;
 END;
-$;
+$$;
 
 DROP TRIGGER IF EXISTS trg_guard_community_signal_trust ON public.community_evolution_signals;
 CREATE TRIGGER trg_guard_community_signal_trust
@@ -650,7 +650,7 @@ AS $$
     OR indexed.search_document ILIKE '%' || search_query || '%'
   ORDER BY rank_score DESC, indexed.title ASC
   LIMIT LEAST(GREATEST(COALESCE(result_limit, 9), 1), 30);
-$;
+$$;
 
 GRANT SELECT ON public.cross_vault_rag_index TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.match_cross_vault_nodes(TEXT, TEXT, INT)
