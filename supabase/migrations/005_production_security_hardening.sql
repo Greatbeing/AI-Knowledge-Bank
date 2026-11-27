@@ -234,17 +234,18 @@ SET search_path = public, auth, pg_temp
 AS $$
 DECLARE
   actor_is_reviewer BOOLEAN := FALSE;
+  actor_is_admin BOOLEAN := FALSE;
 BEGIN
-  actor_is_reviewer :=
-    COALESCE(auth.role(), '') = 'service_role'
-    OR EXISTS (
-      SELECT 1 FROM public.user_profiles up
-      WHERE up.user_id = auth.uid() AND up.role IN ('validator', 'admin')
-    );
-
-  IF actor_is_reviewer THEN
+  IF COALESCE(auth.role(), '') = 'service_role' THEN
     RETURN NEW;
   END IF;
+
+  SELECT
+    COALESCE(BOOL_OR(role IN ('validator', 'admin')), FALSE),
+    COALESCE(BOOL_OR(role = 'admin'), FALSE)
+  INTO actor_is_reviewer, actor_is_admin
+  FROM public.user_profiles
+  WHERE user_id = auth.uid();
 
   IF TG_OP = 'INSERT' THEN
     NEW.submitter_id := auth.uid();
@@ -253,6 +254,20 @@ BEGIN
     NEW.review_comments := NULL;
     NEW.reviewed_at := NULL;
     NEW.confidence_score := NULL;
+    RETURN NEW;
+  END IF;
+
+  IF actor_is_reviewer THEN
+    IF NOT actor_is_admin
+       AND NEW.submitter_id = auth.uid()
+       AND NEW.status IS DISTINCT FROM OLD.status THEN
+      RAISE EXCEPTION 'A validator cannot review their own submission'
+        USING ERRCODE = '42501';
+    END IF;
+    IF NEW.status IS DISTINCT FROM OLD.status THEN
+      NEW.reviewer_id := auth.uid();
+      NEW.reviewed_at := COALESCE(NEW.reviewed_at, NOW());
+    END IF;
     RETURN NEW;
   END IF;
 
@@ -304,17 +319,18 @@ SET search_path = public, auth, pg_temp
 AS $$
 DECLARE
   actor_is_reviewer BOOLEAN := FALSE;
+  actor_is_admin BOOLEAN := FALSE;
 BEGIN
-  actor_is_reviewer :=
-    COALESCE(auth.role(), '') = 'service_role'
-    OR EXISTS (
-      SELECT 1 FROM public.user_profiles up
-      WHERE up.user_id = auth.uid() AND up.role IN ('validator', 'admin')
-    );
-
-  IF actor_is_reviewer THEN
+  IF COALESCE(auth.role(), '') = 'service_role' THEN
     RETURN NEW;
   END IF;
+
+  SELECT
+    COALESCE(BOOL_OR(role IN ('validator', 'admin')), FALSE),
+    COALESCE(BOOL_OR(role = 'admin'), FALSE)
+  INTO actor_is_reviewer, actor_is_admin
+  FROM public.user_profiles
+  WHERE user_id = auth.uid();
 
   IF TG_OP = 'INSERT' THEN
     NEW.proposer_id := auth.uid();
@@ -324,6 +340,20 @@ BEGIN
     NEW.votes_against := 0;
     NEW.voters := '{}'::UUID[];
     NEW.decided_at := NULL;
+    RETURN NEW;
+  END IF;
+
+  IF actor_is_reviewer THEN
+    IF NOT actor_is_admin
+       AND NEW.proposer_id = auth.uid()
+       AND NEW.status IS DISTINCT FROM OLD.status THEN
+      RAISE EXCEPTION 'A validator cannot approve their own merge proposal'
+        USING ERRCODE = '42501';
+    END IF;
+    IF NEW.status IS DISTINCT FROM OLD.status THEN
+      NEW.approver_id := auth.uid();
+      NEW.decided_at := COALESCE(NEW.decided_at, NOW());
+    END IF;
     RETURN NEW;
   END IF;
 
