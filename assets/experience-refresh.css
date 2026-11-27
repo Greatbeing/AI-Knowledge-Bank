@@ -1,0 +1,166 @@
+/* AI Knowledge Bank — shared experience layer
+   Visual-only overrides: keep page structure, routing, and application behavior intact. */
+:root {
+  --akb-ink: #101827;
+  --akb-muted: #5f6f82;
+  --akb-paper: #f5f7fa;
+  --akb-surface: rgba(255, 255, 255, .78);
+  --akb-line: rgba(16, 24, 39, .10);
+  --akb-jade: #0b8f83;
+  --akb-blue: #2867d8;
+  --akb-violet: #7466d8;
+  --akb-radius-sm: 12px;
+  --akb-radius-md: 18px;
+  --akb-radius-lg: 26px;
+  --akb-shadow-soft: 0 18px 48px rgba(19, 35, 56, .08);
+  --akb-shadow-card: 0 24px 64px rgba(19, 35, 56, .11);
+}
+
+html { scroll-padding-top: 96px; }
+body { color: var(--akb-ink); }
+::selection { background: rgba(11, 143, 131, .22); color: #10212a; }
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(40, 103, 216, .62);
+  outline-offset: 3px;
+}
+
+/* Shared navigation */
+.nav {
+  border-bottom-color: rgba(255,255,255,.10);
+  box-shadow: 0 12px 34px rgba(9, 17, 30, .16);
+}
+.brand-mark { border-radius: 12px; }
+.nav-link, .nav-button, .nav-link-main, .language-btn, .more-summary {
+  border-radius: 12px;
+  transition: color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.nav-link:hover, .nav-link.is-active, .nav-button:hover, .nav-link-main:hover {
+  transform: translateY(-1px);
+}
+.nav-button.primary, .start-btn {
+  background: linear-gradient(120deg, #2867d8 0%, #147f9b 55%, #0b8f83 100%);
+  box-shadow: 0 12px 28px rgba(40,103,216,.24);
+}
+.more-panel, .search-panel {
+  border-radius: var(--akb-radius-md);
+  border-color: rgba(255,255,255,.7);
+  box-shadow: 0 28px 80px rgba(11, 20, 35, .22);
+}
+
+/* Home page */
+.home-hero-shell { gap: clamp(28px, 5vw, 64px); }
+.home-hero-intro .hero-title {
+  max-width: 12.5em;
+  font-size: clamp(42px, 5vw, 68px);
+  line-height: 1.12;
+  letter-spacing: -.035em;
+}
+.home-hero-copy { max-width: 39rem; color: #536276; line-height: 1.8; }
+.home-hero-panel, .liquid {
+  border: 1px solid rgba(255,255,255,.78);
+  border-radius: var(--akb-radius-lg);
+  box-shadow: var(--akb-shadow-card), inset 0 1px 0 rgba(255,255,255,.88);
+}
+.home-hero-panel { padding: clamp(22px, 3vw, 34px); }
+.panel-kicker, .pill { letter-spacing: .015em; }
+.hero-quick { border-radius: 16px; background: rgba(255,255,255,.44); border: 1px solid rgba(16,24,39,.07); }
+.hero-quick-input, .hero-quick-run, .btn { border-radius: 12px; }
+.hero-quick-input { border: 1px solid rgba(16,24,39,.08); }
+.hero-quick-run { background: linear-gradient(120deg, #101d31, #0b8f83); }
+.hero-actions .btn { min-height: 48px; padding-inline: 20px; }
+.btn-primary { background: linear-gradient(120deg, #17253b, #0b8f83); }
+.home-metrics .metric, .metric {
+  border-radius: 16px;
+  border-color: rgba(16,24,39,.08);
+  box-shadow: 0 10px 26px rgba(19,35,56,.045);
+}
+.metric-value, .metric strong { font-variant-numeric: tabular-nums; }
+.value-grid, .engine-grid, .entry-grid, .method-result-grid { gap: 18px; }
+.value-card, .engine-card, .entry-card, .method-result, .cta-panel {
+  border-radius: var(--akb-radius-md);
+  box-shadow: var(--akb-shadow-soft);
+}
+.value-card, .engine-card, .entry-card, .method-result {
+  border: 1px solid rgba(255,255,255,.76);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.value-card:hover, .engine-card:hover, .entry-card:hover, .method-result:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--akb-shadow-card);
+  border-color: rgba(11,143,131,.24);
+}
+.method-workbench, .method-query-panel, .method-results-panel {
+  border-radius: var(--akb-radius-lg);
+}
+.method-workbench { box-shadow: var(--akb-shadow-card); }
+.method-query-panel, .method-results-panel { border-color: rgba(16,24,39,.08); }
+.node-map { border-radius: var(--akb-radius-lg); overflow: hidden; }
+.cta-panel { border: 1px solid rgba(255,255,255,.8); }
+
+/* Vault and community pages */
+.page-hero { padding-top: 138px; }
+.page-hero .hero-title {
+  font-size: clamp(38px, 4.4vw, 58px);
+  line-height: 1.16;
+  letter-spacing: -.03em;
+}
+.hero-grid { gap: clamp(24px, 4vw, 48px); }
+.hero-panel, .content-card, .insight-card, .signal-card, .empty-card, .dispatch-panel {
+  border-radius: var(--akb-radius-md);
+  box-shadow: var(--akb-shadow-soft);
+}
+.hero-panel { padding: clamp(22px, 3vw, 32px); }
+.dispatch-panel { padding: clamp(20px, 3vw, 30px); }
+.dispatch-result { border-radius: 14px; }
+.content-card { padding: 26px; }
+.content-card h3 { letter-spacing: -.018em; }
+.insight-card, .signal-card { border-radius: 16px; }
+.toolbar .search-input, .toolbar .filter-select, .dispatch-input, .dispatch-button,
+.detail-button, .run-button { border-radius: 12px; }
+.node-grid, .insight-grid { gap: 18px; }
+.content-card:hover { transform: translateY(-3px); box-shadow: var(--akb-shadow-card); }
+.footer { border-top-color: rgba(16,24,39,.10); }
+
+/* User workspace: retain the dark workspace treatment, refine surfaces and focus. */
+.dark .glass, .dark .glass-card {
+  border-radius: var(--akb-radius-md);
+  border-color: rgba(255,255,255,.11);
+}
+.dark .glass-card { box-shadow: 0 18px 48px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.045); }
+.dark .glass-card:hover { transform: translateY(-2px); }
+.dark button, .dark input, .dark select, .dark textarea { border-radius: 12px; }
+.dark :focus-visible { outline-color: rgba(90,160,255,.8); }
+
+/* Motion is purposeful and respects system accessibility preferences. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+@media (max-width: 860px) {
+  .home-hero-shell { gap: 24px; }
+  .home-hero-intro .hero-title { font-size: clamp(38px, 7vw, 52px); }
+  .page-hero { padding-top: 150px; }
+  .page-hero .hero-title { font-size: clamp(34px, 6vw, 46px); }
+  .dispatch-panel { gap: 16px; }
+}
+@media (max-width: 640px) {
+  .home-hero-intro .hero-title { font-size: clamp(34px, 9vw, 42px); }
+  .home-hero-panel { padding: 20px; }
+  .home-metrics { gap: 8px; }
+  .home-metrics .metric { padding: 13px; }
+  .page-hero { padding-top: 132px; }
+  .hero-panel, .content-card, .insight-card, .signal-card { padding: 20px; }
+  .section { padding-block: 48px; }
+  .section-head { align-items: start; flex-direction: column; gap: 10px; }
+  .dispatch-panel { padding: 16px; }
+  .dispatch-form { grid-template-columns: 1fr; }
+  .dispatch-button { width: 100%; }
+  .dispatch-results, .node-grid, .insight-grid, .signal-grid { grid-template-columns: 1fr; }
+  .metric-grid { gap: 8px; }
+  .metric { min-height: 88px; padding: 12px; }
+  .metric strong { font-size: 25px; }
+}
