@@ -544,7 +544,13 @@ EXECUTE FUNCTION public.guard_community_signal_trust();
 --    A normal PostgreSQL view can otherwise execute with its owner's rights
 --    and bypass the caller's knowledge_nodes RLS policies.
 -- ---------------------------------------------------------------------------
-CREATE OR REPLACE VIEW public.cross_vault_rag_index
+-- The original view exposed every knowledge_nodes column. Drop the
+-- dependent search RPC first because PostgreSQL cannot remove view columns
+-- through CREATE OR REPLACE VIEW.
+DROP FUNCTION IF EXISTS public.match_cross_vault_nodes(TEXT, TEXT, INT);
+DROP VIEW IF EXISTS public.cross_vault_rag_index;
+
+CREATE VIEW public.cross_vault_rag_index
 WITH (security_invoker = true)
 AS
 SELECT
