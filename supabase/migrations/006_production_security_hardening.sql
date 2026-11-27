@@ -490,7 +490,7 @@ RETURNS trigger
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public, auth, pg_temp
-AS $
+AS $$
 DECLARE
   actor_role TEXT := COALESCE(auth.role(), '');
   actor_is_reviewer BOOLEAN := FALSE;
@@ -604,7 +604,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SET search_path = public, pg_temp
-AS $
+AS $$
   WITH indexed AS (
     SELECT
       cvri.id,
