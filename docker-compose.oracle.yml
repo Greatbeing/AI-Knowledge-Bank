@@ -39,4 +39,4 @@ services:
 
 networks:
   app-internal:
-    internal: true
+    driver: bridge
