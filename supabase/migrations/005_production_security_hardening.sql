@@ -169,7 +169,12 @@ BEGIN
   NEW.author_id := OLD.author_id;
   NEW.status := OLD.status;
   NEW.validation_count := OLD.validation_count;
-  NEW.fork_count := OLD.fork_count;
+  -- Recompute the fork counter from source records. This also lets the
+  -- existing AFTER INSERT/DELETE fork trigger update the counter safely.
+  NEW.fork_count := (
+    SELECT COUNT(*)::INT FROM public.node_forks nf
+    WHERE nf.original_node_id = OLD.id
+  );
   NEW.merge_count := OLD.merge_count;
   NEW.validated_at := OLD.validated_at;
   NEW.merged_at := OLD.merged_at;
