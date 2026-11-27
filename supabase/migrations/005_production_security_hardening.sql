@@ -178,6 +178,28 @@ BEGIN
       RAISE EXCEPTION 'A validator cannot publish or merge their own node'
         USING ERRCODE = '42501';
     END IF;
+
+    -- A validator may change only the workflow state and review timestamps.
+    -- They cannot rewrite knowledge content, authorship, versioning or CAS
+    -- metrics while performing a review.
+    IF (to_jsonb(NEW) - ARRAY['status', 'validated_at', 'merged_at', 'updated_at'])
+       IS DISTINCT FROM
+       (to_jsonb(OLD) - ARRAY['status', 'validated_at', 'merged_at', 'updated_at']) THEN
+      RAISE EXCEPTION 'Validators may only change node workflow state'
+        USING ERRCODE = '42501';
+    END IF;
+
+    IF NEW.status IS DISTINCT FROM OLD.status THEN
+      IF NEW.status = 'validated' THEN
+        NEW.validated_at := COALESCE(NEW.validated_at, NOW());
+      ELSIF NEW.status = 'merged' THEN
+        IF OLD.status <> 'validated' THEN
+          RAISE EXCEPTION 'Only validated nodes may be merged'
+            USING ERRCODE = '42501';
+        END IF;
+        NEW.merged_at := COALESCE(NEW.merged_at, NOW());
+      END IF;
+    END IF;
     RETURN NEW;
   END IF;
 
@@ -499,6 +521,117 @@ CREATE TRIGGER trg_guard_community_signal_trust
 BEFORE INSERT OR UPDATE ON public.community_evolution_signals
 FOR EACH ROW
 EXECUTE FUNCTION public.guard_community_signal_trust();
+
+-- ---------------------------------------------------------------------------
+-- 7. Cross-Vault RAG: make the index view invoker-secured and publish-only.
+--    A normal PostgreSQL view can otherwise execute with its owner's rights
+--    and bypass the caller's knowledge_nodes RLS policies.
+-- ---------------------------------------------------------------------------
+CREATE OR REPLACE VIEW public.cross_vault_rag_index
+WITH (security_invoker = true)
+AS
+SELECT
+  kn.id,
+  kn.title,
+  kn.summary,
+  kn.vault_type,
+  kn.trust_score,
+  kn.emergence_level,
+  kn.source_refs,
+  kn.language,
+  concat_ws(
+    ' ',
+    kn.title,
+    kn.summary,
+    kn.content,
+    array_to_string(kn.tags, ' '),
+    array_to_string(kn.scenario_tags, ' ')
+  ) AS search_document,
+  COALESCE(
+    SUM(
+      CASE
+        WHEN ces.signal_type IN ('validated', 'merged')
+          THEN ces.impact_delta * ces.confidence
+        ELSE 0
+      END
+    ),
+    0
+  ) AS signal_strength
+FROM public.knowledge_nodes kn
+LEFT JOIN public.community_evolution_signals ces
+  ON ces.node_id = kn.id
+WHERE kn.status IN ('validated', 'merged')
+GROUP BY kn.id;
+
+CREATE OR REPLACE FUNCTION public.match_cross_vault_nodes(
+  search_query TEXT,
+  locale_filter TEXT DEFAULT 'bilingual',
+  result_limit INT DEFAULT 9
+)
+RETURNS TABLE (
+  id UUID,
+  title TEXT,
+  summary TEXT,
+  vault_type TEXT,
+  trust_score FLOAT,
+  emergence_level FLOAT,
+  rank_score FLOAT,
+  source_refs JSONB
+)
+LANGUAGE sql
+STABLE
+SET search_path = public, pg_temp
+AS $
+  WITH indexed AS (
+    SELECT
+      cvri.id,
+      cvri.title,
+      cvri.summary,
+      cvri.vault_type,
+      cvri.trust_score,
+      cvri.emergence_level,
+      cvri.source_refs,
+      cvri.search_document,
+      cvri.signal_strength,
+      to_tsvector('simple', COALESCE(cvri.search_document, '')) AS document_vector
+    FROM public.cross_vault_rag_index cvri
+    WHERE
+      locale_filter IS NULL
+      OR locale_filter = 'bilingual'
+      OR cvri.language IN (locale_filter, 'bilingual')
+  )
+  SELECT
+    indexed.id,
+    indexed.title,
+    indexed.summary,
+    indexed.vault_type,
+    indexed.trust_score,
+    indexed.emergence_level,
+    (
+      CASE
+        WHEN COALESCE(search_query, '') = '' THEN 0
+        ELSE ts_rank(
+          indexed.document_vector,
+          plainto_tsquery('simple', search_query)
+        )
+      END
+      + COALESCE(indexed.trust_score, 0) * 0.35
+      + COALESCE(indexed.emergence_level, 0) * 0.25
+      + LEAST(GREATEST(COALESCE(indexed.signal_strength, 0), 0), 10) * 0.05
+    ) AS rank_score,
+    indexed.source_refs
+  FROM indexed
+  WHERE
+    COALESCE(search_query, '') = ''
+    OR indexed.document_vector @@ plainto_tsquery('simple', search_query)
+    OR indexed.search_document ILIKE '%' || search_query || '%'
+  ORDER BY rank_score DESC, indexed.title ASC
+  LIMIT LEAST(GREATEST(COALESCE(result_limit, 9), 1), 30);
+$;
+
+GRANT SELECT ON public.cross_vault_rag_index TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.match_cross_vault_nodes(TEXT, TEXT, INT)
+  TO anon, authenticated;
 
 COMMENT ON FUNCTION public.guard_user_profile_security_fields() IS
   'Prevents self-assignment of roles, reputation, account state, and contribution counters.';
