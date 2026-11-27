@@ -169,8 +169,7 @@ function handleHealth(env) {
     version: API_VERSION,
     runtime: 'cloudflare-pages-functions',
     supabase: {
-      configured: Boolean(supabase),
-      hasServiceRole: Boolean(env.SUPABASE_SERVICE_ROLE_KEY)
+      configured: Boolean(supabase)
     },
     endpoints: ['/api/health', '/api/public-config', '/api/vaults', '/api/vaults/:id', '/api/search', '/api/community-signals', '/api/leaderboard'],
     generatedAt: new Date().toISOString()
@@ -360,8 +359,10 @@ async function handleLeaderboard(request, env) {
 }
 
 function getSupabaseConfig(env) {
+  // Public read paths must use the anon key so database RLS remains effective.
+  // The service-role key is intentionally never used by this public API helper.
   const url = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-  const key = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY;
+  const key = env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY;
   if (!url || !key) return null;
   return {
     url: String(url).replace(/\/+$/, ''),
