@@ -53,7 +53,6 @@
 在 Supabase 项目 → **Settings** → **API** 中复制：
 - **Project URL**: `https://xxxxx.supabase.co`
 - **anon/public key**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
-- **service_role key**: 不要用于公开 API，也不要写入前端代码；当前公开 API 只使用 anon key + RLS
 
 ---
 
@@ -86,7 +85,6 @@
    - 添加：
      - `SUPABASE_URL`
      - `SUPABASE_ANON_KEY`
-     - `SUPABASE_SERVICE_ROLE_KEY` 当前公开 API 不需要；不要为了公开读取而配置或使用它
    - 公开 API 只使用 `SUPABASE_ANON_KEY`，确保所有读取继续受 Supabase RLS 约束
    - 只有未来确有受控后台任务时，才单独引入 service-role，并且必须限制在服务端专用路由，绝不用于公开读取
    - Cloudflare 浏览器登录会从 `/api/public-config` 读取 `SUPABASE_URL` 和 `SUPABASE_ANON_KEY`；该接口不会返回任何 service-role 凭据
