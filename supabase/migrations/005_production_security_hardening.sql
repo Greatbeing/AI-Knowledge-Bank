@@ -182,11 +182,28 @@ BEGIN
     -- A validator may change only the workflow state and review timestamps.
     -- They cannot rewrite knowledge content, authorship, versioning or CAS
     -- metrics while performing a review.
-    IF (to_jsonb(NEW) - ARRAY['status', 'validated_at', 'merged_at', 'updated_at'])
-       IS DISTINCT FROM
-       (to_jsonb(OLD) - ARRAY['status', 'validated_at', 'merged_at', 'updated_at']) THEN
-      RAISE EXCEPTION 'Validators may only change node workflow state'
-        USING ERRCODE = '42501';
+    IF pg_trigger_depth() > 1 THEN
+      -- Trusted nested database triggers maintain these derived counters
+      -- after validation/fork events. Clients cannot fake trigger depth.
+      IF (to_jsonb(NEW) - ARRAY[
+            'status', 'validated_at', 'merged_at', 'updated_at',
+            'validation_count', 'fork_count', 'merge_count'
+          ])
+         IS DISTINCT FROM
+         (to_jsonb(OLD) - ARRAY[
+            'status', 'validated_at', 'merged_at', 'updated_at',
+            'validation_count', 'fork_count', 'merge_count'
+          ]) THEN
+        RAISE EXCEPTION 'Nested workflow triggers may only update derived counters'
+          USING ERRCODE = '42501';
+      END IF;
+    ELSE
+      IF (to_jsonb(NEW) - ARRAY['status', 'validated_at', 'merged_at', 'updated_at'])
+         IS DISTINCT FROM
+         (to_jsonb(OLD) - ARRAY['status', 'validated_at', 'merged_at', 'updated_at']) THEN
+        RAISE EXCEPTION 'Validators may only change node workflow state'
+          USING ERRCODE = '42501';
+      END IF;
     END IF;
 
     IF NEW.status IS DISTINCT FROM OLD.status THEN
