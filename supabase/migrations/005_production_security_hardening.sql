@@ -379,6 +379,64 @@ BEFORE INSERT ON public.node_forks
 FOR EACH ROW
 EXECUTE FUNCTION public.guard_node_fork_provenance();
 
+-- ---------------------------------------------------------------------------
+-- 6. Community signals are untrusted input until independently verified.
+--    User-generated usage/dispute events cannot increase retrieval ranking.
+-- ---------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.guard_community_signal_trust()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, auth, pg_temp
+AS $
+DECLARE
+  actor_role TEXT := COALESCE(auth.role(), '');
+  actor_is_reviewer BOOLEAN := FALSE;
+BEGIN
+  actor_is_reviewer :=
+    actor_role = 'service_role'
+    OR EXISTS (
+      SELECT 1 FROM public.user_profiles up
+      WHERE up.user_id = auth.uid() AND up.role IN ('validator', 'admin')
+    );
+
+  IF actor_role = 'service_role' THEN
+    RETURN NEW;
+  END IF;
+
+  IF auth.uid() IS NULL OR NEW.user_id IS DISTINCT FROM auth.uid() THEN
+    RAISE EXCEPTION 'Community signals must be attributed to the signed-in user'
+      USING ERRCODE = '42501';
+  END IF;
+
+  IF actor_is_reviewer THEN
+    IF NEW.signal_type NOT IN ('validated', 'used', 'forked', 'commented', 'merged', 'disputed') THEN
+      RAISE EXCEPTION 'Unsupported community signal type'
+        USING ERRCODE = '22023';
+    END IF;
+    RETURN NEW;
+  END IF;
+
+  IF NEW.signal_type NOT IN ('used', 'forked', 'commented', 'disputed') THEN
+    RAISE EXCEPTION 'Only validators may submit validation or merge signals'
+      USING ERRCODE = '42501';
+  END IF;
+
+  -- Community activity is recorded, but it does not alter trust/ranking until
+  -- reviewed. A later validator/service event can record verified impact.
+  NEW.impact_delta := 0;
+  NEW.confidence := 0.5;
+  NEW.weight_snapshot := '{}'::jsonb;
+  RETURN NEW;
+END;
+$;
+
+DROP TRIGGER IF EXISTS trg_guard_community_signal_trust ON public.community_evolution_signals;
+CREATE TRIGGER trg_guard_community_signal_trust
+BEFORE INSERT OR UPDATE ON public.community_evolution_signals
+FOR EACH ROW
+EXECUTE FUNCTION public.guard_community_signal_trust();
+
 COMMENT ON FUNCTION public.guard_user_profile_security_fields() IS
   'Prevents self-assignment of roles, reputation, account state, and contribution counters.';
 COMMENT ON FUNCTION public.guard_knowledge_node_workflow_fields() IS
