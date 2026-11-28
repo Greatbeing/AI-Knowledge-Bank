@@ -172,7 +172,7 @@ function parseAkbNode(node, repo, path, config, treeEntry, origin, sourceContent
   });
 }
 
-function extractAtomDescription(markdown, atom) {
+export function extractAtomDescription(markdown, atom) {
   if (!markdown || !atom) return "";
   const heading = String(atom.heading || "").trim();
   const tableNumber = heading.match(/^#(\d+)\b/);
@@ -212,14 +212,16 @@ function parsePrimitive(primitive, repo, path, config, treeEntry, atomByPrimitiv
   const sourceRepo = atom ? writingConfig.repository : repo;
   const atomSource = atom ? writingFiles.get(sourcePath) : "";
   const extracted = atom ? extractAtomDescription(atomSource, atom) : "";
-  const description = normalizeDescription(primitive.purpose) || normalizeDescription(extracted) || `The source does not provide a detailed purpose for ${primitive.name}; inspect the linked source before use.`;
+  const combinedDescription = [primitive.purpose, extracted].filter(Boolean).join("。");
+  const description = normalizeDescription(combinedDescription) || `The source does not provide a detailed purpose for ${primitive.name}; inspect the linked source before use.`;
+  const completeDescription = description.length < 20 ? `${description}。具体用法与边界请参阅原始来源。` : description;
   return buildRecord({
     id: primitive.id,
     name: primitive.name,
     kind: "primitive",
     vault: "tools",
-    description,
-    summary: description,
+    description: completeDescription,
+    summary: completeDescription,
     tags: [...(primitive.tags || []), `primitive-family:${primitive.family || "unclassified"}`, `normalized-via:${repo}/${path}`, ...(extracted ? ["description:source-extracted"] : ["description:source-incomplete"])],
     maturity: primitive.lifecycle || "unknown",
     source: sourceMetadata(sourceRepo, sourcePath, sourceConfig, sourceEntry, anchor),
