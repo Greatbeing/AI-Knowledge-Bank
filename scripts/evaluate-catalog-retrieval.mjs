@@ -83,7 +83,8 @@ export function evaluateBenchmark(catalog, benchmark) {
     metrics: {
       recall_at_k: Number(mean("recall_at_k").toFixed(4)),
       mrr: Number(mean("reciprocal_rank").toFixed(4)),
-      ndcg_at_k: Number(mean("ndcg_at_k").toFixed(4)),\n      precision_at_k: Number(taskResults.reduce((sum, task) => sum + task.precision_at_k, 0) / Math.max(1, taskResults.length).toFixed(4))
+      ndcg_at_k: Number(mean("ndcg_at_k").toFixed(4)),
+      precision_at_k: Number((taskResults.reduce((sum, task) => sum + task.precision_at_k, 0) / Math.max(1, taskResults.length)).toFixed(4))
     },
     tasks: taskResults,
     limitations: [
