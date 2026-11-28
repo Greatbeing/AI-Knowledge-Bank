@@ -56,7 +56,7 @@ jobs:
 
       - name: Evaluate retrieval baseline
         run: |
-          node scripts/evaluate-catalog-retrieval.mjs /tmp/phase1-capability-catalog.json /tmp/phase1-retrieval-benchmark.json > /tmp/phase1-retrieval-report.json
+          node scripts/evaluate-catalog-retrieval.mjs /tmp/phase1-capability-catalog.json data/retrieval-benchmark.phase1.json > /tmp/phase1-retrieval-report.json
           node --input-type=module <<'NODE'
           import { readFile } from "node:fs/promises";
           const report = JSON.parse(await readFile("/tmp/phase1-retrieval-report.json", "utf8"));
