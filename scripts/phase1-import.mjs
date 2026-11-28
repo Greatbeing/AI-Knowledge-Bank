@@ -99,7 +99,7 @@ function sourceMetadata(repo, path, config, treeEntry, anchor) {
     commit_sha: config.commit_sha,
     blob_sha: treeEntry?.sha || "",
     anchor: anchor || undefined,
-    url: `https://github.com/${repo}/blob/${config.commit_sha}/${encodedPath}${anchor ? `#${encodeURIComponent(anchor)}` : ""}`,
+    url: `https://github.com/${repo}/blob/${config.commit_sha}/${encodedPath}`,
     parser: config.parser,
     parser_version: PARSER_VERSION,
     license: "unknown",
@@ -172,7 +172,37 @@ function parseAkbNode(node, repo, path, config, treeEntry, origin, sourceContent
   });
 }
 
-function parsePrimitive(primitive, repo, path, config, treeEntry, atomByPrimitiveId, writingConfig, writingTree) {
+function extractAtomDescription(markdown, atom) {
+  if (!markdown || !atom) return "";
+  const heading = String(atom.heading || "").trim();
+  const tableNumber = heading.match(/^#(\\d+)\\b/);
+  if (tableNumber) {
+    const row = markdown.split(/\\r?\\n/).find((line) => {
+      const match = line.match(/^\\|\\s*(\\d+)\\s*\\|/);
+      return match && Number(match[1]) === Number(tableNumber[1]);
+    });
+    if (row) {
+      const cells = row.split("|").map((cell) => cell.trim());
+      if (cells[2] && cells[2].length >= 8) return cells[2];
+    }
+  }
+  const lines = markdown.split(/\\r?\\n/);
+  const title = heading.replace(/^#+\\s*/, "").replace(/\\s+$/, "");
+  const start = lines.findIndex((line) => line.trim() === heading || (title && line.trim().replace(/^#+\\s*/, "") === title));
+  if (start < 0) return "";
+  const level = (lines[start].match(/^#+/) || ["##"])[0].length;
+  const section = [];
+  for (let i = start + 1; i < lines.length; i += 1) {
+    const next = lines[i].match(/^(#+)\\s/);
+    if (next && next[1].length <= level) break;
+    section.push(lines[i]);
+  }
+  const definition = section.find((line) => /\\*\\*定义\\*\\*：/.test(line));
+  if (definition) return definition.replace(/^.*?\\*\\*定义\\*\\*：/, "").trim();
+  return section.map((line) => line.replace(/\\s+/g, " ").trim()).filter(Boolean).join(" ").slice(0, 600);
+}
+
+function parsePrimitive(primitive, repo, path, config, treeEntry, atomByPrimitiveId, writingConfig, writingTree, writingFiles) {
   const isDomain = primitive.kind === "domain";
   const atom = isDomain ? atomByPrimitiveId.get(primitive.id) : null;
   const sourcePath = atom?.file || path;
@@ -180,18 +210,20 @@ function parsePrimitive(primitive, repo, path, config, treeEntry, atomByPrimitiv
   const sourceEntry = atom ? writingTree.get(sourcePath) : treeEntry;
   const anchor = atom?.heading || primitive.id;
   const sourceRepo = atom ? writingConfig.repository : repo;
-  const sourceContent = primitive;
+  const atomSource = atom ? writingFiles.get(sourcePath) : "";
+  const extracted = atom ? extractAtomDescription(atomSource, atom) : "";
+  const description = normalizeDescription(primitive.purpose) || normalizeDescription(extracted) || `The source does not provide a detailed purpose for ${primitive.name}; inspect the linked source before use.`;
   return buildRecord({
     id: primitive.id,
     name: primitive.name,
     kind: "primitive",
     vault: "tools",
-    description: primitive.purpose,
-    summary: primitive.purpose,
-    tags: [...(primitive.tags || []), `primitive-family:${primitive.family || "unclassified"}`, `normalized-via:${repo}/${path}`],
+    description,
+    summary: description,
+    tags: [...(primitive.tags || []), `primitive-family:${primitive.family || "unclassified"}`, `normalized-via:${repo}/${path}`, ...(extracted ? ["description:source-extracted"] : ["description:source-incomplete"])],
     maturity: primitive.lifecycle || "unknown",
     source: sourceMetadata(sourceRepo, sourcePath, sourceConfig, sourceEntry, anchor),
-    sourceContent
+    sourceContent: { primitive, extracted }
   });
 }
 
@@ -251,7 +283,7 @@ export async function importSources(config) {
   if (!Array.isArray(atomIndex)) throw new Error("Writing atom index must be an array.");
   const atomByPrimitiveId = new Map(atomIndex.map((atom) => [`we.${atom.id.replace(".", ".a")}`, atom]));
 
-  const engineFiles = [...writingFiles.keys()].filter((path) => /\/SKILL\.md$/.test(path)).sort();
+  const engineFiles = [...writingFiles.keys()].filter((path) => /-writing\\/SKILL\\.md$/.test(path)).sort();
   const engineRecords = new Map();
   for (const path of engineFiles) {
     const { metadata, body } = parseFrontmatter(writingFiles.get(path));
@@ -275,6 +307,25 @@ export async function importSources(config) {
     if (record) engineRecords.set(engineSlug, record.id);
   }
 
+  // Cangjie is an engine-authoring workflow, not one of the 17 writing engines.
+  const cangjiePath = "cangjie/SKILL.md";
+  if (writingFiles.has(cangjiePath)) {
+    const { metadata, body } = parseFrontmatter(writingFiles.get(cangjiePath));
+    const description = metadata.description || body.slice(0, 800);
+    add(buildRecord({
+      id: "we.workflow.cangjie-authoring",
+      name: metadata.name || "cangjie",
+      kind: "workflow",
+      vault: "tools",
+      description,
+      summary: description,
+      tags: ["writing", "engine-authoring", "meta-workflow"],
+      maturity: "unknown",
+      source: sourceMetadata(writing.repository, cangjiePath, writing, trees.get(writing.repository).get(cangjiePath)),
+      sourceContent: writingFiles.get(cangjiePath)
+    }), `${writing.repository}/${cangjiePath}`);
+  }
+
   const cognitive = config.sources.find((source) => source.parser === "cognitive-registry");
   const cognitiveFiles = filesByRepo.get(cognitive.repository);
   const primitivePaths = ["registry/writing-engines.json", "registry/general.json"];
@@ -295,7 +346,8 @@ export async function importSources(config) {
         trees.get(cognitive.repository).get(path),
         atomByPrimitiveId,
         writing,
-        trees.get(writing.repository)
+        trees.get(writing.repository),
+        writingFiles
       );
       add(record, `${cognitive.repository}/${path}#${primitive.id}`);
       if (record && primitive.kind === "domain") {
@@ -316,15 +368,21 @@ export async function importSources(config) {
   }
 
   const duplicateIds = records.map((record) => record.id).filter((id, index, all) => all.indexOf(id) !== index);
+  const manifestPrimitiveIds = new Set(records.filter((record) => record.kind === "primitive").map((record) => record.id));
+  const missingManifestPrimitiveIds = [...importedPrimitiveIds].filter((id) => (id.startsWith("we.") || id.startsWith("ce.")) && !manifestPrimitiveIds.has(id));
   const uniqueRecords = [...new Map(records.map((record) => [record.id, record])).values()].sort((a, b) => a.id.localeCompare(b.id));
   const validationErrors = uniqueRecords.flatMap((record) => validateRecord(record).map((error) => ({ id: record.id, error })));
   const report = {
     record_count: uniqueRecords.length,
     by_kind: uniqueRecords.reduce((counts, record) => ({ ...counts, [record.kind]: (counts[record.kind] || 0) + 1 }), {}),
     engine_count: engineRecords.size,
+    workflow_count: uniqueRecords.filter((record) => record.kind === "workflow").length,
     atom_index_count: atomIndex.length,
-    imported_domain_primitive_count: domainIds.size,
-    imported_general_primitive_count: [...importedPrimitiveIds].filter((id) => id.startsWith("ce.")).length,
+    imported_domain_primitive_count: uniqueRecords.filter((record) => record.kind === "primitive" && record.id.startsWith("we.")).length,
+    registry_domain_primitive_count: domainIds.size,
+    imported_general_primitive_count: uniqueRecords.filter((record) => record.kind === "primitive" && record.id.startsWith("ce.")).length,
+    registry_general_primitive_count: [...importedPrimitiveIds].filter((id) => id.startsWith("ce.")).length,
+    missing_manifest_primitive_ids: missingManifestPrimitiveIds,
     duplicate_ids: [...new Set(duplicateIds)],
     missing_registry_ids: missingRegistryIds,
     orphan_registry_ids: orphanRegistryIds,
@@ -352,6 +410,7 @@ async function main(argv = process.argv.slice(2)) {
   if (catalog.report.duplicate_ids.length) throw new Error(`Duplicate catalog IDs: ${catalog.report.duplicate_ids.join(", ")}`);
   if (catalog.report.validation_errors.length) throw new Error(`Manifest validation failed: ${JSON.stringify(catalog.report.validation_errors.slice(0, 20))}`);
   if (catalog.report.missing_registry_ids.length || catalog.report.orphan_registry_ids.length) throw new Error("Writing atom index and cognitive registry are out of sync.");
+  if (catalog.report.missing_manifest_primitive_ids.length) throw new Error("One or more source primitives could not be normalized into manifest records.");
   if (argv.includes("--check")) {
     process.stdout.write(JSON.stringify(catalog.report, null, 2) + "\n");
     return;
