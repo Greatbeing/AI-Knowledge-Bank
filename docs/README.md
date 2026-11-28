@@ -6,6 +6,7 @@ AI Knowledge Bank 的长期产品与工程基线文档。
 - [Phase 1 仓库盘点与接入设计](PHASE_1_REPOSITORY_INVENTORY.md)：三个核心仓库的真实资产清单、能力分类、只读 Connector 契约、导入规则和阶段验收标准。
 - [工程能力复用决策日志](ENGINEERING_CAPABILITY_REUSE_LOG.md)：记录项目开发中发现、评估、复用或暂缓采用 GitHub 现有工具的依据与证据。
 - [ADR-0002：Reuse Before Build](ADR-0002-REUSE-BEFORE-BUILD.md)：将复用优先确立为 AI Knowledge Bank 与 Cognitive Engine 的一级架构原则。
+- [ADR-0003：Capability Compression](ADR-0003-CAPABILITY-COMPRESSION.md)：定义能力压缩、复用驱动智能、经验分层和计算资源循环利用的架构决策。
 - [产品愿景与架构说明](AI_CAPABILITY_PLATFORM_VISION.md)：产品战略和系统目标。
 - [Capability Manifest Schema](../schemas/capability-manifest.schema.json)：机器可读的能力元数据规范，支持 engine、primitive 与来源追溯。
 - [Phase 1 来源快照配置](../config/capability-sources.phase1.json)：固定三个公共仓库的 Commit 与保守 allowlist。
@@ -17,9 +18,10 @@ AI Knowledge Bank 的长期产品与工程基线文档。
 
 Phase 1 — GitHub Read-only Ingestion 已完成首轮自有仓库只读盘点、固定来源快照、确定性导入器、Manifest Schema 校验、GitHub 候选发现 CLI 和 25 项人工标注的检索种子基准。首轮目录为 231 条记录；来源对账、重复检查、Schema 校验和导入错误均为零。检索种子基准：Recall@5 0.9600、MRR 0.7993、NDCG@5 0.8386、Precision@1 0.7200；每项任务当前仅标注一个相关资产，因此 Precision@5 的理论上限为 0.2000。以上仅为种子基准，不代表生产检索质量。
 
-已接受 ADR-0002 — Reuse Before Build。Cognitive Engine 的独立 Draft PR #1 已实现第一版确定性复用决策与路由前置策略，包含 reuse、compose、adapt、defer、build_gap，许可证、安全、验证和兼容性门槛，以及“执行授权始终为 false”的安全不变量。最新对应 CI：27 项测试通过，1 项因未检出 companion repository 而跳过。
+已接受 ADR-0002 — Reuse Before Build，并新增 ADR-0003 — Capability Compression as a Foundation for Reuse-Driven Intelligence。Cognitive Engine 的独立 Draft PR #1 已实现第一版确定性复用决策与路由前置策略；本轮新增只读 AI Knowledge Bank Manifest 快照适配器、来源追溯和 fail-closed 决策映射。新增适配器测试正在由 GitHub Actions 验证；在 CI 通过前不将其标记为 verified。
 
-下一阶段重点：将 Reuse Policy 与 AI Knowledge Bank 的真实目录连接，建立可复现的任务级复用评估，并比较 reuse-first 与 generate-first 在任务成功率、质量、成本、延迟、集成时间和维护负担上的差异。文档中的阶段、接口和功能只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
+下一阶段重点：使用真实 Phase 1 导出快照完成端到端任务验证，建立可复现的任务级复用评估，并比较 reuse-first 与 generate-first 在任务成功率、质量、成本、延迟、集成时间和维护负担上的差异。文档中的阶段、接口和功能只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
+
 ## 工作原则
 
 - 从普通用户的任务出发，而不是从工具目录出发。
@@ -27,7 +29,6 @@ Phase 1 — GitHub Read-only Ingestion 已完成首轮自有仓库只读盘点�
 - 先完成只读发现、解析、索引和检索，再开放执行。
 - 任何发现的仓库代码均不得自动执行。
 - 重大架构变化通过 ADR 记录。
-
 
 ## GitHub 能力候选发现
 
