@@ -32,7 +32,7 @@ The first full CI import before the completeness correction exposed a real data-
 - validate normalized records against the canonical JSON Schema;
 - keep all imported records unverified and license status at `review_required`.
 
-The first CI installation also reported 23 dependency vulnerabilities (10 moderate, 13 high). No automatic audit fix was applied because dependency upgrades are outside this ingestion change and may be breaking; this requires a separate dependency-by-dependency security triage. The corrected counts and full CI result must be recorded only after the latest run completes.
+The first CI installation also reported 23 dependency vulnerabilities (10 moderate, 13 high). No automatic audit fix was applied because dependency upgrades are outside this ingestion change and may be breaking; this requires a separate dependency-by-dependency security triage. The corrected pinned-source CI run completed successfully. It emitted 231 records: 17 engines, 1 Cangjie authoring workflow, 182 domain primitives, 4 general primitives, and 27 AKB seed records (9 knowledge, 9 tools, 9 cases). Atom/Primitive missing and orphan mappings: 0; duplicate IDs: 0; missing Manifest primitive IDs: 0; schema/manual validation errors: 0; importer issues: 0. CI passed text health, lint, all tests, live read-only import, TypeScript/Vite build and build-output verification.
 
 ## Required decision record for future engineering tasks
 
