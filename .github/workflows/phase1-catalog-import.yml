@@ -1,0 +1,45 @@
+name: Phase 1 Catalog Import
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout selected source branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Run read-only catalog import
+        run: node scripts/phase1-import.mjs --out /tmp/phase1-catalog.json
+
+      - name: Assert import report
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from "node:fs/promises";
+          const catalog = JSON.parse(await readFile("/tmp/phase1-catalog.json", "utf8"));
+          const { report } = catalog;
+          console.log(JSON.stringify(report, null, 2));
+          if (report.duplicate_ids.length) throw new Error("Duplicate catalog IDs detected");
+          if (report.validation_errors.length) throw new Error("Manifest validation errors detected");
+          if (report.engine_count < 15) throw new Error("Expected at least 15 writing engines");
+          if (report.imported_domain_primitive_count < 170) throw new Error("Expected at least 170 domain primitives");
+          if (report.imported_general_primitive_count !== 4) throw new Error("Expected 4 general primitives");
+          if (report.record_count < 190) throw new Error("Catalog record count unexpectedly low");
+          NODE
+
+      - name: Upload catalog artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-capability-catalog
+          path: /tmp/phase1-catalog.json
+          if-no-files-found: error
+          retention-days: 7
