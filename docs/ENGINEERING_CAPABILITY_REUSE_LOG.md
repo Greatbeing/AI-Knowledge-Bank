@@ -98,3 +98,13 @@ On commit `9973702f809ef85b8c5732bc0faca0bdd9c67e26`, GitHub Actions run [461193
 ### Next decision
 
 Keep the lexical baseline as a transparent control. Expand the benchmark first; then compare MiniSearch, Fuse.js, FlexSearch and a Chinese-aware semantic/hybrid approach on the same judged tasks. Select based on relevance, latency, bundle size, index size, operational complexity, licensing and security—not popularity or stars.
+
+
+## Decision record 004 — Retrieval benchmark expansion
+
+**Task:** reduce the risk of overfitting the lexical baseline to direct keyword queries.
+
+- Expanded the manually curated seed set from 10 to 25 tasks, adding colloquial paraphrases, indirect task descriptions and professional task formulations across the existing 17 writing engines and 4 general reasoning/verification primitives.
+- Added Precision@5 alongside Recall@5, MRR and NDCG@5 so the report exposes irrelevant results in the top-five list, not only whether a relevant result appears.
+- Kept the original 10 tasks for continuity; new judgments are explicit and inspectable in `data/retrieval-benchmark.phase1.json`.
+- The expanded set is still a seed benchmark, not an independently adjudicated production benchmark. Scores must be reported with this limitation and reviewed for ambiguous/overlapping intents before any production engine decision.
