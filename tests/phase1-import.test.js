@@ -50,7 +50,7 @@ describe("Phase 1 importer integration", () => {
         "data/db.json": JSON.stringify({ nodes: [{ id: "db-1", title: "DB knowledge asset", vault_type: "knowledge", summary: "A sufficiently detailed local seed database description." }], signals: [{ id: "not-imported" }] })
       },
       "Greatbeing/cognitive-engine": {
-        "registry/writing-engines.json": JSON.stringify({ primitives: [{ id: "we.test-writing.a1", name: "Test atom", purpose: "A sufficiently detailed primitive description for this fixture.", kind: "domain", family: "test", tags: ["test"], lifecycle: "draft" }] }),
+        "registry/writing-engines.json": JSON.stringify({ primitives: [{ id: "we.test-writing.a1", name: "Test atom", purpose: "Short purpose", kind: "domain", family: "test", tags: ["test"], lifecycle: "draft" }] }),
         "registry/general.json": JSON.stringify({ primitives: [{ id: "ce.general.test", name: "General check", purpose: "A sufficiently detailed general primitive description for this fixture.", kind: "general", lifecycle: "draft" }] })
       },
       "Greatbeing/writing-engines": {
@@ -96,7 +96,7 @@ describe("Phase 1 importer integration", () => {
     expect(first.report.missing_registry_ids).toEqual([]);
     expect(first.report.orphan_registry_ids).toEqual([]);
     expect(first.report.safety.code_executed).toBe(false);
-    expect(first.records.find((record) => record.id === "we.test-writing.a1").source.blob_sha).toBe(blob);
+    expect(first.records.find((record) => record.id === "we.test-writing.a1").source.blob_sha).toBe(blob);\n    expect(first.records.find((record) => record.id === "we.test-writing.a1").description).toContain("A sufficiently detailed atom operation definition");
     expect(first.records.find((record) => record.id === "we.test-writing.a1").relationships).toContainEqual({ type: "belongs_to", target_id: "we.engine.test-writing" });
     expect(first.records.find((record) => record.id === "we.engine.test-writing").relationships).toContainEqual({ type: "contains", target_id: "we.test-writing.a1" });
     expect(first.records.some((record) => record.id.includes("not-imported"))).toBe(false);
