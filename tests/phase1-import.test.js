@@ -56,7 +56,7 @@ describe("Phase 1 importer integration", () => {
       sources: [
         { repository: "Greatbeing/AI-Knowledge-Bank", ref: "main", commit_sha: commit, parser: "akb-seed", allowlist: ["data/akb_seed_nodes.json", "data/db.json"] },
         { repository: "Greatbeing/cognitive-engine", ref: "main", commit_sha: commit, parser: "cognitive-registry", allowlist: ["registry/writing-engines.json", "registry/general.json"] },
-        { repository: "Greatbeing/writing-engines", ref: "main", commit_sha: commit, parser: "writing-engines", allowlist: ["atoms/index.json", "*-writing/SKILL.md", "*-writing/references/atom-ops.md"] }
+        { repository: "Greatbeing/writing-engines", ref: "main", commit_sha: commit, parser: "writing-engines", allowlist: ["atoms/index.json", "*-writing/SKILL.md", "cangjie/SKILL.md", "*-writing/references/atom-ops.md"] }
       ]
     };
     vi.stubGlobal("fetch", vi.fn(async (input) => {
@@ -76,8 +76,8 @@ describe("Phase 1 importer integration", () => {
     const first = await importSources(config);
     const second = await importSources(config);
     expect(first).toEqual(second);
-    expect(first.report.record_count).toBe(5);
-    expect(first.report.engine_count).toBe(1);
+    expect(first.report.record_count).toBe(6);
+    expect(first.report.engine_count).toBe(1);\n    expect(first.report.workflow_count).toBe(1);\n    expect(first.records.find((record) => record.id === "we.workflow.cangjie-authoring").kind).toBe("workflow");
     expect(first.report.atom_index_count).toBe(1);
     expect(first.report.imported_domain_primitive_count).toBe(1);
     expect(first.report.imported_general_primitive_count).toBe(1);
