@@ -48,7 +48,8 @@ describe("Phase 1 importer integration", () => {
       "Greatbeing/writing-engines": {
         "atoms/index.json": JSON.stringify([{ id: "test-writing.1", name: "Test atom", engine: "test-writing", family: "test", file: "test-writing/references/atom-ops.md", heading: "## 1. Test atom" }]),
         "test-writing/SKILL.md": ["---", "name: test-writing", "description: |", "  A sufficiently detailed engine description for this fixture.", "---", "# Instructions (not executed)"].join("\n"),
-        "test-writing/references/atom-ops.md": "## 1. Test atom\nDescription only."
+        "test-writing/references/atom-ops.md": "## 1. Test atom\nDescription only.",
+        "cangjie/SKILL.md": ["---", "name: cangjie", "description: A sufficiently detailed engine authoring workflow description for this fixture.", "---", "# Workflow"].join("\n")
       }
     };
     const config = {
