@@ -46,10 +46,12 @@ jobs:
           console.log(JSON.stringify(report, null, 2));
           if (report.duplicate_ids.length) throw new Error("Duplicate catalog IDs detected");
           if (report.validation_errors.length) throw new Error("Manifest validation errors detected");
-          if (report.engine_count < 15) throw new Error("Expected at least 15 writing engines");
-          if (report.imported_domain_primitive_count < 170) throw new Error("Expected at least 170 domain primitives");
-          if (report.imported_general_primitive_count !== 4) throw new Error("Expected 4 general primitives");
-          if (report.record_count < 190) throw new Error("Catalog record count unexpectedly low");
+          if (report.missing_manifest_primitive_ids.length) throw new Error("Some source primitives were not normalized");
+          if (report.engine_count !== 17) throw new Error("Expected the 17 catalogued writing engines");
+          if (report.workflow_count < 1) throw new Error("Expected the Cangjie engine-authoring workflow");
+          if (report.imported_domain_primitive_count !== 182) throw new Error("Expected all 182 domain primitives to be normalized");
+          if (report.imported_general_primitive_count !== 4) throw new Error("Expected all 4 general primitives");
+          if (report.record_count < 230) throw new Error("Catalog record count unexpectedly low");
           NODE
 
       - name: Build
