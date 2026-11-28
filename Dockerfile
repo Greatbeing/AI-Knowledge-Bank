@@ -1,5 +1,5 @@
 # API target: runs the existing Fetch API handler under Node.js.
-FROM node:22-alpine AS api
+FROM node:24-alpine AS api
 WORKDIR /app
 ENV NODE_ENV=production API_RUNTIME=oracle-node PORT=8080 HOST=0.0.0.0
 COPY functions/api/[[path]].js ./functions/api/[[path]].js
@@ -9,7 +9,7 @@ EXPOSE 8080
 CMD ["node", "server/oracle-api.mjs"]
 
 # Frontend target: build the current Vite application and serve static assets.
-FROM node:22-alpine AS frontend-build
+FROM node:24-alpine AS frontend-build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
