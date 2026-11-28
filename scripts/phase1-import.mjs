@@ -33,22 +33,22 @@ export function sha256(value) {
 }
 
 export function parseFrontmatter(markdown) {
-  const match = markdown.match(/^---\\s*\\r?\\n([\\s\\S]*?)\\r?\\n---\\s*(?:\\r?\\n|$)/);
+  const match = markdown.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/);
   if (!match) return { metadata: {}, body: markdown };
   const metadata = {};
-  const lines = match[1].split(/\\r?\\n/);
+  const lines = match[1].split(/\r?\n/);
   for (let i = 0; i < lines.length; i += 1) {
-    const entry = lines[i].match(/^([A-Za-z0-9_-]+):\\s*(.*)$/);
+    const entry = lines[i].match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
     if (!entry) continue;
     const [, key, rawValue] = entry;
     if (rawValue === "|" || rawValue === ">") {
       const block = [];
-      while (i + 1 < lines.length && /^\\s+/.test(lines[i + 1])) {
-        block.push(lines[++i].replace(/^\\s+/, ""));
+      while (i + 1 < lines.length && /^\s+/.test(lines[i + 1])) {
+        block.push(lines[++i].replace(/^\s+/, ""));
       }
-      metadata[key] = block.join(rawValue === ">" ? " " : "\\n").trim();
+      metadata[key] = block.join(rawValue === ">" ? " " : "\n").trim();
     } else {
-      metadata[key] = rawValue.replace(/^(['"])(.*)\\1$/, "$2").trim();
+      metadata[key] = rawValue.replace(/^(['"])(.*)\1$/, "$2").trim();
     }
   }
   return { metadata, body: markdown.slice(match[0].length) };
@@ -66,7 +66,7 @@ export function toSafeId(value) {
 }
 
 function normalizeDescription(value, fallback = "") {
-  const text = String(value || fallback || "").replace(/\\s+/g, " ").trim();
+  const text = String(value || fallback || "").replace(/\s+/g, " ").trim();
   return text.length >= 20 ? text.slice(0, MAX_DESCRIPTION) : "";
 }
 
@@ -77,7 +77,7 @@ function validateRecord(record) {
   if (!KINDS.has(record.kind)) errors.push("invalid kind");
   if (record.vault && !VAULTS.has(record.vault)) errors.push("invalid vault");
   if (typeof record.description !== "string" || record.description.length < 20 || record.description.length > MAX_DESCRIPTION) errors.push("invalid description");
-  if (!record.source || !/^[^/\\s]+/[^/\\s]+$/.test(record.source.repository || "")) errors.push("invalid source repository");
+  if (!record.source || typeof record.source.repository !== "string" || record.source.repository.split("/").length !== 2 || record.source.repository.split("/").some((part) => !part || /\s/.test(part))) errors.push("invalid source repository");
   if (!record.source?.path) errors.push("missing source path");
   if (!/^[a-f0-9]{40}$/.test(record.source?.commit_sha || "")) errors.push("invalid immutable commit SHA");
   if (!/^[a-f0-9]{40}$/.test(record.source?.blob_sha || "")) errors.push("missing or invalid source blob SHA");
@@ -147,7 +147,7 @@ async function fetchText(url) {
 
 export function matchesAllowlist(path, patterns) {
   return patterns.some((pattern) => {
-    const escaped = pattern.replace(/[.+^${}()|[\\]\\\\]/g, "\\\\$&").replace(/\\*/g, ".*");
+    const escaped = pattern.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*");
     return new RegExp(`^${escaped}$`).test(path);
   });
 }
@@ -344,7 +344,7 @@ export async function importSources(config) {
 
 async function main(argv = process.argv.slice(2)) {
   if (argv.includes("--help")) {
-    process.stdout.write("Usage: node scripts/phase1-import.mjs [--out <path>] [--check]\\nDefault mode is read-only and prints deterministic catalog JSON to stdout.\\n");
+    process.stdout.write("Usage: node scripts/phase1-import.mjs [--out <path>] [--check]\nDefault mode is read-only and prints deterministic catalog JSON to stdout.\n");
     return;
   }
   const config = JSON.parse(await readFile(CONFIG_PATH, "utf8"));
@@ -353,16 +353,16 @@ async function main(argv = process.argv.slice(2)) {
   if (catalog.report.validation_errors.length) throw new Error(`Manifest validation failed: ${JSON.stringify(catalog.report.validation_errors.slice(0, 20))}`);
   if (catalog.report.missing_registry_ids.length || catalog.report.orphan_registry_ids.length) throw new Error("Writing atom index and cognitive registry are out of sync.");
   if (argv.includes("--check")) {
-    process.stdout.write(JSON.stringify(catalog.report, null, 2) + "\\n");
+    process.stdout.write(JSON.stringify(catalog.report, null, 2) + "\n");
     return;
   }
   const outputIndex = argv.indexOf("--out");
-  const output = JSON.stringify(catalog, null, 2) + "\\n";
+  const output = JSON.stringify(catalog, null, 2) + "\n";
   if (outputIndex >= 0 && argv[outputIndex + 1]) {
     const path = resolve(process.cwd(), argv[outputIndex + 1]);
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, output, "utf8");
-    process.stdout.write(JSON.stringify(catalog.report, null, 2) + "\\n");
+    process.stdout.write(JSON.stringify(catalog.report, null, 2) + "\n");
   } else {
     process.stdout.write(output);
   }
@@ -370,7 +370,7 @@ async function main(argv = process.argv.slice(2)) {
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch((error) => {
-    process.stderr.write(`Phase 1 import failed: ${error.message}\\n`);
+    process.stderr.write(`Phase 1 import failed: ${error.message}\n`);
     process.exitCode = 1;
   });
 }
