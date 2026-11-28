@@ -59,6 +59,23 @@ function toSafeId(value) {
   return String(value || "").toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 96);
 }
 
+
+function validateRecord(record) {
+  const errors = [];
+  const kinds = ["principle", "framework", "prompt", "script", "tool", "agent", "workflow", "case-study", "dataset", "model-adapter", "engine", "primitive", "knowledge", "case"];
+  if (!/^[a-z0-9][a-z0-9._-]{2,95}$/.test(record.id || "")) errors.push("invalid id");
+  if (!record.name || record.name.length < 2 || record.name.length > 120) errors.push("invalid name");
+  if (!kinds.includes(record.kind)) errors.push("invalid kind");
+  if (record.vault && !["knowledge", "tools", "cases"].includes(record.vault)) errors.push("invalid vault");
+  if (!record.description || record.description.length < 20 || record.description.length > MAX_DESCRIPTION) errors.push("invalid description");
+  if (!record.source || !/^[^/\\s]+\/[^/\\s]+$/.test(record.source.repository || "")) errors.push("invalid source repository");
+  if (!record.source?.path) errors.push("missing source path");
+  if (!/^[a-f0-9]{7,40}$/.test(record.source?.commit_sha || "")) errors.push("invalid source commit SHA");
+  if (!["discovered", "parsed", "reviewed", "verified", "executable", "deprecated", "rejected"].includes(record.lifecycle)) errors.push("invalid lifecycle");
+  if (record.relationships?.some((link) => !link.type || !link.target_id)) errors.push("invalid relationship");
+  return errors;
+}
+
 function sourceMetadata(repo, path, config, treeEntry, anchor = "") {
   return {
     repository: repo,
@@ -282,6 +299,7 @@ async function importSources(config) {
   }
 
   const duplicateIds = records.map((r) => r.id).filter((id, index, all) => all.indexOf(id) !== index);
+  const validationErrors = records.flatMap((record) => validateRecord(record).map((error) => ({ id: record.id, error })));
   const uniqueRecords = [...new Map(records.map((r) => [r.id, r])).values()].sort((a, b) => a.id.localeCompare(b.id));
   const domainPrimitives = uniqueRecords.filter((r) => r.kind === "primitive" && r.id.startsWith("we.")).length;
   const generalPrimitives = uniqueRecords.filter((r) => r.kind === "primitive" && r.id.startsWith("ce.")).length;
@@ -316,7 +334,7 @@ async function main(argv = process.argv.slice(2)) {
   }
   const config = JSON.parse(await readFile(CONFIG_PATH, "utf8"));
   const catalog = await importSources(config);
-  if (catalog.report.duplicate_ids.length) throw new Error(`Duplicate catalog IDs: ${catalog.report.duplicate_ids.join(", ")}`);
+  if (catalog.report.duplicate_ids.length) throw new Error(`Duplicate catalog IDs: ${catalog.report.duplicate_ids.join(", ")}`);\n  if (catalog.report.validation_errors.length) throw new Error(`Manifest validation failed: ${JSON.stringify(catalog.report.validation_errors.slice(0, 20))}`);
   const outputIndex = argv.indexOf("--out");
   const output = JSON.stringify(catalog, null, 2) + "\n";
   if (outputIndex >= 0 && argv[outputIndex + 1]) {
@@ -329,7 +347,7 @@ async function main(argv = process.argv.slice(2)) {
   }
 }
 
-export { importSources, normalizeVault, parseFrontmatter, toSafeId };
+export { importSources, normalizeVault, parseFrontmatter, toSafeId, validateRecord };
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch((error) => {
