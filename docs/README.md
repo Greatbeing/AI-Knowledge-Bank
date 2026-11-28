@@ -3,12 +3,13 @@
 AI Knowledge Bank 的长期产品与工程基线文档。
 
 - [项目总开发文档](PROJECT_DEVELOPMENT_BLUEPRINT.md)：产品章程、PRD、技术架构、安全模型、能力贡献规范、长期路线图和治理。
+- [Phase 1 仓库盘点与接入设计](PHASE_1_REPOSITORY_INVENTORY.md)：三个核心仓库的真实资产清单、能力分类、只读 Connector 契约、导入规则和阶段验收标准。
 - [产品愿景与架构说明](AI_CAPABILITY_PLATFORM_VISION.md)：产品战略和系统目标。
 - [Capability Manifest Schema](../schemas/capability-manifest.schema.json)：机器可读的能力元数据规范。
 
 ## 当前状态
 
-当前项目处于 Phase 0 — Product & Architecture Baseline。文档中的阶段、接口和功能属于目标设计，只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
+Phase 0 — Product & Architecture Baseline 已形成文档基线；Phase 1 — GitHub Read-only Ingestion 已启动，完成了三个核心仓库的首轮只读盘点。当前尚未完成 Connector 实现、可重复导入、检索评测或产品集成。文档中的阶段、接口和功能只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
 
 ## 工作原则
 
