@@ -32,7 +32,7 @@ The first full CI import before the completeness correction exposed a real data-
 - validate normalized records against the canonical JSON Schema;
 - keep all imported records unverified and license status at `review_required`.
 
-The corrected counts and full CI result must be recorded only after the latest run completes.
+The first CI installation also reported 23 dependency vulnerabilities (10 moderate, 13 high). No automatic audit fix was applied because dependency upgrades are outside this ingestion change and may be breaking; this requires a separate dependency-by-dependency security triage. The corrected counts and full CI result must be recorded only after the latest run completes.
 
 ## Required decision record for future engineering tasks
 
