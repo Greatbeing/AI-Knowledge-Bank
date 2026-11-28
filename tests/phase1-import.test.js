@@ -78,7 +78,9 @@ describe("Phase 1 importer integration", () => {
     const second = await importSources(config);
     expect(first).toEqual(second);
     expect(first.report.record_count).toBe(6);
-    expect(first.report.engine_count).toBe(1);\n    expect(first.report.workflow_count).toBe(1);\n    expect(first.records.find((record) => record.id === "we.workflow.cangjie-authoring").kind).toBe("workflow");
+    expect(first.report.engine_count).toBe(1);
+    expect(first.report.workflow_count).toBe(1);
+    expect(first.records.find((record) => record.id === "we.workflow.cangjie-authoring").kind).toBe("workflow");
     expect(first.report.atom_index_count).toBe(1);
     expect(first.report.imported_domain_primitive_count).toBe(1);
     expect(first.report.imported_general_primitive_count).toBe(1);
