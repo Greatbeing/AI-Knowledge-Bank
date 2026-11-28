@@ -79,21 +79,21 @@ Repository discovery and package metadata are evidence for candidate triage only
 ### Baseline implementation
 
 - Added `scripts/evaluate-catalog-retrieval.mjs`, a dependency-free offline lexical baseline using weighted title, tag, description and summary matches, with Chinese character n-grams.
-- Added `data/retrieval-benchmark.phase1.json`, a 10-task human-labeled seed benchmark across writing, reasoning and verification tasks.
+- Added `data/retrieval-benchmark.phase1.json`, now a 25-task human-labeled seed benchmark across writing, reasoning and verification tasks, including paraphrased and colloquial task formulations.
 - Added Recall@5, Mean Reciprocal Rank (MRR) and NDCG@5 reporting.
 - Added tests for Chinese/English tokenization, ranking and metric calculation.
 - Added CI gates to evaluate the actual pinned-source catalog after import.
 
 ### Observed CI result
 
-On commit `9973702f809ef85b8c5732bc0faca0bdd9c67e26`, GitHub Actions run [46119330826](https://github.com/Greatbeing/AI-Knowledge-Bank/actions/runs/46119330826) completed successfully:
+On commit `34b72475d1650de29ed3ff74fff70551f1268e4a`, GitHub Actions run [46120234581](https://github.com/Greatbeing/AI-Knowledge-Bank/actions/runs/46120234581) completed successfully:
 
 - 146 tests across 11 test files passed.
 - Catalog import: 231 records; 17 engines; 1 authoring workflow; 182 domain primitives; 4 general primitives; 27 AKB seed records.
-- Retrieval seed benchmark: Recall@5 = 1.0000; MRR = 1.0000; NDCG@5 = 1.0000.
+- Expanded retrieval seed benchmark (25 tasks): Recall@5 = 0.9600; MRR = 0.7993; NDCG@5 = 0.8386; Precision@5 = 0.1920.
 - Lint, text health, pinned-source reconciliation, schema validation, TypeScript/Vite build and build-output checks passed.
 
-**Interpretation limit:** the perfect score is only a smoke-test result on 10 relatively direct, manually labeled queries. It is not evidence of production retrieval quality. The benchmark must be expanded with ambiguous natural-language requests, synonyms, misspellings, multi-intent tasks, negative examples, hard distractors, lifecycle/license filters and independently reviewed relevance judgments. Candidate engines should be compared on the same corpus and split before selecting or adding a dependency.
+**Interpretation limit:** the expanded 25-task score is a seed benchmark, not evidence of production retrieval quality. Precision@5 = 0.1920 shows that the current top-five list still contains many irrelevant results; high Recall@5 should not be mistaken for high ranking precision. The next benchmark revision should add independently reviewed relevance judgments, ambiguous and multi-intent requests, misspellings, hard distractors, negative/no-match tasks, and lifecycle/license filters. Candidate engines should be compared on the same corpus and split before selecting or adding a dependency.
 
 ### Next decision
 
@@ -108,3 +108,6 @@ Keep the lexical baseline as a transparent control. Expand the benchmark first; 
 - Added Precision@5 alongside Recall@5, MRR and NDCG@5 so the report exposes irrelevant results in the top-five list, not only whether a relevant result appears.
 - Kept the original 10 tasks for continuity; new judgments are explicit and inspectable in `data/retrieval-benchmark.phase1.json`.
 - The expanded set is still a seed benchmark, not an independently adjudicated production benchmark. Scores must be reported with this limitation and reviewed for ambiguous/overlapping intents before any production engine decision.
+
+
+The 25-task benchmark is an intermediate checkpoint. The CI threshold currently checks the task count, minimum Recall@5 and minimum MRR; Precision@5 is reported but not yet gated because the relevance judgments are a small seed set and the precision baseline needs further calibration.
