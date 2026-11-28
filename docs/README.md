@@ -20,3 +20,14 @@ Phase 0 — Product & Architecture Baseline 已形成文档基线；Phase 1 — 
 - 先完成只读发现、解析、索引和检索，再开放执行。
 - 任何发现的仓库代码均不得自动执行。
 - 重大架构变化通过 ADR 记录。
+
+
+## GitHub 能力候选发现
+
+开发阶段可按具体工程任务搜索公开 GitHub 仓库：
+
+```bash
+npm run github:discover -- --query "json schema validator language:TypeScript" --limit 10
+```
+
+该工具只读取 GitHub 仓库元数据，并输出候选评分、许可证状态、维护时间、风险标记和人工复核建议。评分仅用于初筛，不代表能力质量或安全结论；候选默认不是可执行能力。接入前必须解析不可变 Commit SHA、审查许可证与依赖、检查源码和测试，并在隔离环境中验证。
