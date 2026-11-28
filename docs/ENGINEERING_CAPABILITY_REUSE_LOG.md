@@ -60,3 +60,41 @@ Before implementing a non-trivial subsystem, record:
 | Execution / installation | Clone, package installation or repository scripts | Reject at discovery stage | The discovery tool reads metadata only. It does not clone, install, run code, or mark candidates executable. |
 
 The discovery CLI is implemented and its mocked API contract is covered by CI. A real query against the public GitHub Search API remains a manual smoke test; rate limits and authentication policy must be considered before automation at scale.
+
+
+## Decision record 003 — Retrieval engine selection and baseline
+
+**Task:** establish a reproducible retrieval baseline over the normalized 231-record catalog before selecting a production search engine.
+
+### Existing candidates discovered
+
+| Candidate | Observed repository/package evidence | Initial assessment | Decision |
+|---|---|---|---|
+| MiniSearch | `lucaong/minisearch`, package `7.2.0`, package metadata declares MIT; inspected default-branch commit `3d239d1c3ae7aef1bf5d8945dd7b5f0709f646f5` dated 2025-09-16 | Small full-text search engine with fuzzy/prefix support; latest inspected commit is relatively old; repository LICENSE file was not resolved in the initial path check and must be verified before adoption | Defer |
+| Fuse.js | `krisk/Fuse`, inspected package `7.6.0-beta.6`, package metadata declares Apache-2.0; inspected commit `b7590957d868fcd68634b3546b893ae1633a49b1` dated 2026-11-24 | Mature fuzzy-search approach; inspected package version is a beta build, so production selection should use a stable release and benchmark it against Chinese/English mixed queries | Defer |
+| FlexSearch | `nextapps-de/flexsearch`, package `0.8.215`, package metadata declares Apache-2.0; inspected commit `f7ed963096a0792da7b2fd63bb7114b3fbac55ed` dated 2026-05-29 | Full-text search with broad indexing features; latest inspected commit message is a command-injection vulnerability fix, which requires review of the fix and dependency/security posture before adoption | Defer; security review required |
+
+Repository discovery and package metadata are evidence for candidate triage only. They do not establish fitness, legal compatibility, security, or task-level performance. No candidate was installed or executed.
+
+### Baseline implementation
+
+- Added `scripts/evaluate-catalog-retrieval.mjs`, a dependency-free offline lexical baseline using weighted title, tag, description and summary matches, with Chinese character n-grams.
+- Added `data/retrieval-benchmark.phase1.json`, a 10-task human-labeled seed benchmark across writing, reasoning and verification tasks.
+- Added Recall@5, Mean Reciprocal Rank (MRR) and NDCG@5 reporting.
+- Added tests for Chinese/English tokenization, ranking and metric calculation.
+- Added CI gates to evaluate the actual pinned-source catalog after import.
+
+### Observed CI result
+
+On commit `9973702f809ef85b8c5732bc0faca0bdd9c67e26`, GitHub Actions run [46119330826](https://github.com/Greatbeing/AI-Knowledge-Bank/actions/runs/46119330826) completed successfully:
+
+- 146 tests across 11 test files passed.
+- Catalog import: 231 records; 17 engines; 1 authoring workflow; 182 domain primitives; 4 general primitives; 27 AKB seed records.
+- Retrieval seed benchmark: Recall@5 = 1.0000; MRR = 1.0000; NDCG@5 = 1.0000.
+- Lint, text health, pinned-source reconciliation, schema validation, TypeScript/Vite build and build-output checks passed.
+
+**Interpretation limit:** the perfect score is only a smoke-test result on 10 relatively direct, manually labeled queries. It is not evidence of production retrieval quality. The benchmark must be expanded with ambiguous natural-language requests, synonyms, misspellings, multi-intent tasks, negative examples, hard distractors, lifecycle/license filters and independently reviewed relevance judgments. Candidate engines should be compared on the same corpus and split before selecting or adding a dependency.
+
+### Next decision
+
+Keep the lexical baseline as a transparent control. Expand the benchmark first; then compare MiniSearch, Fuse.js, FlexSearch and a Chinese-aware semantic/hybrid approach on the same judged tasks. Select based on relevance, latency, bundle size, index size, operational complexity, licensing and security—not popularity or stars.
