@@ -279,7 +279,8 @@
           "format": "uri"
         },
         "blob_sha": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
         },
         "anchor": {
           "type": "string"
@@ -297,6 +298,10 @@
             "unknown",
             "restricted"
           ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
         }
       },
       "additionalProperties": false
@@ -367,6 +372,11 @@
         "additionalProperties": false
       },
       "maxItems": 100
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 fingerprint of normalized source content for deterministic change detection."
     }
   },
   "additionalProperties": false
