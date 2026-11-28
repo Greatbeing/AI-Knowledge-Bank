@@ -39,7 +39,7 @@ export function tokenize(value) {
 /** 把知识库节点映射成「能力记录」形状（name/description/summary/tags）。 */
 export function toCapabilityRecord(node) {
   return {
-    id: node.id,
+    id: node.id || node.asset_id,
     kind: node.vault_type || node.kind || 'knowledge',
     name: node.title || node.name || '',
     description: node.recommendation_reason || node.description || '',
@@ -151,7 +151,7 @@ export function evaluateStrategy(strategy, records, benchmark) {
 }
 
 export function runComparison(catalog, benchmark) {
-  const records = catalog.nodes ? catalog.nodes.map(toCapabilityRecord) : catalog.records;
+  const records = (catalog.nodes || catalog.records || []).map(toCapabilityRecord);
   const results = Object.fromEntries(
     Object.entries(STRATEGIES).map(([name, strategy]) => [name, evaluateStrategy(strategy, records, benchmark)])
   );
@@ -204,3 +204,4 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     process.exitCode = 1;
   }
 }
+
