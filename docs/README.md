@@ -15,8 +15,11 @@ AI Knowledge Bank 的长期产品与工程基线文档。
 
 ## 当前状态
 
-Phase 0 — Product & Architecture Baseline 已形成文档基线；Phase 1 — GitHub Read-only Ingestion 已启动，完成了三个核心仓库的首轮只读盘点。已完成首轮仓库盘点、固定来源快照、只读导入器、Manifest JSON Schema 校验和 GitHub 候选能力发现 CLI。最新 CI 的 146 项测试全部通过；真实 GitHub 只读导入生成 231 条 Manifest 记录，来源对账、重复检查和校验错误均为零。已建立 10 项人工标注的检索种子基准，当前词法基线 Recall@5、MRR、NDCG@5 均为 1.0；该结果仅是简单查询的冒烟测试，不代表生产检索质量。下一步扩充困难样本，并在同一数据集上比较 MiniSearch、Fuse.js、FlexSearch 与中英混合语义检索方案。文档中的阶段、接口和功能只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
+Phase 1 — GitHub Read-only Ingestion 已完成首轮自有仓库只读盘点、固定来源快照、确定性导入器、Manifest Schema 校验、GitHub 候选发现 CLI 和 25 项人工标注的检索种子基准。首轮目录为 231 条记录；来源对账、重复检查、Schema 校验和导入错误均为零。检索种子基准：Recall@5 0.9600、MRR 0.7993、NDCG@5 0.8386、Precision@1 0.7200；每项任务当前仅标注一个相关资产，因此 Precision@5 的理论上限为 0.2000。以上仅为种子基准，不代表生产检索质量。
 
+已接受 ADR-0002 — Reuse Before Build。Cognitive Engine 的独立 Draft PR #1 已实现第一版确定性复用决策与路由前置策略，包含 reuse、compose、adapt、defer、build_gap，许可证、安全、验证和兼容性门槛，以及“执行授权始终为 false”的安全不变量。最新对应 CI：26 项测试通过，1 项因未检出 companion repository 而跳过。
+
+下一阶段重点：将 Reuse Policy 与 AI Knowledge Bank 的真实目录连接，建立可复现的任务级复用评估，并比较 reuse-first 与 generate-first 在任务成功率、质量、成本、延迟、集成时间和维护负担上的差异。文档中的阶段、接口和功能只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
 ## 工作原则
 
 - 从普通用户的任务出发，而不是从工具目录出发。
