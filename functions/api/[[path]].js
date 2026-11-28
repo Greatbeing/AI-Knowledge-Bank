@@ -92,7 +92,7 @@ export async function onRequest(context) {
   const { request } = context;
 
   if (request.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders(request) });
+    return new Response(null, { status: 204, headers: corsHeaders(request, context.env) });
   }
 
   const rateLimitEntry = checkRateLimit(getClientIp(request));
@@ -111,46 +111,46 @@ export async function onRequest(context) {
     const route = getRoute(context);
 
     if (route === 'health' && request.method === 'GET') {
-      return jsonResponse(handleHealth(context.env), 200, {}, request);
+      return jsonResponse(handleHealth(context.env), 200, {}, request, context.env);
     }
 
     if (route === 'public-config' && request.method === 'GET') {
-      return jsonResponse(handlePublicConfig(context.env), 200, {}, request);
+      return jsonResponse(handlePublicConfig(context.env), 200, {}, request, context.env);
     }
 
     if (route === 'vaults' && request.method === 'GET') {
-      return jsonResponse(await handleVaults(request, context.env), 200, {}, request);
+      return jsonResponse(await handleVaults(request, context.env), 200, {}, request, context.env);
     }
 
     if (route === 'search' && request.method === 'GET') {
-      return jsonResponse(await handleSearch(request, context.env), 200, {}, request);
+      return jsonResponse(await handleSearch(request, context.env), 200, {}, request, context.env);
     }
 
     if (route === 'community-signals' && request.method === 'POST') {
-      return jsonResponse(await handleCommunitySignals(request, context.env), 201, {}, request);
+      return jsonResponse(await handleCommunitySignals(request, context.env), 201, {}, request, context.env);
     }
 
     if (route.startsWith('vaults/') && request.method === 'GET') {
       const nodeId = route.replace('vaults/', '');
-      return jsonResponse(await handleVaultNodeDetail(nodeId, context.env), 200, {}, request);
+      return jsonResponse(await handleVaultNodeDetail(nodeId, context.env), 200, {}, request, context.env);
     }
 
     if (route === 'leaderboard' && request.method === 'GET') {
-      return jsonResponse(await handleLeaderboard(request, context.env), 200, {}, request);
+      return jsonResponse(await handleLeaderboard(request, context.env), 200, {}, request, context.env);
     }
 
     return jsonResponse({
       ok: false,
       error: 'not_found',
       message: 'Unknown AI Knowledge Bank API route.'
-    }, 404, {}, request);
+    }, 404, {}, request, context.env);
   } catch (error) {
     const status = Number.isInteger(error.status) ? error.status : 500;
     return jsonResponse({
       ok: false,
       error: error.code || (status === 500 ? 'internal_error' : 'request_error'),
       message: Number.isInteger(error.status) ? error.message : 'Unexpected API error.'
-    }, status, rateHeaders, request);
+    }, status, rateHeaders, request, context.env);
   }
 }
 
@@ -167,10 +167,9 @@ function handleHealth(env) {
     ok: true,
     service: 'AI Knowledge Bank API',
     version: API_VERSION,
-    runtime: 'cloudflare-pages-functions',
+    runtime: env.API_RUNTIME || 'cloudflare-pages-functions',
     supabase: {
-      configured: Boolean(supabase),
-      hasServiceRole: Boolean(env.SUPABASE_SERVICE_ROLE_KEY)
+      configured: Boolean(supabase)
     },
     endpoints: ['/api/health', '/api/public-config', '/api/vaults', '/api/vaults/:id', '/api/search', '/api/community-signals', '/api/leaderboard'],
     generatedAt: new Date().toISOString()
@@ -360,8 +359,10 @@ async function handleLeaderboard(request, env) {
 }
 
 function getSupabaseConfig(env) {
+  // Public read paths must use the anon key so database RLS remains effective.
+  // The service-role key is intentionally never used by this public API helper.
   const url = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-  const key = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY;
+  const key = env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY;
   if (!url || !key) return null;
   return {
     url: String(url).replace(/\/+$/, ''),
@@ -834,11 +835,11 @@ function httpError(status, message, code) {
   return error;
 }
 
-function jsonResponse(payload, status = 200, extraHeaders = {}, request = null) {
+function jsonResponse(payload, status = 200, extraHeaders = {}, request = null, env = {}) {
   return new Response(JSON.stringify(payload), {
     status,
     headers: {
-      ...corsHeaders(request),
+      ...corsHeaders(request, env),
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
       ...extraHeaders
@@ -887,9 +888,11 @@ const ALLOWED_ORIGINS = new Set([
   'http://localhost:4173'
 ]);
 
-function corsHeaders(request) {
+function corsHeaders(request, env = {}) {
   const origin = request?.headers?.get('Origin') || '';
-  const allowedOrigin = ALLOWED_ORIGINS.has(origin) ? origin : ALLOWED_ORIGINS.values().next().value;
+  const configuredOrigins = String(env.API_ALLOWED_ORIGINS || '').split(',').map((item) => item.trim()).filter(Boolean);
+  const allowedOrigins = new Set([...ALLOWED_ORIGINS, ...configuredOrigins]);
+  const allowedOrigin = allowedOrigins.has(origin) ? origin : ALLOWED_ORIGINS.values().next().value;
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',

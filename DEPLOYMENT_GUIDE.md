@@ -24,12 +24,15 @@
 4. 等待项目创建完成 (约 2 分钟)
 
 ### 3. 运行数据库迁移
+> 重要：对已有 Supabase 项目，先核对 `supabase migration list` 或迁移历史，只执行尚未应用的迁移。不要把下面的完整列表直接重复粘贴到生产数据库。
 1. 进入项目 → **SQL Editor**
 2. 依次复制并执行以下文件内容：
    - `supabase/migrations/001_cas_emergence_algorithm.sql`
    - `supabase/migrations/002_user_system.sql`
    - `supabase/migrations/003_knowledge_workflow.sql` (如果存在)
    - `supabase/migrations/004_three_vault_cross_rag.sql`
+   - `supabase/migrations/005_indexes_rls_fixes.sql`
+   - `supabase/migrations/006_production_security_hardening.sql`
 3. 每次执行后确认显示 "Success"
 
 ### 4. 配置 OAuth 登录 (GitHub)
@@ -50,7 +53,6 @@
 在 Supabase 项目 → **Settings** → **API** 中复制：
 - **Project URL**: `https://xxxxx.supabase.co`
 - **anon/public key**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
-- **service_role key**: 仅用于 Cloudflare Pages Functions，不要写入前端代码
 
 ---
 
@@ -83,9 +85,9 @@
    - 添加：
      - `SUPABASE_URL`
      - `SUPABASE_ANON_KEY`
-     - `SUPABASE_SERVICE_ROLE_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY` 只放在 Cloudflare 环境变量中，不要提交到仓库
-   - Cloudflare 浏览器登录会从 `/api/public-config` 读取 `SUPABASE_URL` 和 `SUPABASE_ANON_KEY`；该接口不会返回 service-role
+   - 公开 API 只使用 `SUPABASE_ANON_KEY`，确保所有读取继续受 Supabase RLS 约束
+   - 只有未来确有受控后台任务时，才单独引入 service-role，并且必须限制在服务端专用路由，绝不用于公开读取
+   - Cloudflare 浏览器登录会从 `/api/public-config` 读取 `SUPABASE_URL` 和 `SUPABASE_ANON_KEY`；该接口不会返回任何 service-role 凭据
    - 只有部署到不支持 Pages Functions 的纯静态平台时，才需要在构建阶段提供 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`
 
 5. **验证接口**
@@ -140,7 +142,7 @@
 ```env
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 SUPABASE_ANON_KEY=YOUR_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+ # 不要配置 service-role key，公开 API 使用 anon key + RLS
 # 仅纯静态构建需要以下两项：
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
@@ -209,7 +211,8 @@ VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 
 ```markdown
 - [ ] Supabase 项目已创建
-- [ ] 数据库迁移脚本已执行
+- [ ] 数据库迁移脚本 001–006 已按顺序执行（包括原有 005_indexes_rls_fixes.sql 和 006_production_security_hardening.sql）
+- [ ] RLS 安全策略已验证：普通用户无法修改角色、声誉、审核状态或可信度指标
 - [ ] OAuth 提供商已配置
 - [ ] 代码已推送到 GitHub
 - [ ] `npm run check:text` 通过
