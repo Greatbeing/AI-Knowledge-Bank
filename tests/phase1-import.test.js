@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeVault, parseFrontmatter, toSafeId } from "../scripts/phase1-import.mjs";
+import { normalizeVault, parseFrontmatter, toSafeId, validateRecord } from "../scripts/phase1-import.mjs";
 
 describe("Phase 1 importer parsing primitives", () => {
   it("normalizes the legacy three-vault values", () => {
@@ -38,5 +38,37 @@ describe("Phase 1 importer parsing primitives", () => {
     const parsed = parseFrontmatter(markdown);
     expect(parsed.metadata).toEqual({});
     expect(parsed.body).toBe(markdown);
+  });
+});
+
+describe("Phase 1 manifest validation", () => {
+  it("accepts a parsed capability with immutable provenance", () => {
+    const record = {
+      id: "we.engine.feature-writing",
+      name: "Feature Writing",
+      kind: "engine",
+      vault: "tools",
+      description: "A writing capability with explicit workflow and safety boundaries.",
+      source: {
+        repository: "Greatbeing/writing-engines",
+        path: "feature-writing/SKILL.md",
+        commit_sha: "78b6ce37bcdad3dafb2e0134939920f2f617733f"
+      },
+      lifecycle: "parsed",
+      relationships: [{ type: "contains", target_id: "we.feature.a1" }]
+    };
+    expect(validateRecord(record)).toEqual([]);
+  });
+
+  it("rejects malformed or untraceable records", () => {
+    const record = {
+      id: "bad id",
+      name: "X",
+      kind: "unknown",
+      description: "too short",
+      source: { repository: "not-a-repository", path: "" },
+      lifecycle: "executable"
+    };
+    expect(validateRecord(record).length).toBeGreaterThan(3);
   });
 });
