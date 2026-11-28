@@ -46,3 +46,17 @@ Before implementing a non-trivial subsystem, record:
 6. Test result and known limitations after integration.
 
 **No automatic installation or execution:** discovery produces candidates, not permission. Dependencies require explicit review; executable tools require adapters, sandboxing, least privilege and authorization.
+
+
+## Decision record 002 — GitHub capability candidate discovery
+
+**Task:** turn an engineering need into a shortlist of public GitHub repositories for human evaluation.
+
+| Need | Existing capability evaluated / reused | Decision | Evidence and boundary |
+|---|---|---|---|
+| Search public repository metadata | GitHub REST `search/repositories` endpoint | Reuse | Implemented in `scripts/github-capability-discovery.mjs`; accepts a natural-language/qualifier query and returns up to 30 repository candidates. |
+| Candidate triage | GitHub-provided search relevance, pushed timestamp, SPDX identifier, description/topics, stars and forks | Compose | Transparent weighted signals; stars/forks are weak ecosystem signals only. The result is a shortlist, never a quality or security certification. |
+| Test search behavior | Vitest with mocked GitHub Search API response | Reuse | Query construction, candidate ordering, archived/stale/license handling and non-verified status are covered without consuming GitHub API quota. |
+| Execution / installation | Clone, package installation or repository scripts | Reject at discovery stage | The discovery tool reads metadata only. It does not clone, install, run code, or mark candidates executable. |
+
+The discovery CLI is implemented and its mocked API contract is covered by CI. A real query against the public GitHub Search API remains a manual smoke test; rate limits and authentication policy must be considered before automation at scale.
