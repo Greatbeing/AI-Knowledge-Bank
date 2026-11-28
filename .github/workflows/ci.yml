@@ -61,7 +61,7 @@ jobs:
           import { readFile } from "node:fs/promises";
           const report = JSON.parse(await readFile("/tmp/phase1-retrieval-report.json", "utf8"));
           console.log(JSON.stringify(report.metrics, null, 2));
-          if (report.task_count !== 10) throw new Error("Expected 10 human-labeled retrieval tasks");
+          if (report.task_count !== 25) throw new Error("Expected 25 human-labeled retrieval tasks");
           if (report.metrics.recall_at_k < 0.8) throw new Error("Recall@5 baseline below the initial floor");
           if (report.metrics.mrr < 0.5) throw new Error("MRR baseline below the initial floor");
           NODE
