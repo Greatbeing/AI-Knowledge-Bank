@@ -25,7 +25,8 @@ const typographyControlSources = {
   'index.html': homepageSource,
   'dashboard.html': dashboardSource,
   'assets/vault-page.css': readSource('assets/vault-page.css'),
-  'assets/typography.css': typographySource
+  'assets/typography.css': typographySource,
+  'assets/experience-refresh.css': readSource('assets/experience-refresh.css')
 };
 
 function escapeRegExp(value) {
@@ -63,7 +64,8 @@ describe('shared typography', () => {
     const stylesheetTags = [...source.matchAll(/<link\b(?=[^>]*\brel=["']stylesheet["'])[^>]*>/gi)]
       .map(([tag]) => tag);
 
-    expect(stylesheetTags.at(-1)).toMatch(/\bhref=["']\.\/assets\/typography\.css["']/i);
+    expect(stylesheetTags.at(-1)).toMatch(/\bhref=["']\.\/assets\/experience-refresh\.css["']/i);
+    expect(stylesheetTags.some((tag) => /\bhref=["']\.\/assets\/typography\.css["']/i.test(tag))).toBe(true);
     expect(source).toMatch(/fonts\.googleapis\.com\/css2\?[^"']*Noto(?:\+|%20)Serif(?:\+|%20)SC/i);
     expect(source).toMatch(/fonts\.googleapis\.com\/css2\?[^"']*Noto(?:\+|%20)Sans(?:\+|%20)SC/i);
   });
@@ -112,12 +114,12 @@ describe('approved bilingual content', () => {
     const englishHomepage = localeBlock(homepageSource, 'const translations = {', 'en');
     const approvedCopy = [
       ['eyebrow', '经真实使用不断验证的 AI 方法', 'AI methods improved through real use'],
-      ['heroTitle', '让有效的 AI 实践，成为可验证、可复用的公共知识。', 'Turn effective AI practice into reusable public knowledge.'],
-      ['heroCopy', '从知识框架、执行路径和真实案例中找到答案；用过之后，把结果带回来，让下一版本更可靠。', 'Find the reasoning, workflow, and evidence behind a method. After using it, bring back the result so the next version is more reliable.'],
-      ['heroQuickTitle', '先找方法，再选工具', 'Start with the method, not the tool.'],
-      ['heroQuickCopy', '描述目标，查看为什么有效、如何执行、在哪些场景验证过。', 'Describe your goal to see why it works, how to run it, and where it has been tested.'],
-      ['primaryCta', '开始查找方法', 'Find a method'],
-      ['secondaryCta', '提交使用结果', 'Submit a result'],
+      ['heroTitle', '把有效的 AI 实践，沉淀为可验证、可复用的公共能力。', 'Turn effective AI practice into verified, reusable capabilities.'],
+      ['heroCopy', '从原理、执行路径和真实案例中找到方法。使用后提交结果，让有效经验持续迭代。', 'Discover the reasoning, workflows, and real-world evidence behind a method. Share outcomes to help improve what comes next.'],
+      ['heroQuickTitle', '先定义问题，再组合方法', 'Start with the problem, not the tool.'],
+      ['heroQuickCopy', '输入目标，系统将关联解释框架、执行路径与真实案例。', 'Describe your goal to connect the right principles, execution paths, and real-world cases.'],
+      ['primaryCta', '查找可用方法', 'Explore methods'],
+      ['secondaryCta', '贡献实践证据', 'Contribute evidence'],
       ['finalCtaTitle', '找到一个方法，带回一次真实结果。', 'Use one method. Bring back one real result.']
     ];
 
@@ -129,22 +131,22 @@ describe('approved bilingual content', () => {
   });
 
   it('renders equal entry points for finding and contributing evidence', () => {
-    expectLinkedI18nCopy(homepageSource, 'primaryCta', '开始查找方法');
-    expectLinkedI18nCopy(homepageSource, 'secondaryCta', '提交使用结果');
+    expectLinkedI18nCopy(homepageSource, 'primaryCta', '查找可用方法');
+    expectLinkedI18nCopy(homepageSource, 'secondaryCta', '贡献实践证据');
 
     const englishHomepage = localeBlock(homepageSource, 'const translations = {', 'en');
-    expectKeyValue(englishHomepage, 'primaryCta', 'Find a method');
-    expectKeyValue(englishHomepage, 'secondaryCta', 'Submit a result');
+    expectKeyValue(englishHomepage, 'primaryCta', 'Explore methods');
+    expectKeyValue(englishHomepage, 'secondaryCta', 'Contribute evidence');
   });
 
   it('maps each vault promise to the correct page and locale', () => {
     const chineseVaultCopy = localeBlock(vaultPageSource, 'const dictionaries = {', 'zh');
     const englishVaultCopy = localeBlock(vaultPageSource, 'const dictionaries = {', 'en');
     const pagePromises = [
-      ['pageTitleKnowledge', '先理解为什么，再决定用什么。', 'Understand why before choosing what to use.'],
-      ['pageTitleTools', '把有效方法，变成可以重复执行的路径。', 'Turn effective methods into repeatable execution paths.'],
-      ['pageTitleCases', '用真实结果，判断一种方法能否迁移。', 'Use real outcomes to decide whether a method can transfer.'],
-      ['pageTitleCommunity', '知识因真实使用而可信。', 'Knowledge earns trust through real use.']
+      ['pageTitleKnowledge', '先理解原理，再选择方法。', 'Understand the principle before choosing a method.'],
+      ['pageTitleTools', '把有效方法，变成可复用的执行流程。', 'Turn effective methods into reusable workflows.'],
+      ['pageTitleCases', '用真实结果，判断方法是否值得迁移。', 'Use real outcomes to judge whether a method transfers.'],
+      ['pageTitleCommunity', '让真实实践，推动知识持续进化。', 'Real practice is how shared knowledge evolves.']
     ];
 
     for (const [key, chinese, english] of pagePromises) {
