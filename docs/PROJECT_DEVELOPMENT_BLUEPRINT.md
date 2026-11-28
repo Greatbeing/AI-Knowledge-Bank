@@ -782,17 +782,17 @@ Manifest 中声明 execution.mode 仅表示作者建议或实现接口。平台�
 
 ## 41. 当前项目状态与下一步
 
-当前基线阶段：Phase 0 — Product & Architecture Baseline。
+当前阶段：Phase 1 — GitHub Read-only Ingestion 与 Reuse-first 决策机制初步实现。
 
-已建立产品愿景和初版 Capability Manifest Schema。本开发文档定义长期目标。GitHub 只读接入、真实索引、任务路由和安全执行均需在后续阶段逐项实现并验收。
+已建立产品愿景、Capability Manifest Schema、三个核心仓库的只读导入链路和初版检索基准。Cognitive Engine 已在独立 Draft PR 中实现 Reuse-before-Build 决策模块，并在内部 Primitive 路由之前检查外部候选能力。真实目录在线连接、任务级效果评估和安全执行仍需后续逐项实现并验收。
 
-**下一项工程工作：Phase 1 的技术 Spike。**
-1. 对三个自有仓库做只读结构盘点；
-2. 分别识别 registry、Manifest、README、工具和案例格式；
-3. 设计统一 Source Connector 与 CatalogRecord；
-4. 用真实仓库数据构建小规模可重复导入；
-5. 形成检索质量基准集；
-6. 通过测试后再接入正式前端。
+**下一项工程工作：Phase 1.5 — Reuse Policy 与真实能力目录集成。**
+1. 将 Cognitive Engine 的候选输入接入 AI Knowledge Bank 的标准化目录；
+2. 建立 task requirements 到 capability metadata 的映射与解释；
+3. 用真实候选验证 reuse、compose、adapt、defer 和 build_gap 决策；
+4. 建立 reuse-first 与 generate-first 的配对任务评估；
+5. 评估任务成功率、质量、成本、延迟、集成和维护负担；
+6. 在证据充分后再决定前端和受控执行集成。
 
 在 Phase 1 验收之前，不删除现有数据库集成、不做生产迁移、不启用任意代码执行、不部署新的付费资源。
 
@@ -830,7 +830,7 @@ AI Knowledge Bank 的开发过程必须使用其自身倡导的能力发现与�
 - **质量证据**：测试、基准、独立评估、可复现案例和已知失败模式；
 - **集成总成本**：接入、维护、迁移、性能、运行费用和锁定风险。
 
-决策结果统一为：`reuse`、`compose`、`build_gap`、`defer` 或 `reject`，并记录理由与证据。
+决策结果统一为：`reuse`、`compose`、`adapt`、`build_gap`、`defer` 或 `reject`，并记录理由与证据。
 
 ## A.4 安全边界
 
