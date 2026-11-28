@@ -7,6 +7,7 @@
  */
 import { createHash } from "node:crypto";
 import Ajv from "ajv";
+import yaml from "js-yaml";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -35,24 +36,15 @@ export function sha256(value) {
 }
 
 export function parseFrontmatter(markdown) {
-  const match = markdown.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/);
+  const match = markdown.match(/^---\\s*\\r?\\n([\\s\\S]*?)\\r?\\n---\\s*(?:\\r?\\n|$)/);
   if (!match) return { metadata: {}, body: markdown };
-  const metadata = {};
-  const lines = match[1].split(/\r?\n/);
-  for (let i = 0; i < lines.length; i += 1) {
-    const entry = lines[i].match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
-    if (!entry) continue;
-    const [, key, rawValue] = entry;
-    if (rawValue === "|" || rawValue === ">") {
-      const block = [];
-      while (i + 1 < lines.length && /^\s+/.test(lines[i + 1])) {
-        block.push(lines[++i].replace(/^\s+/, ""));
-      }
-      metadata[key] = block.join(rawValue === ">" ? " " : "\n").trim();
-    } else {
-      metadata[key] = rawValue.replace(/^(['"])(.*)\1$/, "$2").trim();
-    }
+  const parsed = yaml.load(match[1]);
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error("SKILL.md frontmatter must be a YAML mapping.");
   }
+  const metadata = Object.fromEntries(
+    Object.entries(parsed).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value])
+  );
   return { metadata, body: markdown.slice(match[0].length) };
 }
 
