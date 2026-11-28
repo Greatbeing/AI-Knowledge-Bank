@@ -33,6 +33,7 @@ describe("offline catalog retrieval baseline", () => {
     expect(report.metrics.recall_at_k).toBe(1);
     expect(report.metrics.mrr).toBe(1);
     expect(report.metrics.ndcg_at_k).toBe(1);
-    expect(report.metrics.precision_at_1).toBe(1);\n    expect(report.metrics.precision_at_k).toBe(0.5);
+    expect(report.metrics.precision_at_1).toBe(1);
+    expect(report.metrics.precision_at_k).toBe(0.5);
   });
 });
