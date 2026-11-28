@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Human-labeled Phase 1 retrieval benchmark. Relevant IDs are judgments, not inferred from the retrieval system.",
+  "k": 5,
+  "tasks": [
+    {
+      "id": "gongwen-drafting",
+      "query": "起草机关公文、通知、报告、请示和会议纪要",
+      "relevant": [
+        {
+          "asset_id": "we.engine.gongwen-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "feature-reporting",
+      "query": "人物特稿、深度报道、采访现场和人物变化",
+      "relevant": [
+        {
+          "asset_id": "we.engine.feature-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "official-commentary",
+      "query": "撰写庄重权威的党报评论、官方时评和政策评论",
+      "relevant": [
+        {
+          "asset_id": "we.engine.guanfang-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "daily-life-essay",
+      "query": "写吃食、草木、手艺和节令风俗的生活散文",
+      "relevant": [
+        {
+          "asset_id": "we.engine.wangzengqi-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "short-fiction",
+      "query": "用冷静叙事、口语对话和重复结构写普通人的苦难短篇",
+      "relevant": [
+        {
+          "asset_id": "we.engine.yuhua-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "original-wuxia",
+      "query": "创作原创武侠故事，塑造人物、设计冲突和悬念",
+      "relevant": [
+        {
+          "asset_id": "we.engine.jinyong-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "claim-decomposition",
+      "query": "把论述拆成事实、推断和价值判断等原子主张",
+      "relevant": [
+        {
+          "asset_id": "ce.general.claim_decomposition",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "counterexample-search",
+      "query": "为宽泛的因果或全称主张寻找可信反例",
+      "relevant": [
+        {
+          "asset_id": "ce.general.counterexample_search",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "evidence-grounding",
+      "query": "将每条结论绑定到素材中的具体出处，识别无支撑陈述",
+      "relevant": [
+        {
+          "asset_id": "ce.general.evidence_grounding",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "redline-audit",
+      "query": "审查文本中的风险红线、事实错误和表达边界",
+      "relevant": [
+        {
+          "asset_id": "ce.general.redline_audit",
+          "relevance": 3
+        }
+      ]
+    }
+  ]
+}
