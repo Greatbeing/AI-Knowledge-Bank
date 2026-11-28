@@ -11,7 +11,7 @@ AI Knowledge Bank 的长期产品与工程基线文档。
 
 ## 当前状态
 
-Phase 0 — Product & Architecture Baseline 已形成文档基线；Phase 1 — GitHub Read-only Ingestion 已启动，完成了三个核心仓库的首轮只读盘点。已完成首轮仓库盘点、固定来源快照、只读导入器、Manifest JSON Schema 校验和自动化测试。最新 CI 的真实 GitHub 只读导入通过，共生成 231 条 Manifest 记录，来源对账、重复检查和校验错误均为零。下一步进入 GitHub 能力候选发现/评估与检索基准设计。文档中的阶段、接口和功能只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
+Phase 0 — Product & Architecture Baseline 已形成文档基线；Phase 1 — GitHub Read-only Ingestion 已启动，完成了三个核心仓库的首轮只读盘点。已完成首轮仓库盘点、固定来源快照、只读导入器、Manifest JSON Schema 校验和 GitHub 候选能力发现 CLI。最新 CI 的 143 项测试全部通过；真实 GitHub 只读导入生成 231 条 Manifest 记录，来源对账、重复检查和校验错误均为零。下一步是对候选发现器进行真实查询试用，并建立检索质量基准。文档中的阶段、接口和功能只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
 
 ## 工作原则
 
