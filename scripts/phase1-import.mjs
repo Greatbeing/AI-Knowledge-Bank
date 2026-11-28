@@ -6,12 +6,14 @@
  * It never executes source code, capability instructions, or writes to a database.
  */
 import { createHash } from "node:crypto";
+import Ajv from "ajv";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CONFIG_PATH = resolve(ROOT, "config/capability-sources.phase1.json");
+const SCHEMA_PATH = resolve(ROOT, "schemas/capability-manifest.schema.json");
 const USER_AGENT = "AI-Knowledge-Bank-Phase1-Importer/0.2.0";
 const PARSER_VERSION = "0.2.0";
 const MAX_DESCRIPTION = 4000;
@@ -257,6 +259,9 @@ export async function importSources(config) {
     }
   }
 
+  const manifestSchema = JSON.parse(await readFile(SCHEMA_PATH, "utf8"));
+  const ajv = new Ajv({ allErrors: true, schemaId: "auto" });
+  const validateSchema = ajv.compile(manifestSchema);
   const records = [];
   const issues = [];
   const add = (record, context) => {
@@ -373,7 +378,12 @@ export async function importSources(config) {
   const manifestPrimitiveIds = new Set(records.filter((record) => record.kind === "primitive").map((record) => record.id));
   const missingManifestPrimitiveIds = [...importedPrimitiveIds].filter((id) => (id.startsWith("we.") || id.startsWith("ce.")) && !manifestPrimitiveIds.has(id));
   const uniqueRecords = [...new Map(records.map((record) => [record.id, record])).values()].sort((a, b) => a.id.localeCompare(b.id));
-  const validationErrors = uniqueRecords.flatMap((record) => validateRecord(record).map((error) => ({ id: record.id, error })));
+  const validationErrors = uniqueRecords.flatMap((record) => {
+    const manualErrors = validateRecord(record).map((error) => ({ id: record.id, error }));
+    const schemaValid = validateSchema(record);
+    const schemaErrors = schemaValid ? [] : (validateSchema.errors || []).map((error) => ({ id: record.id, error: `${error.dataPath || "/"} ${error.message}` }));
+    return [...manualErrors, ...schemaErrors];
+  });
   const report = {
     record_count: uniqueRecords.length,
     by_kind: uniqueRecords.reduce((counts, record) => ({ ...counts, [record.kind]: (counts[record.kind] || 0) + 1 }), {}),
