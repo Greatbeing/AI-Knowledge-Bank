@@ -95,6 +95,16 @@ async function searchRepositories(query, limit) {
   return response.json();
 }
 
+export async function discoverCandidates(query, limit = 10, now = Date.now()) {
+  if (!String(query || "").trim()) throw new Error("A non-empty GitHub search query is required.");
+  if (!Number.isInteger(limit) || limit < 1 || limit > 30) throw new Error("limit must be an integer from 1 to 30.");
+  const response = await searchRepositories(query, limit);
+  const candidates = (response.items || [])
+    .map((repository) => assessRepository(repository, now))
+    .sort((a, b) => b.score - a.score || a.repository.localeCompare(b.repository));
+  return { total_count: response.total_count || 0, candidates };
+}
+
 function parseArgs(argv) {
   const queryIndex = argv.indexOf("--query");
   const limitIndex = argv.indexOf("--limit");
@@ -114,11 +124,10 @@ async function main(argv = process.argv.slice(2)) {
   if (!Number.isInteger(args.limit) || args.limit < 1 || args.limit > 30) {
     throw new Error("--limit must be an integer from 1 to 30.");
   }
-  const response = await searchRepositories(args.query, args.limit);
-  const candidates = (response.items || []).map((repository) => assessRepository(repository)).sort((a, b) => b.score - a.score || a.repository.localeCompare(b.repository));
+  const { total_count, candidates } = await discoverCandidates(args.query, args.limit);
   const report = {
     query: args.query,
-    total_count: response.total_count || 0,
+    total_count,
     returned_count: candidates.length,
     discovered_at: new Date().toISOString(),
     discovery_only: true,
