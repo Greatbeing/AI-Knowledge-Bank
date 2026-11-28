@@ -18,7 +18,7 @@ AI Knowledge Bank 的长期产品与工程基线文档。
 
 Phase 1 — GitHub Read-only Ingestion 已完成首轮自有仓库只读盘点、固定来源快照、确定性导入器、Manifest Schema 校验、GitHub 候选发现 CLI 和 25 项人工标注的检索种子基准。首轮目录为 231 条记录；来源对账、重复检查、Schema 校验和导入错误均为零。检索种子基准：Recall@5 0.9600、MRR 0.7993、NDCG@5 0.8386、Precision@1 0.7200；每项任务当前仅标注一个相关资产，因此 Precision@5 的理论上限为 0.2000。以上仅为种子基准，不代表生产检索质量。
 
-已接受 ADR-0002 — Reuse Before Build，并新增 ADR-0003 — Capability Compression as a Foundation for Reuse-Driven Intelligence。Cognitive Engine 的独立 Draft PR #1 已实现第一版确定性复用决策与路由前置策略；本轮新增只读 AI Knowledge Bank Manifest 快照适配器、来源追溯和 fail-closed 决策映射。新增适配器测试正在由 GitHub Actions 验证；在 CI 通过前不将其标记为 verified。
+已接受 ADR-0002 — Reuse Before Build，并新增 ADR-0003 — Capability Compression as a Foundation for Reuse-Driven Intelligence。Cognitive Engine 的独立 Draft PR #1 已实现第一版确定性复用决策与路由前置策略，以及只读 AI Knowledge Bank Manifest 快照适配器、来源追溯和 fail-closed 决策映射。GitHub Actions 已从固定版本的 AI Knowledge Bank 仓库运行只读导入器，生成完整 231 条记录快照，并由 Cognitive Engine 完成端到端目录加载与路由验证；对应 CI 通过，37 项测试通过、1 项既有 writing-engines 集成测试因 companion repo 未检出而跳过。此结果验证了快照到路由的数据兼容和安全拒绝行为，不代表任务质量提升或外部能力执行已验证。
 
 下一阶段重点：使用真实 Phase 1 导出快照完成端到端任务验证，建立可复现的任务级复用评估，并比较 reuse-first 与 generate-first 在任务成功率、质量、成本、延迟、集成时间和维护负担上的差异。文档中的阶段、接口和功能只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
 
