@@ -256,3 +256,20 @@ A GitHub file being public does not make its contents safe to execute. A `SKILL.
 - Use immutable commit snapshots and deterministic imports.
 - Keep the importer in dry-run mode: it writes only a local JSON catalog artifact when `--out` is supplied (otherwise stdout) and a machine-readable validation report. Do not write to production Supabase or deploy.
 - Keep the existing product API and database intact until the new catalog is proven against the retrieval evaluation set.
+
+
+## 11. Self-use validation and importer hardening
+
+The repository importer is the first real dogfooding task: AI Knowledge Bank is using its own GitHub-native discovery and reuse approach to build the platform.
+
+The first implementation review identified and corrected several gaps before treating the importer as reliable:
+
+- The initial writing-engine allowlist pattern omitted `cangjie/SKILL.md`; the source allowlist now includes it explicitly.
+- Atom provenance now resolves from the Atom Index to the original `atom-ops.md` file and heading, rather than relying on fragile parsing of generated registry references.
+- Every imported record now carries a SHA-256 content fingerprint, immutable Commit SHA, source Blob SHA and source URL.
+- Output no longer embeds the current wall-clock timestamp, allowing byte-stable output for the same source snapshots and parser version.
+- The importer reports missing/orphaned Atom-to-Primitive mappings and validation errors rather than silently accepting a partial registry.
+- Legacy AKB seed nodes are imported; runtime/community signals are excluded.
+- The importer remains read-only and does not execute code, write to a database or deploy anything.
+
+The new tests exercise deterministic normalization and provenance using mocked source snapshots. Actual GitHub Actions results and a full pinned-source dry run must be checked before claiming end-to-end acceptance.
