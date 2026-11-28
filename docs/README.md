@@ -1,0 +1,19 @@
+# 项目文档中心
+
+AI Knowledge Bank 的长期产品与工程基线文档。
+
+- [项目总开发文档](PROJECT_DEVELOPMENT_BLUEPRINT.md)：产品章程、PRD、技术架构、安全模型、能力贡献规范、长期路线图和治理。
+- [产品愿景与架构说明](AI_CAPABILITY_PLATFORM_VISION.md)：产品战略和系统目标。
+- [Capability Manifest Schema](../schemas/capability-manifest.schema.json)：机器可读的能力元数据规范。
+
+## 当前状态
+
+当前项目处于 Phase 0 — Product & Architecture Baseline。文档中的阶段、接口和功能属于目标设计，只有在代码、自动化测试和验收证据齐备后才能标记为 implemented 或 verified。
+
+## 工作原则
+
+- 从普通用户的任务出发，而不是从工具目录出发。
+- GitHub 是首期知识资产权威来源；运行状态仍由适当的受控存储管理。
+- 先完成只读发现、解析、索引和检索，再开放执行。
+- 任何发现的仓库代码均不得自动执行。
+- 重大架构变化通过 ADR 记录。
