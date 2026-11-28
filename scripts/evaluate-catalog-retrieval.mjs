@@ -4,6 +4,8 @@
  * It consumes an already generated catalog; it never accesses GitHub or executes assets.
  */
 import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 function normalize(value) {
   return String(value || "").toLocaleLowerCase().normalize("NFKC");
@@ -105,7 +107,7 @@ async function main(argv = process.argv.slice(2)) {
   process.stdout.write(JSON.stringify(report, null, 2) + "\n");
 }
 
-if (process.argv[1] && new URL(import.meta.url).pathname === process.argv[1]) {
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch((error) => {
     process.stderr.write(`Retrieval evaluation failed: ${error.message}\n`);
     process.exitCode = 1;
