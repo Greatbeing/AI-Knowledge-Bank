@@ -177,7 +177,7 @@ export function extractAtomDescription(markdown, atom) {
     });
     if (row) {
       const cells = row.split("|").map((cell) => cell.trim());
-      if (cells[2] && cells[2].length >= 8) return cells[2];
+      if (cells[3] && cells[3].length >= 8) return cells[3];
     }
   }
   const lines = markdown.split(/\r?\n/);
