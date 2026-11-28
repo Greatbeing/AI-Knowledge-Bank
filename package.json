@@ -15,6 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "bench:retrieval": "node scripts/retrieval-eval.mjs",
+    "catalog:build": "node scripts/build-catalog.mjs",
+    "catalog:check": "node scripts/build-catalog.mjs --check",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {

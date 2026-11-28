@@ -1,0 +1,196 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Read-only capability catalog compressed from local knowledge nodes; safe to regenerate from data/db.json.",
+  "record_count": 9,
+  "records": [
+    {
+      "asset_id": "case-alert-false-positive-fix",
+      "kind": "case",
+      "name": "告警误报的回归修复记录",
+      "description": "一次真实误报的复盘，比十篇「如何做好告警」的理论更能说明问题。",
+      "summary": "真实误报：一条新闻因含地名被命中不相关告警；修复把关键词平铺改为实体短语分层，并加向后兼容的回归用例。误报率下降，且不再误伤真阳性。",
+      "tags": [
+        "告警",
+        "回归",
+        "案例"
+      ],
+      "provenance": {
+        "vault": "case",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/WORKFLOW_GUIDE.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-16T05:00:00.000Z"
+      }
+    },
+    {
+      "asset_id": "case-blind-eval-writing-engine",
+      "kind": "case",
+      "name": "用盲评证明「写作引擎」有用",
+      "description": "写作是主观领域，没有对照就没有说服力；盲评是把「主张」变成「证据」的 cheapest 办法。",
+      "summary": "同题四体盲排：裸模型 baseline + 三个写作引擎，同模型同温度、隐藏出处，让评分者盲排。产出的是「用了比不用好」的胜率与可分性结论，而不是自评「我觉得挺好」。",
+      "tags": [
+        "写作",
+        "案例",
+        "评测"
+      ],
+      "provenance": {
+        "vault": "case",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/README.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-15T03:00:00.000Z"
+      }
+    },
+    {
+      "asset_id": "case-claimed-vs-measured",
+      "kind": "case",
+      "name": "「宣称可用」对不上「实测可用」",
+      "description": "这是「测出来的分数」相对「宣称」最直接的价值证明。",
+      "summary": "某网关宣称近百个模型，默认路由却把响应几十秒的排在前、快的排在后面。一次实测就暴露「宣称」与「实测」的差距，据此改为按测出来的分数路由。",
+      "tags": [
+        "案例",
+        "模型路由",
+        "证据"
+      ],
+      "provenance": {
+        "vault": "case",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/README.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-14T02:00:00.000Z"
+      }
+    },
+    {
+      "asset_id": "kb-cite-or-drop",
+      "kind": "knowledge",
+      "name": "有出处才入库，核不过就丢掉",
+      "description": "把「知识库」和「模型幻觉」隔开的最小纪律；否则库越大越不可信。",
+      "summary": "知识条目里的每条事实必须能指回可核的材料；引用的数字/年份要能在原文里找到。不通过就丢弃，而不是先写进去再补来源。没有出处的知识只是观点。",
+      "tags": [
+        "原则",
+        "反幻觉",
+        "证据"
+      ],
+      "provenance": {
+        "vault": "knowledge",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/DEVELOPMENT.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-19T06:00:00.000Z"
+      }
+    },
+    {
+      "asset_id": "kb-define-acceptance-first",
+      "kind": "knowledge",
+      "name": "先定验收标准，再选工具",
+      "description": "大多数 AI 项目失败在开工前没定义「对」，而不是工具不够强。",
+      "summary": "拿到一个模糊的 AI 需求，先写清「怎样算做对了」——可核的验收指标、必须保留的人工确认点、出错时的兜底。验收没定义之前，不选模型、不写 Prompt。",
+      "tags": [
+        "方法",
+        "需求",
+        "验收"
+      ],
+      "provenance": {
+        "vault": "knowledge",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/DEVELOPMENT.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-20T02:00:00.000Z"
+      }
+    },
+    {
+      "asset_id": "kb-numbers-by-code-words-by-model",
+      "kind": "knowledge",
+      "name": "数字由代码算，模型只写字",
+      "description": "让 LLM 直接算数是幻觉与错误的头号来源；分离后错误可定位、可复算。",
+      "summary": "可核的数字（金额、涨跌、计数、比例）一律由确定性代码算好，大模型只负责把结论写成人话，不参与算数。生成与核对分离，避免一本正经地算错。",
+      "tags": [
+        "LLM",
+        "原则",
+        "可靠性"
+      ],
+      "provenance": {
+        "vault": "knowledge",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/DEVELOPMENT.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-18T03:30:00.000Z"
+      }
+    },
+    {
+      "asset_id": "tool-anti-hallucination-prompt",
+      "kind": "tool",
+      "name": "反幻觉 Prompt 边界模板",
+      "description": "高风险场景（财务/医疗/对外发布）先把边界写进 Prompt，比事后审查便宜得多。",
+      "summary": "一段可直接套用的 System 骨架：声明未知如何处理、事实必须带来源、把「生成」与「判断」拆成两步、关键决策保留人工复核、明确禁止猜测的范围。",
+      "tags": [
+        "Prompt",
+        "安全",
+        "工具"
+      ],
+      "provenance": {
+        "vault": "tool",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/WORKFLOW_GUIDE.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-21T02:00:00.000Z"
+      }
+    },
+    {
+      "asset_id": "tool-failure-review-template",
+      "kind": "tool",
+      "name": "失败复盘与回归用例模板",
+      "description": "把「踩过的坑」沉淀成可自动重放的用例，是团队不再重复踩坑的最省事办法。",
+      "summary": "一次线上错误 → 记录触发条件、根因、修复、以及一条能复现它的回归用例。修复必须带用例，否则同样的错会再来一次。",
+      "tags": [
+        "回归",
+        "复盘",
+        "工具"
+      ],
+      "provenance": {
+        "vault": "tool",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/DEVELOPMENT.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-17T08:00:00.000Z"
+      }
+    },
+    {
+      "asset_id": "tool-model-probe-scoring",
+      "kind": "tool",
+      "name": "模型实测打分脚本",
+      "description": "「宣称可用」和「真能用」经常是两回事，选型要测出来的分数。",
+      "summary": "对同一批请求实测每个模型的成功率、延迟与稳定性；成功率用置信下界、样本少打折，输出可排序的评分表，用来选型与路由，而不是看排行榜宣称。",
+      "tags": [
+        "工具",
+        "模型路由",
+        "评测"
+      ],
+      "provenance": {
+        "vault": "tool",
+        "status": "validated",
+        "source_refs": [
+          "AI-Knowledge-Bank/WORKFLOW_GUIDE.md"
+        ],
+        "language": "zh",
+        "created_at": "2026-11-22T05:00:00.000Z"
+      }
+    }
+  ]
+}

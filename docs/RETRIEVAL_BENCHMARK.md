@@ -55,3 +55,16 @@ node scripts/retrieval-eval.mjs --catalog data/db.json --benchmark data/retrieva
 - 把基准扩到 50+ 查询与更大目录（含 Phase-1 能力目录）。
 - 用同一评测器对比「加向量召回 / 交叉编码器重排」的增量。
 - 若 `structured` 优势在扩样后仍成立，再把它接进 `/api/search` 与前端检索。
+## 只读导入器（目录压缩，零依赖离线）
+
+scripts/build-catalog.mjs 把 data/db.json 的真实节点压缩成能力目录 data/catalog.local.json（标准字段 + provenance），基准可直接消费该目录：
+
+`ash
+npm run catalog:build          # 生成 data/catalog.local.json
+npm run catalog:check          # CI：校验产物是否最新
+node scripts/retrieval-eval.mjs --catalog data/catalog.local.json
+`
+
+- 只读：不联网、不执行资产、不写数据库；draft/ejected 不入目录。
+- 确定性：产物不含时间戳，可直接纳入版本库并用 --check 校验。
+- 用目录跑基准的指标与直接用 data/db.json 完全一致（9 条 / 12 查询）。
