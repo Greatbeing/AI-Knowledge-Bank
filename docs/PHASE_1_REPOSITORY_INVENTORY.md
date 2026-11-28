@@ -22,7 +22,7 @@ The inventories are snapshots of the repositories' default branches at the SHAs 
 
 There is already a substantial capability representation in the ecosystem:
 
-- `writing-engines/atoms/index.json` contains **182 atom records**, spanning **17 engines** and **19 families**.
+- `writing-engines/atoms/index.json` contains **182 atom records**, spanning **17 writing engines** and **19 families**；仓库另有一个 Cangjie 引擎创作工作流。
 - `cognitive-engine/registry/writing-engines.json` already contains **182 imported writing primitives**, all currently marked `draft`.
 - `cognitive-engine/registry/general.json` contains **4 general reasoning/verification primitives**.
 - The existing cognitive primitive schema and importer provide a useful starting point. We should reuse and improve them rather than invent a competing primitive registry.
@@ -272,4 +272,4 @@ The first implementation review identified and corrected several gaps before tre
 - Legacy AKB seed nodes are imported; runtime/community signals are excluded.
 - The importer remains read-only and does not execute code, write to a database or deploy anything.
 
-The new tests exercise deterministic normalization and provenance using mocked source snapshots. Actual GitHub Actions results and a full pinned-source dry run must be checked before claiming end-to-end acceptance.
+The tests exercise deterministic normalization, Atom description extraction and provenance using mocked source snapshots. The importer distinguishes the 17 writing engines from the Cangjie meta-workflow, and resolves concise Atom purposes against the original Markdown source files rather than dropping them. The CI acceptance gate now requires all 182 domain primitives and all 4 general primitives to become Manifest records, with no missing mappings.
