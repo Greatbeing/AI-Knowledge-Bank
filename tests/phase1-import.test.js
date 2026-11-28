@@ -1,74 +1,98 @@
-import { describe, expect, it } from "vitest";
-import { normalizeVault, parseFrontmatter, toSafeId, validateRecord } from "../scripts/phase1-import.mjs";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  importSources,
+  matchesAllowlist,
+  parseFrontmatter,
+  sha256,
+  stableStringify,
+  toSafeId
+} from "../scripts/phase1-import.mjs";
 
-describe("Phase 1 importer parsing primitives", () => {
-  it("normalizes the legacy three-vault values", () => {
-    expect(normalizeVault("knowledge")).toBe("knowledge");
-    expect(normalizeVault("tool")).toBe("tools");
-    expect(normalizeVault("tools")).toBe("tools");
-    expect(normalizeVault("case")).toBe("cases");
-    expect(normalizeVault("unknown")).toBeUndefined();
-  });
+describe("Phase 1 importer primitives", () => {
+  afterEach(() => vi.unstubAllGlobals());
 
-  it("parses SKILL.md frontmatter with a multiline description", () => {
-    const source = [
-      "---",
-      "name: example-writing",
-      "description: |",
-      "  First trigger.",
-      "  Second trigger.",
-      "---",
-      "# Engine",
-      "Body text."
-    ].join("\n");
+  it("parses block frontmatter without executing the body", () => {
+    const source = ["---", "name: test-engine", "description: |", "  A sufficiently detailed capability description.", "  A second line.", "---", "# Body"].join("\n");
     const parsed = parseFrontmatter(source);
-    expect(parsed.metadata.name).toBe("example-writing");
-    expect(parsed.metadata.description).toBe("First trigger.\nSecond trigger.");
-    expect(parsed.body).toContain("# Engine");
+    expect(parsed.metadata.name).toBe("test-engine");
+    expect(parsed.metadata.description).toBe("A sufficiently detailed capability description.\nA second line.");
+    expect(parsed.body).toContain("# Body");
   });
 
-  it("preserves namespaced source identifiers without adding a second prefix", () => {
-    expect(toSafeId("we.zhexuan.a1")).toBe("we.zhexuan.a1");
-    expect(toSafeId("ce.general.claim_decomposition")).toBe("ce.general.claim_decomposition");
-    expect(toSafeId("akb.seed.00000000-0000-0000-0000-000000000101")).toBe("akb.seed.00000000-0000-0000-0000-000000000101");
+  it("matches explicit allowlist patterns only", () => {
+    expect(matchesAllowlist("feature-writing/SKILL.md", ["*-writing/SKILL.md"])).toBe(true);
+    expect(matchesAllowlist("cangjie/SKILL.md", ["*-writing/SKILL.md"])).toBe(false);
+    expect(matchesAllowlist("private/.env", ["*-writing/SKILL.md"])).toBe(false);
   });
 
-  it("returns the original markdown when frontmatter is absent", () => {
-    const markdown = "# No frontmatter\n\nContent.";
-    const parsed = parseFrontmatter(markdown);
-    expect(parsed.metadata).toEqual({});
-    expect(parsed.body).toBe(markdown);
+  it("creates stable hashes independent of object key order", () => {
+    expect(stableStringify({ b: 2, a: 1 })).toBe(stableStringify({ a: 1, b: 2 }));
+    expect(sha256({ b: 2, a: 1 })).toBe(sha256({ a: 1, b: 2 }));
+    expect(toSafeId("Example / Capability")).toBe("example-capability");
   });
 });
 
-describe("Phase 1 manifest validation", () => {
-  it("accepts a parsed capability with immutable provenance", () => {
-    const record = {
-      id: "we.engine.feature-writing",
-      name: "Feature Writing",
-      kind: "engine",
-      vault: "tools",
-      description: "A writing capability with explicit workflow and safety boundaries.",
-      source: {
-        repository: "Greatbeing/writing-engines",
-        path: "feature-writing/SKILL.md",
-        commit_sha: "78b6ce37bcdad3dafb2e0134939920f2f617733f"
+describe("Phase 1 importer integration", () => {
+  it("normalizes pinned snapshots and preserves immutable provenance", async () => {
+    const commit = "a".repeat(40);
+    const blob = "b".repeat(40);
+    const sourceFiles = {
+      "Greatbeing/AI-Knowledge-Bank": {
+        "data/akb_seed_nodes.json": JSON.stringify([{ id: "seed-1", title: "Seed knowledge asset", content: { vault: "knowledge", summary: "A sufficiently detailed seed knowledge description for this fixture." } }]),
+        "data/db.json": JSON.stringify({ nodes: [{ id: "db-1", title: "DB knowledge asset", vault_type: "knowledge", summary: "A sufficiently detailed local seed database description." }], signals: [{ id: "not-imported" }] })
       },
-      lifecycle: "parsed",
-      relationships: [{ type: "contains", target_id: "we.feature.a1" }]
+      "Greatbeing/cognitive-engine": {
+        "registry/writing-engines.json": JSON.stringify({ primitives: [{ id: "we.test-writing.a1", name: "Test atom", purpose: "A sufficiently detailed primitive description for this fixture.", kind: "domain", family: "test", tags: ["test"], lifecycle: "draft" }] }),
+        "registry/general.json": JSON.stringify({ primitives: [{ id: "ce.general.test", name: "General check", purpose: "A sufficiently detailed general primitive description for this fixture.", kind: "general", lifecycle: "draft" }] })
+      },
+      "Greatbeing/writing-engines": {
+        "atoms/index.json": JSON.stringify([{ id: "test-writing.1", name: "Test atom", engine: "test-writing", family: "test", file: "test-writing/references/atom-ops.md", heading: "## 1. Test atom" }]),
+        "test-writing/SKILL.md": ["---", "name: test-writing", "description: |", "  A sufficiently detailed engine description for this fixture.", "---", "# Instructions (not executed)"].join("\n"),
+        "test-writing/references/atom-ops.md": "## 1. Test atom\nDescription only."
+      }
     };
-    expect(validateRecord(record)).toEqual([]);
+    const config = {
+      policy: { immutable_refs_required: true },
+      sources: [
+        { repository: "Greatbeing/AI-Knowledge-Bank", ref: "main", commit_sha: commit, parser: "akb-seed", allowlist: ["data/akb_seed_nodes.json", "data/db.json"] },
+        { repository: "Greatbeing/cognitive-engine", ref: "main", commit_sha: commit, parser: "cognitive-registry", allowlist: ["registry/writing-engines.json", "registry/general.json"] },
+        { repository: "Greatbeing/writing-engines", ref: "main", commit_sha: commit, parser: "writing-engines", allowlist: ["atoms/index.json", "*-writing/SKILL.md", "*-writing/references/atom-ops.md"] }
+      ]
+    };
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/git/trees/")) {
+        const repository = url.split("/repos/")[1].split("/git/trees/")[0];
+        const tree = Object.keys(sourceFiles[repository]).map((path) => ({ path, type: "blob", sha: blob }));
+        return new Response(JSON.stringify({ sha: commit, truncated: false, tree }), { status: 200 });
+      }
+      const match = url.match(/raw\.githubusercontent\.com\/([^/]+\/[^/]+)\/[^/]+\/(.+)$/);
+      const repository = match?.[1];
+      const path = match?.[2] ? decodeURIComponent(match[2]) : "";
+      const content = sourceFiles[repository]?.[path];
+      return content === undefined ? new Response("not found", { status: 404 }) : new Response(content, { status: 200 });
+    }));
+
+    const first = await importSources(config);
+    const second = await importSources(config);
+    expect(first).toEqual(second);
+    expect(first.report.record_count).toBe(5);
+    expect(first.report.engine_count).toBe(1);
+    expect(first.report.atom_index_count).toBe(1);
+    expect(first.report.imported_domain_primitive_count).toBe(1);
+    expect(first.report.imported_general_primitive_count).toBe(1);
+    expect(first.report.validation_errors).toEqual([]);
+    expect(first.report.missing_registry_ids).toEqual([]);
+    expect(first.report.orphan_registry_ids).toEqual([]);
+    expect(first.report.safety.code_executed).toBe(false);
+    expect(first.records.find((record) => record.id === "we.test-writing.a1").source.blob_sha).toBe(blob);
+    expect(first.records.find((record) => record.id === "we.test-writing.a1").relationships).toContainEqual({ type: "belongs_to", target_id: "we.engine.test-writing" });
+    expect(first.records.find((record) => record.id === "we.engine.test-writing").relationships).toContainEqual({ type: "contains", target_id: "we.test-writing.a1" });
+    expect(first.records.some((record) => record.id.includes("not-imported"))).toBe(false);
   });
 
-  it("rejects malformed or untraceable records", () => {
-    const record = {
-      id: "bad id",
-      name: "X",
-      kind: "unknown",
-      description: "too short",
-      source: { repository: "not-a-repository", path: "" },
-      lifecycle: "executable"
-    };
-    expect(validateRecord(record).length).toBeGreaterThan(3);
+  it("rejects mutable source refs", async () => {
+    await expect(importSources({ policy: { immutable_refs_required: true }, sources: [{ repository: "x/y", ref: "main", commit_sha: "main", parser: "x", allowlist: [] }] }))
+      .rejects.toThrow("not pinned to a full commit SHA");
   });
 });
