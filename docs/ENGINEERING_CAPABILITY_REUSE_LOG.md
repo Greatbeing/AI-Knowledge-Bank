@@ -123,7 +123,7 @@ The 25-task benchmark is an intermediate checkpoint. The CI threshold currently 
 - Composition requires explicit composability and complete coverage of declared task capabilities. A partial set is not silently treated as sufficient.
 - Unknown license/security/verification states defer for review. Known incompatible or deprecated candidates are rejected.
 - Extended RoutingDecision contracts and added a Python 3.11 GitHub Actions test workflow.
-- Latest Cognitive Engine CI: [run 46121822275](https://github.com/Greatbeing/cognitive-engine/actions/runs/46121822275), 26 tests passed; one pre-existing companion-repository integration test skipped because the companion repository is not checked out in the workflow.
+- Latest Cognitive Engine CI: [run 46122068057](https://github.com/Greatbeing/cognitive-engine/actions/runs/46121822275), 27 tests passed; one pre-existing companion-repository integration test skipped because the companion repository is not checked out in the workflow.
 - Draft implementation PR: https://github.com/Greatbeing/cognitive-engine/pull/1.
 
 **Boundary:** this is the first policy implementation with explicit candidate input; it is not yet connected to the live AI Knowledge Bank catalog. The policy never executes candidates and always returns `execution_authorized=false`. `build_gap` authorizes designing a capability only, not deploying or executing it.
