@@ -334,7 +334,8 @@ async function main(argv = process.argv.slice(2)) {
   }
   const config = JSON.parse(await readFile(CONFIG_PATH, "utf8"));
   const catalog = await importSources(config);
-  if (catalog.report.duplicate_ids.length) throw new Error(`Duplicate catalog IDs: ${catalog.report.duplicate_ids.join(", ")}`);\n  if (catalog.report.validation_errors.length) throw new Error(`Manifest validation failed: ${JSON.stringify(catalog.report.validation_errors.slice(0, 20))}`);
+  if (catalog.report.duplicate_ids.length) throw new Error(`Duplicate catalog IDs: ${catalog.report.duplicate_ids.join(", ")}`);
+  if (catalog.report.validation_errors.length) throw new Error(`Manifest validation failed: ${JSON.stringify(catalog.report.validation_errors.slice(0, 20))}`);
   const outputIndex = argv.indexOf("--out");
   const output = JSON.stringify(catalog, null, 2) + "\n";
   if (outputIndex >= 0 && argv[outputIndex + 1]) {
