@@ -41,10 +41,10 @@
       "commit_sha": "78b6ce37bcdad3dafb2e0134939920f2f617733f",
       "parser": "writing-engines",
       "allowlist": [
-        "atoms/index.json",
         "*-writing/SKILL.md",
-        "cangjie/SKILL.md",
         "acheng-writing/references/atom-ops.md",
+        "atoms/index.json",
+        "cangjie/SKILL.md",
         "feature-writing/references/atom-ops.md",
         "gongwen-writing/references/atom-ops.md",
         "guanfang-writing/references/atom-ops.md",
