@@ -36,7 +36,7 @@ export function sha256(value) {
 }
 
 export function parseFrontmatter(markdown) {
-  const match = markdown.match(/^---\\s*\\r?\\n([\\s\\S]*?)\\r?\\n---\\s*(?:\\r?\\n|$)/);
+  const match = markdown.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/);
   if (!match) return { metadata: {}, body: markdown };
   const parsed = yaml.load(match[1]);
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
