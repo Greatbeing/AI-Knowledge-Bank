@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/Greatbeing/AI-Knowledge-Bank/schemas/capability-manifest.schema.json",
   "title": "AI Knowledge Bank Capability Manifest",
   "description": "Portable manifest for a discoverable, verifiable capability published in a Git repository. A manifest describes a capability; it does not authorize code execution.",
