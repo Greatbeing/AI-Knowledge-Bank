@@ -68,7 +68,7 @@ function validateRecord(record) {
   if (!kinds.includes(record.kind)) errors.push("invalid kind");
   if (record.vault && !["knowledge", "tools", "cases"].includes(record.vault)) errors.push("invalid vault");
   if (!record.description || record.description.length < 20 || record.description.length > MAX_DESCRIPTION) errors.push("invalid description");
-  if (!record.source || !/^[^/\\s]+\/[^/\\s]+$/.test(record.source.repository || "")) errors.push("invalid source repository");
+  if (!record.source || typeof record.source.repository !== "string" || record.source.repository.split("/").length !== 2 || /\s/.test(record.source.repository)) errors.push("invalid source repository");
   if (!record.source?.path) errors.push("missing source path");
   if (!/^[a-f0-9]{7,40}$/.test(record.source?.commit_sha || "")) errors.push("invalid source commit SHA");
   if (!["discovered", "parsed", "reviewed", "verified", "executable", "deprecated", "rejected"].includes(record.lifecycle)) errors.push("invalid lifecycle");
