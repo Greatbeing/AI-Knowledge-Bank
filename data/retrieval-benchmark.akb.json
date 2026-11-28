@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "purpose": "针对 AI Knowledge Bank 现有 9 条真实节点的离线检索基准。query 覆盖口语化、改写、专业化三种问法；相关性与等级为人工标注。",
+  "k": 3,
+  "tasks": [
+    {
+      "id": "vague-requirement",
+      "query": "需求还说不清，先怎么约定做到什么程度算对",
+      "relevant": [{ "asset_id": "kb-define-acceptance-first", "relevance": 3 }]
+    },
+    {
+      "id": "llm-arithmetic-error",
+      "query": "让大模型直接算金额总是算错怎么办",
+      "relevant": [{ "asset_id": "kb-numbers-by-code-words-by-model", "relevance": 3 }]
+    },
+    {
+      "id": "no-fabrication",
+      "query": "知识条目怎么避免编造、必须有出处",
+      "relevant": [{ "asset_id": "kb-cite-or-drop", "relevance": 3 }]
+    },
+    {
+      "id": "prompt-boundary",
+      "query": "高风险场景的 prompt 要怎么设边界",
+      "relevant": [{ "asset_id": "tool-anti-hallucination-prompt", "relevance": 3 }]
+    },
+    {
+      "id": "model-benchmark",
+      "query": "怎么实测比较几个模型的成功率和延迟",
+      "relevant": [{ "asset_id": "tool-model-probe-scoring", "relevance": 3 }]
+    },
+    {
+      "id": "postmortem-regression",
+      "query": "线上事故之后怎么复盘并补回归用例",
+      "relevant": [{ "asset_id": "tool-failure-review-template", "relevance": 3 }]
+    },
+    {
+      "id": "blind-evaluation",
+      "query": "怎样用盲评证明写作引擎确实更好",
+      "relevant": [{ "asset_id": "case-blind-eval-writing-engine", "relevance": 3 }]
+    },
+    {
+      "id": "alert-false-positive",
+      "query": "告警经常误报怎么修",
+      "relevant": [{ "asset_id": "case-alert-false-positive-fix", "relevance": 3 }]
+    },
+    {
+      "id": "claimed-vs-measured",
+      "query": "模型排行榜宣称的和实际测出来不一致",
+      "relevant": [{ "asset_id": "case-claimed-vs-measured", "relevance": 3 }]
+    },
+    {
+      "id": "verify-before-ingest",
+      "query": "入库前要不要逐条核对来源",
+      "relevant": [{ "asset_id": "kb-cite-or-drop", "relevance": 3 }]
+    },
+    {
+      "id": "selection-prep",
+      "query": "选模型之前先准备什么评测",
+      "relevant": [{ "asset_id": "tool-model-probe-scoring", "relevance": 3 }]
+    },
+    {
+      "id": "acceptance-metrics",
+      "query": "做 AI 功能前先定哪些验收指标",
+      "relevant": [{ "asset_id": "kb-define-acceptance-first", "relevance": 3 }]
+    }
+  ]
+}
