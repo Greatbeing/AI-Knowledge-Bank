@@ -1,0 +1,387 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Greatbeing/AI-Knowledge-Bank/schemas/capability-manifest.schema.json",
+  "title": "AI Knowledge Bank Capability Manifest",
+  "description": "Portable manifest for a discoverable, verifiable capability published in a Git repository. A manifest describes a capability; it does not authorize code execution.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "kind",
+    "description",
+    "source",
+    "lifecycle",
+    "content_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,95}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 120
+    },
+    "kind": {
+      "enum": [
+        "principle",
+        "framework",
+        "prompt",
+        "script",
+        "tool",
+        "agent",
+        "workflow",
+        "case-study",
+        "dataset",
+        "model-adapter",
+        "engine",
+        "primitive",
+        "knowledge",
+        "case"
+      ]
+    },
+    "vault": {
+      "enum": [
+        "knowledge",
+        "tools",
+        "cases"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 4000
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "use_cases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 30
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 50
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "en"
+      ]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean",
+            "default": false
+          },
+          "schema": {
+            "type": "object"
+          },
+          "sensitivity": {
+            "enum": [
+              "public",
+              "personal",
+              "confidential",
+              "restricted"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "instruction",
+            "api",
+            "mcp",
+            "sandbox",
+            "human-guided"
+          ]
+        },
+        "adapter_id": {
+          "type": "string"
+        },
+        "entrypoint": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "network_access": {
+          "enum": [
+            "none",
+            "allowlisted",
+            "unrestricted"
+          ]
+        },
+        "risk": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        }
+      },
+      "additionalProperties": false
+    },
+    "requirements": {
+      "type": "object",
+      "properties": {
+        "runtime": {
+          "type": "string"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "environment_variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Names only; never include secret values."
+        }
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "unverified",
+            "tested",
+            "verified",
+            "disputed",
+            "expired"
+          ]
+        },
+        "method": {
+          "type": "string"
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "last_verified_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evaluation_ref": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repository",
+        "path",
+        "commit_sha",
+        "blob_sha",
+        "url"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[^/\\s]+/[^/\\s]+$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{7,40}$"
+        },
+        "license": {
+          "type": "string"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri"
+        },
+        "blob_sha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "anchor": {
+          "type": "string"
+        },
+        "parser": {
+          "type": "string"
+        },
+        "parser_version": {
+          "type": "string"
+        },
+        "license_status": {
+          "enum": [
+            "verified",
+            "review_required",
+            "unknown",
+            "restricted"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "enum": [
+        "discovered",
+        "parsed",
+        "reviewed",
+        "verified",
+        "executable",
+        "deprecated",
+        "rejected"
+      ]
+    },
+    "version": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "maturity": {
+      "enum": [
+        "proposed",
+        "draft",
+        "tested",
+        "validated",
+        "stable",
+        "deprecated",
+        "unknown"
+      ],
+      "description": "Source-native maturity; separate from the platform ingestion lifecycle."
+    },
+    "relationships": {
+      "type": "array",
+      "description": "Explicit links to other catalog assets; do not infer equivalence from similar names.",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "target_id"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "contains",
+              "references",
+              "has_example",
+              "tested_by",
+              "belongs_to",
+              "derived_from",
+              "evaluates",
+              "composes"
+            ]
+          },
+          "target_id": {
+            "type": "string"
+          },
+          "source_ref": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "maxItems": 100
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 fingerprint of normalized source content for deterministic change detection."
+    }
+  },
+  "additionalProperties": false
+}

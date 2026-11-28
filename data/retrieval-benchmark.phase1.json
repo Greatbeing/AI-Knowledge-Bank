@@ -1,0 +1,257 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Expanded human-labeled Phase 1 retrieval benchmark. Queries include paraphrase, colloquial intent and professional task formulations; relevance IDs are explicit human judgments.",
+  "k": 5,
+  "tasks": [
+    {
+      "id": "gongwen-drafting",
+      "query": "起草机关公文、通知、报告、请示和会议纪要",
+      "relevant": [
+        {
+          "asset_id": "we.engine.gongwen-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "feature-reporting",
+      "query": "人物特稿、深度报道、采访现场和人物变化",
+      "relevant": [
+        {
+          "asset_id": "we.engine.feature-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "official-commentary",
+      "query": "撰写庄重权威的党报评论、官方时评和政策评论",
+      "relevant": [
+        {
+          "asset_id": "we.engine.guanfang-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "daily-life-essay",
+      "query": "写吃食、草木、手艺和节令风俗的生活散文",
+      "relevant": [
+        {
+          "asset_id": "we.engine.wangzengqi-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "short-fiction",
+      "query": "用冷静叙事、口语对话和重复结构写普通人的苦难短篇",
+      "relevant": [
+        {
+          "asset_id": "we.engine.yuhua-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "original-wuxia",
+      "query": "创作原创武侠故事，塑造人物、设计冲突和悬念",
+      "relevant": [
+        {
+          "asset_id": "we.engine.jinyong-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "claim-decomposition",
+      "query": "把论述拆成事实、推断和价值判断等原子主张",
+      "relevant": [
+        {
+          "asset_id": "ce.general.claim_decomposition",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "counterexample-search",
+      "query": "为宽泛的因果或全称主张寻找可信反例",
+      "relevant": [
+        {
+          "asset_id": "ce.general.counterexample_search",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "evidence-grounding",
+      "query": "将每条结论绑定到素材中的具体出处，识别无支撑陈述",
+      "relevant": [
+        {
+          "asset_id": "ce.general.evidence_grounding",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "redline-audit",
+      "query": "审查文本中的风险红线、事实错误和表达边界",
+      "relevant": [
+        {
+          "asset_id": "ce.general.redline_audit",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "ai-tone-cleanup",
+      "query": "把这段文字改得像真人写的，少点机器腔，像城市生活公众号文章",
+      "relevant": [
+        {
+          "asset_id": "we.engine.sanlian-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "comedy-monologue",
+      "query": "准备一段三到五分钟开放麦口播，有铺垫、反转和回扣",
+      "relevant": [
+        {
+          "asset_id": "we.engine.standup-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "casual-life-essay",
+      "query": "写一篇关于家常吃食、地方风物和节令习俗的闲适小品",
+      "relevant": [
+        {
+          "asset_id": "we.engine.wangzengqi-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "personal-life-prose",
+      "query": "记录自己的日常琐事和季节变化，用天真、细致的观察写散文",
+      "relevant": [
+        {
+          "asset_id": "we.engine.lijuan-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "satirical-essay",
+      "query": "针对一种社会习惯写冷峻、有反讽意味的短评，不针对具体个人",
+      "relevant": [
+        {
+          "asset_id": "we.engine.luxun-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "reasoned-humor",
+      "query": "用严密推理拆穿一本正经的空话，写成有幽默感的白话杂文",
+      "relevant": [
+        {
+          "asset_id": "we.engine.wangxiaobo-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "argument-speech",
+      "query": "准备一篇层次分明、通俗易懂、分条讲道理的演讲稿",
+      "relevant": [
+        {
+          "asset_id": "we.engine.mao-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "social-media-irony",
+      "query": "写一条表面谦虚求助、实际暗中炫耀的朋友圈文案",
+      "relevant": [
+        {
+          "asset_id": "we.engine.versailles-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "modern-city-human-relations",
+      "query": "写一段都市人情故事，用细节、物件和微妙心理呈现关系",
+      "relevant": [
+        {
+          "asset_id": "we.engine.zhangailing-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "literary-travel-note",
+      "query": "写一篇现代白话游记，从眼前小事自然转到人生感悟，不要文言腔",
+      "relevant": [
+        {
+          "asset_id": "we.engine.sushi-writing",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "evidence-audit",
+      "query": "检查报告每个结论有没有原始材料支撑，并标出没有出处的判断",
+      "relevant": [
+        {
+          "asset_id": "ce.general.evidence_grounding",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "argument-counterexample",
+      "query": "检验一个普遍性判断是否站得住，找能推翻它的真实反例",
+      "relevant": [
+        {
+          "asset_id": "ce.general.counterexample_search",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "separate-claim-types",
+      "query": "把一段复杂论述拆开，区分客观事实、逻辑推断与价值立场",
+      "relevant": [
+        {
+          "asset_id": "ce.general.claim_decomposition",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "policy-redline-review",
+      "query": "对正式材料做合规性审阅，标记事实错误、风险表述和不可触碰的边界",
+      "relevant": [
+        {
+          "asset_id": "ce.general.redline_audit",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "draft-official-document",
+      "query": "给上级部门写一份正式情况汇报，语气规范、结构清楚、不能擅自补造事实",
+      "relevant": [
+        {
+          "asset_id": "we.engine.gongwen-writing",
+          "relevance": 3
+        }
+      ]
+    }
+  ]
+}

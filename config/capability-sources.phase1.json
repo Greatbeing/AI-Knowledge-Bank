@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Pinned, read-only source snapshots and conservative allowlists for the Phase 1 catalog importer.",
+  "sources": [
+    {
+      "repository": "Greatbeing/AI-Knowledge-Bank",
+      "ref": "main",
+      "commit_sha": "37affd4c3d6caece2ebbaeb9857bbd03f5fd8792",
+      "parser": "akb-seed",
+      "allowlist": [
+        "data/akb_seed_nodes.json",
+        "data/db.json"
+      ],
+      "exclusions": [
+        ".env*",
+        "supabase/**",
+        "user-generated records",
+        "runtime database contents"
+      ]
+    },
+    {
+      "repository": "Greatbeing/cognitive-engine",
+      "ref": "main",
+      "commit_sha": "a9d90a873858cd180415776d2c34c7558d7ebbdc",
+      "parser": "cognitive-registry",
+      "allowlist": [
+        "registry/general.json",
+        "registry/writing-engines.json",
+        "schema/primitive.schema.json",
+        "schema/contracts.schema.json"
+      ],
+      "exclusions": [
+        "execution of Python files",
+        "runtime state",
+        "unreviewed experiment outputs"
+      ]
+    },
+    {
+      "repository": "Greatbeing/writing-engines",
+      "ref": "master",
+      "commit_sha": "78b6ce37bcdad3dafb2e0134939920f2f617733f",
+      "parser": "writing-engines",
+      "allowlist": [
+        "*-writing/SKILL.md",
+        "acheng-writing/references/atom-ops.md",
+        "atoms/index.json",
+        "cangjie/SKILL.md",
+        "feature-writing/references/atom-ops.md",
+        "gongwen-writing/references/atom-ops.md",
+        "guanfang-writing/references/atom-ops.md",
+        "jinyong-writing/references/atom-ops.md",
+        "lijuan-writing/references/atom-ops.md",
+        "luxun-writing/references/atom-ops.md",
+        "mao-writing/references/atom-ops.md",
+        "sanlian-writing/references/atoms.md",
+        "standup-writing/references/atom-ops.md",
+        "sushi-writing/references/atom-ops.md",
+        "versailles-writing/references/atom-ops.md",
+        "wangxiaobo-writing/references/atom-ops.md",
+        "wangzengqi-writing/references/atom-ops.md",
+        "yuhua-writing/references/atom-ops.md",
+        "zhangailing-writing/references/atom-ops.md",
+        "zhexuan-writing/references/atom-ops.md"
+      ],
+      "exclusions": [
+        "drafts/**",
+        "corpus/**",
+        "sources/local/**",
+        "eval/**/blind/**",
+        "eval/**/key.json",
+        "generated site HTML"
+      ]
+    }
+  ],
+  "policy": {
+    "code_execution": false,
+    "private_data": false,
+    "default_license_status": "review_required",
+    "default_verification_status": "unverified",
+    "immutable_refs_required": true
+  }
+}
