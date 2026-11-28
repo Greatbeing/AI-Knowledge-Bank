@@ -55,10 +55,8 @@ function normalizeDescription(value, fallback = "") {
   return text.slice(0, MAX_DESCRIPTION);
 }
 
-function toSafeId(value, prefix) {
-  const raw = String(value || "").toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
-  const id = raw.startsWith(prefix) ? raw : `${prefix}.${raw}`;
-  return id.slice(0, 96);
+function toSafeId(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 96);
 }
 
 function sourceMetadata(repo, path, config, treeEntry, anchor = "") {
@@ -81,7 +79,7 @@ function baseRecord({ id, name, kind, vault, description, summary, tags = [], ma
   if (!cleanDescription) return null;
   return {
     schema_version: "1.0",
-    id: toSafeId(id, "akb"),
+    id: toSafeId(id),
     name: String(name || id).slice(0, 120),
     kind,
     ...(vault ? { vault } : {}),
@@ -222,7 +220,6 @@ async function importSources(config) {
   const writing = config.sources.find((s) => s.parser === "writing-engines");
   const writingFiles = filesByRepo.get(writing.repository);
   const atomIndex = JSON.parse(writingFiles.get("atoms/index.json") || "[]");
-  const atomEngineMap = new Map(atomIndex.map((atom) => [atom.engine, atom.id.split(".")[0]]));
 
   const engineFiles = [...writingFiles.keys()].filter((path) => /-writing\/SKILL\.md$/.test(path)).sort();
   const engineRecords = new Map();
