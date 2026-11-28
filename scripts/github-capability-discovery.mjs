@@ -8,6 +8,7 @@
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const USER_AGENT = "AI-Knowledge-Bank-GitHub-Discovery/0.1.0";
 
@@ -107,7 +108,7 @@ function parseArgs(argv) {
 async function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
   if (args.help || !args.query) {
-    process.stdout.write("Usage: node scripts/github-capability-discovery.mjs --query \"json schema validator language:TypeScript\" [--limit 10] [--out candidates.json]\\n");
+    process.stdout.write("Usage: node scripts/github-capability-discovery.mjs --query \"json schema validator language:TypeScript\" [--limit 10] [--out candidates.json]\n");
     return;
   }
   if (!Number.isInteger(args.limit) || args.limit < 1 || args.limit > 30) {
@@ -124,20 +125,20 @@ async function main(argv = process.argv.slice(2)) {
     code_executed: false,
     candidates
   };
-  const output = JSON.stringify(report, null, 2) + "\\n";
+  const output = JSON.stringify(report, null, 2) + "\n";
   if (args.out) {
     const path = resolve(process.cwd(), args.out);
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, output, "utf8");
-    process.stdout.write(JSON.stringify({ query: report.query, returned_count: report.returned_count, out: path }, null, 2) + "\\n");
+    process.stdout.write(JSON.stringify({ query: report.query, returned_count: report.returned_count, out: path }, null, 2) + "\n");
   } else {
     process.stdout.write(output);
   }
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch((error) => {
-    process.stderr.write(`GitHub discovery failed: ${error.message}\\n`);
+    process.stderr.write(`GitHub discovery failed: ${error.message}\n`);
     process.exitCode = 1;
   });
 }
