@@ -7,7 +7,7 @@ AI Knowledge Bank 的长期产品与工程基线文档。
 - [产品愿景与架构说明](AI_CAPABILITY_PLATFORM_VISION.md)：产品战略和系统目标。
 - [Capability Manifest Schema](../schemas/capability-manifest.schema.json)：机器可读的能力元数据规范，支持 engine、primitive 与来源追溯。
 - [Phase 1 来源快照配置](../config/capability-sources.phase1.json)：固定三个公共仓库的 Commit 与保守 allowlist。
-- [Phase 1 只读导入器](../scripts/phase1-import.mjs)：生成可追溯、可对账的本地能力目录 JSON，不写数据库、不执行仓库代码。\n- [Phase 1 导入器测试](../tests/phase1-import.test.js)：覆盖 Frontmatter、Allowlist、确定性哈希、来源追溯与 Atom/Primitive 对账。
+- [Phase 1 只读导入器](../scripts/phase1-import.mjs)：生成可追溯、可对账的本地能力目录 JSON，不写数据库、不执行仓库代码。\n- [GitHub 候选能力发现器](../scripts/github-capability-discovery.mjs)：根据任务关键词搜索 GitHub 仓库并给出透明的初步筛选信号，不克隆、不安装、不执行。\n- [Phase 1 导入器测试](../tests/phase1-import.test.js)：覆盖 Frontmatter、Allowlist、确定性哈希、来源追溯与 Atom/Primitive 对账。
 
 ## 当前状态
 
