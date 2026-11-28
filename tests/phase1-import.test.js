@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  extractAtomDescription,
   importSources,
   matchesAllowlist,
   parseFrontmatter,
@@ -17,6 +18,13 @@ describe("Phase 1 importer primitives", () => {
     expect(parsed.metadata.name).toBe("test-engine");
     expect(parsed.metadata.description).toBe("A sufficiently detailed capability description.\nA second line.");
     expect(parsed.body).toContain("# Body");
+  });
+
+  it("extracts atom definitions from both tables and headed sections", () => {
+    const table = "| 1 | 共识假装 | 把个人判断包装成共识，再拆穿它 | 例句 | 族 |";
+    expect(extractAtomDescription(table, { heading: "#1 共识假装" })).toBe("把个人判断包装成共识，再拆穿它");
+    const section = "## 2. 题记装置\n\n**族**：独有\n**定义**：正文前放一句文学引语定调，再转入人物。\n\n## 3. 下一节";
+    expect(extractAtomDescription(section, { heading: "## 2. 题记装置" })).toBe("正文前放一句文学引语定调，再转入人物。");
   });
 
   it("matches explicit allowlist patterns only", () => {
