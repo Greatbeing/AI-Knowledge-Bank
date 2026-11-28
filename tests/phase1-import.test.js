@@ -56,7 +56,7 @@ describe("Phase 1 importer integration", () => {
       "Greatbeing/writing-engines": {
         "atoms/index.json": JSON.stringify([{ id: "test-writing.1", name: "Test atom", engine: "test-writing", family: "test", file: "test-writing/references/atom-ops.md", heading: "## 1. Test atom" }]),
         "test-writing/SKILL.md": ["---", "name: test-writing", "description: |", "  A sufficiently detailed engine description for this fixture.", "---", "# Instructions (not executed)"].join("\n"),
-        "test-writing/references/atom-ops.md": "## 1. Test atom\nDescription only.",
+        "test-writing/references/atom-ops.md": "## 1. Test atom\n**定义**：A sufficiently detailed atom operation definition for this fixture.",
         "cangjie/SKILL.md": ["---", "name: cangjie", "description: A sufficiently detailed engine authoring workflow description for this fixture.", "---", "# Workflow"].join("\n")
       }
     };
@@ -96,7 +96,8 @@ describe("Phase 1 importer integration", () => {
     expect(first.report.missing_registry_ids).toEqual([]);
     expect(first.report.orphan_registry_ids).toEqual([]);
     expect(first.report.safety.code_executed).toBe(false);
-    expect(first.records.find((record) => record.id === "we.test-writing.a1").source.blob_sha).toBe(blob);\n    expect(first.records.find((record) => record.id === "we.test-writing.a1").description).toContain("A sufficiently detailed atom operation definition");
+    expect(first.records.find((record) => record.id === "we.test-writing.a1").source.blob_sha).toBe(blob);
+    expect(first.records.find((record) => record.id === "we.test-writing.a1").description).toContain("A sufficiently detailed atom operation definition");
     expect(first.records.find((record) => record.id === "we.test-writing.a1").relationships).toContainEqual({ type: "belongs_to", target_id: "we.engine.test-writing" });
     expect(first.records.find((record) => record.id === "we.engine.test-writing").relationships).toContainEqual({ type: "contains", target_id: "we.test-writing.a1" });
     expect(first.records.some((record) => record.id.includes("not-imported"))).toBe(false);
