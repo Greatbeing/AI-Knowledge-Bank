@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "deploy": "npm run build && wrangler deploy",
     "catalog:import:phase1": "node scripts/phase1-import.mjs",
-    "catalog:check:phase1": "node scripts/phase1-import.mjs --check"
+    "catalog:check:phase1": "node scripts/phase1-import.mjs --check",
+    "github:discover": "node scripts/github-capability-discovery.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
