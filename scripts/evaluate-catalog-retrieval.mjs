@@ -68,7 +68,8 @@ export function evaluateBenchmark(catalog, benchmark) {
       query: task.query,
       recall_at_k: relevant.size ? found.length / relevant.size : 1,
       reciprocal_rank: firstRelevantRank < 0 ? 0 : 1 / (firstRelevantRank + 1),
-      ndcg_at_k: dcg(ideal) ? dcg(actual) / dcg(ideal) : 1,\n      precision_at_k: found.length / k,
+      ndcg_at_k: dcg(ideal) ? dcg(actual) / dcg(ideal) : 1,
+      precision_at_k: found.length / k,
       relevant_ids: [...relevant.keys()],
       retrieved_ids: topK.map((item) => item.asset_id),
       first_relevant_rank: firstRelevantRank < 0 ? null : firstRelevantRank + 1
