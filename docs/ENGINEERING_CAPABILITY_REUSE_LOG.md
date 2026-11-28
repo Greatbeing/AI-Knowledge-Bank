@@ -90,10 +90,10 @@ On commit `34b72475d1650de29ed3ff74fff70551f1268e4a`, GitHub Actions run [461202
 
 - 146 tests across 11 test files passed.
 - Catalog import: 231 records; 17 engines; 1 authoring workflow; 182 domain primitives; 4 general primitives; 27 AKB seed records.
-- Expanded retrieval seed benchmark (25 tasks): Recall@5 = 0.9600; MRR = 0.7993; NDCG@5 = 0.8386; Precision@5 = 0.1920.
+- Expanded retrieval seed benchmark (25 tasks): Recall@5 = 0.9600; MRR = 0.7993; NDCG@5 = 0.8386; Precision@5 = 0.1920 (theoretical ceiling is 0.2000 when each task has one relevant asset).
 - Lint, text health, pinned-source reconciliation, schema validation, TypeScript/Vite build and build-output checks passed.
 
-**Interpretation limit:** the expanded 25-task score is a seed benchmark, not evidence of production retrieval quality. Precision@5 = 0.1920 shows that the current top-five list still contains many irrelevant results; high Recall@5 should not be mistaken for high ranking precision. The next benchmark revision should add independently reviewed relevance judgments, ambiguous and multi-intent requests, misspellings, hard distractors, negative/no-match tasks, and lifecycle/license filters. Candidate engines should be compared on the same corpus and split before selecting or adding a dependency.
+**Interpretation limit:** the expanded 25-task score is a seed benchmark, not evidence of production retrieval quality. Precision@5 = 0.1920 is close to its 0.2000 ceiling under the current one-relevant-asset-per-task labels; it must not be interpreted as a poor score. Precision@1 is added to make first-result accuracy easier to interpret. High Recall@5 still does not establish production retrieval quality. The next benchmark revision should add independently reviewed relevance judgments, ambiguous and multi-intent requests, misspellings, hard distractors, negative/no-match tasks, and lifecycle/license filters. Candidate engines should be compared on the same corpus and split before selecting or adding a dependency.
 
 ### Next decision
 
