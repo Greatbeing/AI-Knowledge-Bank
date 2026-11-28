@@ -240,11 +240,19 @@ A GitHub file being public does not make its contents safe to execute. A `SKILL.
 6. **Operational storage:** GitHub is the canonical source for public, versioned capability assets, not a replacement for user identity, approvals, task sessions, execution traces or private feedback.
 7. **Public repository access:** initial connector can use public GitHub APIs. Private repository support, rate-limit strategy and webhook sync require a separate permission/security design.
 
-## 10. Immediate engineering decisions
+## 10. Implementation status (2026-11-28)
+
+- Added `config/capability-sources.phase1.json` with immutable commit snapshots and conservative allowlists for all three repositories.
+- Added `scripts/phase1-import.mjs`, a read-only importer that parses AKB seed JSON, cognitive registries and writing-engine SKILL frontmatter; it emits a local catalog artifact and validation report.
+- Added unit tests for vault normalization, SKILL frontmatter parsing, canonical IDs and manifest provenance validation.
+- Added the `npm run catalog:import:phase1` command.
+- The importer has not yet completed a full end-to-end run against the remote snapshots. Its generated record counts, schema validation and real-source edge cases remain unverified until the CI checks and a controlled run complete.
+
+## 11. Immediate engineering decisions
 
 - Reuse the cognitive primitive schema as the primitive-source contract, but add a platform-level wrapper for source identity, visibility, license, publication status and cross-asset relationships.
 - Keep engine and primitive as separate asset types.
 - Treat `writing-engines/atoms/index.json` as the source index and cognitive-engine's imported registry as a derived normalized view until freshness checks prove otherwise.
 - Use immutable commit snapshots and deterministic imports.
-- Start with a dry-run importer that writes a local JSONL/catalog artifact and a machine-readable validation report. Do not write to production Supabase or deploy.
+- Keep the importer in dry-run mode: it writes only a local JSON catalog artifact when `--out` is supplied (otherwise stdout) and a machine-readable validation report. Do not write to production Supabase or deploy.
 - Keep the existing product API and database intact until the new catalog is proven against the retrieval evaluation set.
