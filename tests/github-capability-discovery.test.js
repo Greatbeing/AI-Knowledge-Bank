@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { assessRepository, discoverCandidates } from "../scripts/github-capability-discovery.mjs";
 
-describe("GitHub capability candidate assessment", () => {\n  afterEach(() => vi.unstubAllGlobals());
+describe("GitHub capability candidate assessment", () => {
+  afterEach(() => vi.unstubAllGlobals());
   const now = Date.parse("2026-11-28T00:00:00Z");
   const base = {
     full_name: "example/tool",
