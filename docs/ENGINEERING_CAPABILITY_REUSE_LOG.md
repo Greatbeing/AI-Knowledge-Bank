@@ -111,3 +111,21 @@ Keep the lexical baseline as a transparent control. Expand the benchmark first; 
 
 
 The 25-task benchmark is an intermediate checkpoint. The CI threshold currently checks the task count, minimum Recall@5 and minimum MRR; Precision@5 is reported but not yet gated because the relevance judgments are a small seed set and the precision baseline needs further calibration.
+
+
+## Decision record 005 — Reuse-first policy implemented in Cognitive Engine
+
+**Decision:** operationalize ADR-0002 as a deterministic planning policy, not merely a development guideline.
+
+- Added `cognitive_engine/reuse_policy.py` with explicit candidate gates for task fit, lifecycle, verification, license, security and compatibility.
+- Added `route_with_reuse()` so external catalog candidates are considered before the internal primitive router.
+- Supported actions: `reuse`, `compose`, `adapt`, `defer`, and `build_gap`.
+- Composition requires explicit composability and complete coverage of declared task capabilities. A partial set is not silently treated as sufficient.
+- Unknown license/security/verification states defer for review. Known incompatible or deprecated candidates are rejected.
+- Extended RoutingDecision contracts and added a Python 3.11 GitHub Actions test workflow.
+- Latest Cognitive Engine CI: [run 46121822275](https://github.com/Greatbeing/cognitive-engine/actions/runs/46121822275), 26 tests passed; one pre-existing companion-repository integration test skipped because the companion repository is not checked out in the workflow.
+- Draft implementation PR: https://github.com/Greatbeing/cognitive-engine/pull/1.
+
+**Boundary:** this is the first policy implementation with explicit candidate input; it is not yet connected to the live AI Knowledge Bank catalog. The policy never executes candidates and always returns `execution_authorized=false`. `build_gap` authorizes designing a capability only, not deploying or executing it.
+
+**Next validation:** connect real catalog candidates and run paired reuse-first versus generate-first tasks. Compare task success, output quality, total cost, latency, integration time, maintenance burden and security outcomes. Reuse rate is diagnostic, not an independent optimization target.
