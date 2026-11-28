@@ -3,7 +3,7 @@
 AI Knowledge Bank 的长期产品与工程基线文档。
 
 - [项目总开发文档](PROJECT_DEVELOPMENT_BLUEPRINT.md)：产品章程、PRD、技术架构、安全模型、能力贡献规范、长期路线图和治理。
-- [Phase 1 仓库盘点与接入设计](PHASE_1_REPOSITORY_INVENTORY.md)：三个核心仓库的真实资产清单、能力分类、只读 Connector 契约、导入规则和阶段验收标准。
+- [Phase 1 仓库盘点与接入设计](PHASE_1_REPOSITORY_INVENTORY.md)：三个核心仓库的真实资产清单、能力分类、只读 Connector 契约、导入规则和阶段验收标准。\n- [工程能力复用决策日志](ENGINEERING_CAPABILITY_REUSE_LOG.md)：记录项目开发中发现、评估、复用或暂缓采用 GitHub 现有工具的依据与证据。
 - [产品愿景与架构说明](AI_CAPABILITY_PLATFORM_VISION.md)：产品战略和系统目标。
 - [Capability Manifest Schema](../schemas/capability-manifest.schema.json)：机器可读的能力元数据规范，支持 engine、primitive 与来源追溯。
 - [Phase 1 来源快照配置](../config/capability-sources.phase1.json)：固定三个公共仓库的 Commit 与保守 allowlist。
