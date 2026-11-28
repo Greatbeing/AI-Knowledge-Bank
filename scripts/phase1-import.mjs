@@ -175,10 +175,10 @@ function parseAkbNode(node, repo, path, config, treeEntry, origin, sourceContent
 function extractAtomDescription(markdown, atom) {
   if (!markdown || !atom) return "";
   const heading = String(atom.heading || "").trim();
-  const tableNumber = heading.match(/^#(\\d+)\\b/);
+  const tableNumber = heading.match(/^#(\d+)\b/);
   if (tableNumber) {
-    const row = markdown.split(/\\r?\\n/).find((line) => {
-      const match = line.match(/^\\|\\s*(\\d+)\\s*\\|/);
+    const row = markdown.split(/\r?\n/).find((line) => {
+      const match = line.match(/^\|\s*(\d+)\s*\|/);
       return match && Number(match[1]) === Number(tableNumber[1]);
     });
     if (row) {
@@ -186,20 +186,20 @@ function extractAtomDescription(markdown, atom) {
       if (cells[2] && cells[2].length >= 8) return cells[2];
     }
   }
-  const lines = markdown.split(/\\r?\\n/);
-  const title = heading.replace(/^#+\\s*/, "").replace(/\\s+$/, "");
-  const start = lines.findIndex((line) => line.trim() === heading || (title && line.trim().replace(/^#+\\s*/, "") === title));
+  const lines = markdown.split(/\r?\n/);
+  const title = heading.replace(/^#+\s*/, "").replace(/\s+$/, "");
+  const start = lines.findIndex((line) => line.trim() === heading || (title && line.trim().replace(/^#+\s*/, "") === title));
   if (start < 0) return "";
   const level = (lines[start].match(/^#+/) || ["##"])[0].length;
   const section = [];
   for (let i = start + 1; i < lines.length; i += 1) {
-    const next = lines[i].match(/^(#+)\\s/);
+    const next = lines[i].match(/^(#+)\s/);
     if (next && next[1].length <= level) break;
     section.push(lines[i]);
   }
-  const definition = section.find((line) => /\\*\\*定义\\*\\*：/.test(line));
-  if (definition) return definition.replace(/^.*?\\*\\*定义\\*\\*：/, "").trim();
-  return section.map((line) => line.replace(/\\s+/g, " ").trim()).filter(Boolean).join(" ").slice(0, 600);
+  const definition = section.find((line) => /\*\*定义\*\*：/.test(line));
+  if (definition) return definition.replace(/^.*?\*\*定义\*\*：/, "").trim();
+  return section.map((line) => line.replace(/\s+/g, " ").trim()).filter(Boolean).join(" ").slice(0, 600);
 }
 
 function parsePrimitive(primitive, repo, path, config, treeEntry, atomByPrimitiveId, writingConfig, writingTree, writingFiles) {
@@ -283,7 +283,7 @@ export async function importSources(config) {
   if (!Array.isArray(atomIndex)) throw new Error("Writing atom index must be an array.");
   const atomByPrimitiveId = new Map(atomIndex.map((atom) => [`we.${atom.id.replace(".", ".a")}`, atom]));
 
-  const engineFiles = [...writingFiles.keys()].filter((path) => /-writing\\/SKILL\\.md$/.test(path)).sort();
+  const engineFiles = [...writingFiles.keys()].filter((path) => /-writing\/SKILL\.md$/.test(path)).sort();
   const engineRecords = new Map();
   for (const path of engineFiles) {
     const { metadata, body } = parseFrontmatter(writingFiles.get(path));
